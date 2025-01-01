@@ -4,12 +4,15 @@ import { css, Global, ThemeProvider } from "@emotion/react";
 import { theme } from "./shared/styles/theme";
 import { GlobalStyles } from "./shared/styles/global";
 import styled from "@emotion/styled";
+import { Button } from "./shared/components/buttons/Button";
 
 function App() {
   return (
     <ThemeProvider theme={theme}>
       <Global styles={GlobalStyles} />
-      <div></div>
+      <Button variant="primary" size="medium" state="disabled">
+        로그인
+      </Button>
     </ThemeProvider>
   );
 }
