@@ -3,11 +3,35 @@ import { css } from "@emotion/react";
 export const GlobalStyles = css`
   @font-face {
     font-family: "SpoqaHanSansNeo";
-    src: url("../../fonts/SpoqaHanSansNeo-Medium.woff2") format("woff2"),
-      url("../../fonts/SpoqaHanSansNeo-Medium.woff") format("woff");
-    font-weight: 500;
+    src: url("../../fonts/SpoqaHanSansNeo-Light.woff2") format("woff2"),
+      url("../../fonts/SpoqaHanSansNeo-Light.woff") format("woff");
+    font-weight: 300; /* Light */
     font-style: normal;
   }
+
+  @font-face {
+    font-family: "SpoqaHanSansNeo";
+    src: url("../../fonts/SpoqaHanSansNeo-Regular.woff2") format("woff2"),
+      url("../../fonts/SpoqaHanSansNeo-Regular.woff") format("woff");
+    font-weight: 400; /* Regular */
+    font-style: normal;
+  }
+  @font-face {
+    font-family: "SpoqaHanSansNeo";
+    src: url("../../fonts/SpoqaHanSansNeo-Medium.woff2") format("woff2"),
+      url("../../fonts/SpoqaHanSansNeo-Medium.woff") format("woff");
+    font-weight: 500; /* Medium */
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: "SpoqaHanSansNeo";
+    src: url("../../fonts/SpoqaHanSansNeo-Bold.woff2") format("woff2"),
+      url("../../fonts/SpoqaHanSansNeo-Bold.woff") format("woff");
+    font-weight: 700; /* Bold */
+    font-style: normal;
+  }
+
   html,
   body,
   div,
