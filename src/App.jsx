@@ -12,12 +12,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <Global styles={GlobalStyles} />
-      <Button variant="primary" size="medium" state="default">
-        Button
-      </Button>
-      <IconBtn variant="primary" size="medium" state="default">
-        <Plus />
-      </IconBtn>
+    
     </ThemeProvider>
   );
 }
