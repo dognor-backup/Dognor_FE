@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import { useState } from "react";
 
-const Checkbox = ({ name, size }) => {
+const Checkbox = ({ name, size, label }) => {
   const [isChecked, setChecked] = useState(false);
   return (
     <div>
@@ -13,7 +13,7 @@ const Checkbox = ({ name, size }) => {
         checked={isChecked}
       />
       <LabelChk htmlFor={name} checked={isChecked} size={size}>
-        Accept terms and conditions
+        {label}
       </LabelChk>
     </div>
   );
@@ -38,8 +38,8 @@ const LabelChk = styled.label(({ theme, checked, size }) => ({
     content: '""',
     display: "inline-block",
     marginRight: "8px",
-    width: size === "small" ? "12px" : "24px",
-    height: size === "small" ? "12px" : "24px",
+    width: size === "small" ? "16px" : "24px",
+    height: size === "small" ? "16px" : "24px",
     border: `1px solid ${theme.colors.neutrals_01}`,
     backgroundColor: checked
       ? theme.colors.neutrals_08
