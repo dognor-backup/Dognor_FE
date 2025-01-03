@@ -1,19 +1,18 @@
 import styled from "@emotion/styled";
 import { useState } from "react";
 
-const Checkbox = () => {
+const Checkbox = ({ name, size }) => {
   const [isChecked, setChecked] = useState(false);
   return (
     <div>
       <InputChk
         type="checkbox"
-        name=""
-        id="checkbox"
+        name={name}
+        id={name}
         onChange={() => setChecked((prev) => !prev)}
         checked={isChecked}
       />
-      {/* size={"small"} 작은 사이즈 체크박스 */}
-      <LabelChk htmlFor="checkbox" checked={isChecked}>
+      <LabelChk htmlFor={name} checked={isChecked} size={size}>
         Accept terms and conditions
       </LabelChk>
     </div>

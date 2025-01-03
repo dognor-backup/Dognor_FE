@@ -9,7 +9,6 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <Global styles={GlobalStyles} />
-      <Checkbox />
     </ThemeProvider>
   );
 }
