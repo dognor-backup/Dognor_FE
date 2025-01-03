@@ -88,7 +88,7 @@ const sizes = {
 };
 
 export const IconBtn = styled.button(
-    // variant = "primary", size = "medium", state = "default" 를 기본 default 값으로 정의
+  // variant = "primary", size = "medium", state = "default" 를 기본 default 값으로 정의
   ({ theme, variant = "primary", size = "medium", state = "default" }) => {
     const variantStyles = variants[variant][state](theme) || {}; // varients 객체안의 varient (ex. "primary") 안의 state (ex. "default")를 props로 받아 스타일 정의, 없으면 빈 객체 {}
     const sizeStyles = sizes[size] || {};
@@ -97,7 +97,6 @@ export const IconBtn = styled.button(
       ...sizeStyles,
       ...variantStyles,
       borderRadius: "6px",
-      fontWeight: "bold",
       display: "flex",
       alignItems: "center",
       justifyContent: "center",

@@ -76,19 +76,17 @@ const sizes = {
   medium: {
     padding: "10px",
     fontSize: "16px",
-    width: "75px",
     height: "42px",
   },
   small: {
     padding: "8px",
     fontSize: "14px",
-    width: "64px",
     height: "36px",
   },
 };
 
 export const Button = styled.button(
-    // variant = "primary", size = "medium", state = "default" 를 기본 default 값으로 정의
+  // variant = "primary", size = "medium", state = "default" 를 기본 default 값으로 정의
   ({ theme, variant = "primary", size = "medium", state = "default" }) => {
     const variantStyles = variants[variant][state](theme) || {}; // varients 객체안의 varient (ex. "primary") 안의 state (ex. "default")를 props로 받아 스타일 정의, 없으면 빈 객체 {}
     const sizeStyles = sizes[size] || {};
@@ -97,7 +95,7 @@ export const Button = styled.button(
       ...sizeStyles,
       ...variantStyles,
       borderRadius: "6px",
-      fontWeight: "bold",
+      fontWeight: 700,
       "&:hover": {
         ...(state !== "disabled" && variants[variant].hover(theme)),
       },
