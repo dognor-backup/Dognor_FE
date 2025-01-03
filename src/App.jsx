@@ -12,9 +12,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <Global styles={GlobalStyles} />
-      <Button variant="primary" size="medium" state="outline">
-        로그인
-      </Button>
+    
     </ThemeProvider>
   );
 }
