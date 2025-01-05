@@ -1,54 +1,49 @@
 import styled from "@emotion/styled";
-import { useState } from "react";
 import { Link } from "react-router-dom";
 
-export default function TopNavMenuContainer() {
-  const [activeLink, setActiveLink] = useState("");
+export default function TopNavMenuContainer({
+  activeMenuLink,
+  setActiveMenuLink,
+}) {
+  const menuList = [
+    {
+      engTitle: "donationinfo",
+      korTitle: "헌혈견 안내",
+    },
+    {
+      engTitle: "map",
+      korTitle: "병원소식",
+    },
+    {
+      engTitle: "showcase",
+      korTitle: "헌혈견 자랑",
+    },
+    {
+      engTitle: "community",
+      korTitle: "커뮤니티",
+    },
+    {
+      engTitle: "campaigns",
+      korTitle: "캠페인",
+    },
+    {
+      engTitle: "aboutus",
+      korTitle: "About us",
+    },
+  ];
 
   return (
     <TopNavMenuLayout>
-      <TopNavMenuLink
-        isActive={activeLink === "donationinfo"}
-        onClick={() => setActiveLink("donationinfo")}
-        to="donationinfo"
-      >
-        헌혈 안내
-      </TopNavMenuLink>
-      <TopNavMenuLink
-        isActive={activeLink === "map"}
-        onClick={() => setActiveLink("map")}
-        to="map"
-      >
-        병원소식
-      </TopNavMenuLink>
-      <TopNavMenuLink
-        isActive={activeLink === "showcase"}
-        onClick={() => setActiveLink("showcase")}
-        to="showcase"
-      >
-        헌혈견 자랑
-      </TopNavMenuLink>
-      <TopNavMenuLink
-        isActive={activeLink === "community"}
-        onClick={() => setActiveLink("community")}
-        to="community"
-      >
-        커뮤니티
-      </TopNavMenuLink>
-      <TopNavMenuLink
-        isActive={activeLink === "campaigns"}
-        onClick={() => setActiveLink("campaigns")}
-        to="campaigns"
-      >
-        캠페인
-      </TopNavMenuLink>
-      <TopNavMenuLink
-        isActive={activeLink === "aboutus"}
-        onClick={() => setActiveLink("aboutus")}
-        to="aboutus"
-      >
-        About Us
-      </TopNavMenuLink>
+      {menuList.map((menu, index) => (
+        <TopNavMenuLink
+          key={index}
+          isActive={activeMenuLink === menu.engTitle}
+          onClick={() => setActiveMenuLink(menu.engTitle)}
+          to={menu.engTitle}
+        >
+          {menu.korTitle}
+        </TopNavMenuLink>
+      ))}
     </TopNavMenuLayout>
   );
 }
