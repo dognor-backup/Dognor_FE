@@ -5,13 +5,19 @@ import { useState } from "react";
 
 export default function Nav() {
   const [activeMenuLink, setActiveMenuLink] = useState("");
+  const [isMenuOpen, setIsMenuOpen] = useState(true);
 
   return (
     <NavLayout>
-      <TopNavHeader activeMenuLink={activeMenuLink} />
+      <TopNavHeader
+        activeMenuLink={activeMenuLink}
+        isMenuOpen={isMenuOpen}
+        setIsMenuOpen={setIsMenuOpen}
+      />
       <TopNavMenuContainer
         activeMenuLink={activeMenuLink}
         setActiveMenuLink={setActiveMenuLink}
+        isMenuOpen={isMenuOpen}
       />
     </NavLayout>
   );
@@ -19,4 +25,6 @@ export default function Nav() {
 
 const NavLayout = styled.div`
   width: 100%;
+  position: fixed;
+  top: 0;
 `;

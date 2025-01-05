@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 export default function TopNavMenuContainer({
   activeMenuLink,
   setActiveMenuLink,
+  isMenuOpen,
 }) {
   const menuList = [
     {
@@ -33,7 +34,7 @@ export default function TopNavMenuContainer({
   ];
 
   return (
-    <TopNavMenuLayout>
+    <TopNavMenuLayout isMenuOpen={isMenuOpen}>
       {menuList.map((menu, index) => (
         <TopNavMenuLink
           key={index}
@@ -56,6 +57,11 @@ const TopNavMenuLayout = styled.div`
   padding: 8px 36px;
   gap: 24px;
   box-sizing: border-box;
+  top: 75px;
+  position: absolute;
+  transform: ${({ isMenuOpen }) =>
+    isMenuOpen ? "translateY(0)" : "translateY(-100%)"};
+  transition: 0.5s;
 `;
 
 const TopNavMenuLink = styled(Link)`
@@ -72,8 +78,8 @@ const TopNavMenuLink = styled(Link)`
     isActive ? theme.colors.blue_normal_100 : theme.colors.blue_dark_400};
   background-color: transparent;
   text-decoration: none;
-  border-bottom: ${({ isActive, theme }) =>
-    isActive ? `1px solid ${theme.colors.blue_normal_100}` : "none"};
+  box-shadow: ${({ isActive, theme }) =>
+    isActive ? `0 1px 0 ${theme.colors.blue_normal_100}` : "none"};
 
   &:hover {
     color: ${({ theme }) => theme.colors.purple_normal_100};

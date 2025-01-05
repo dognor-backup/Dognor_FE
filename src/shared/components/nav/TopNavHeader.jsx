@@ -2,15 +2,31 @@ import styled from "@emotion/styled";
 import Logo from "../../../assets/images/logo.svg?react";
 import { Button } from "../buttons/Button";
 import { useState } from "react";
+import MenuIcon from "../../../assets/icons/black/hamburger_menu.svg?react";
 
-export default function TopNavHeader({ activeMenuLink }) {
+export default function TopNavHeader({
+  activeMenuLink,
+  isMenuOpen,
+  setIsMenuOpen,
+}) {
   const [isLogin, setIsLogin] = useState(false);
+
+  const handleToggleMenu = () => {
+    setIsMenuOpen((prev) => !prev);
+    console.log(isMenuOpen);
+  };
   return (
     <TopNavHeaderLayout>
       <Logo />
       {isLogin ? (
         <AuthButtonsContainer>
-          <TextBtn onClick={() => setIsLogin(false)}>로그아웃</TextBtn>
+          {activeMenuLink === "map" ? (
+            <ToggleBtn onClick={handleToggleMenu}>
+              <MenuIcon />
+            </ToggleBtn>
+          ) : (
+            <TextBtn onClick={() => setIsLogin(false)}>로그아웃</TextBtn>
+          )}
           <Button variant="normal" size="medium" state="outline">
             마이페이지
           </Button>
@@ -18,7 +34,9 @@ export default function TopNavHeader({ activeMenuLink }) {
       ) : (
         <AuthButtonsContainer>
           {activeMenuLink === "map" ? (
-            <ToggleBtn>asd</ToggleBtn>
+            <ToggleBtn onClick={handleToggleMenu}>
+              <MenuIcon />
+            </ToggleBtn>
           ) : (
             <TextBtn>회원가입</TextBtn>
           )}
@@ -42,6 +60,9 @@ const TopNavHeaderLayout = styled.div`
   justify-content: space-between;
   padding: 16px 36px;
   box-sizing: border-box;
+  background: ${({ theme }) => theme.colors.neutrals_08};
+  position: relative;
+  z-index: 1;
 `;
 
 const AuthButtonsContainer = styled.div`
