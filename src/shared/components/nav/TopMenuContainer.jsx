@@ -1,24 +1,22 @@
-import React from "react";
-import { TopMenuBtn } from "./TopMenuBtn";
 import styled from "@emotion/styled";
 import { Link } from "react-router-dom";
 
 export default function TopMenuContainer() {
   return (
     <TopMenuLayout>
-      <TopMenuBtn>헌혈 안내</TopMenuBtn>
-      <TopMenuBtn>병원소식</TopMenuBtn>
-      <TopMenuBtn>헌혈견 자랑</TopMenuBtn>
-      <TopMenuBtn>커뮤니티</TopMenuBtn>
-      <TopMenuBtn>캠페인</TopMenuBtn>
-      <TopMenuBtn>About Us</TopMenuBtn>
-      <TopMenuLink>링크</TopMenuLink>
+      <TopMenuLink to="donationinfo">헌혈 안내</TopMenuLink>
+      <TopMenuLink to="map">병원소식</TopMenuLink>
+      <TopMenuLink to="showcase">헌혈견 자랑</TopMenuLink>
+      <TopMenuLink to="community">커뮤니티</TopMenuLink>
+      <TopMenuLink to="campaigns">캠페인</TopMenuLink>
+      <TopMenuLink to="aboutus">About Us</TopMenuLink>
     </TopMenuLayout>
   );
 }
 
 const TopMenuLayout = styled.div`
   display: flex;
+  width: 100vw;
   justify-content: center;
   align-content: center;
   padding: 8px 36px;
@@ -26,7 +24,9 @@ const TopMenuLayout = styled.div`
 `;
 
 const TopMenuLink = styled(Link)`
-  text-decoration: none;
+display: flex;
+justify-content: center;
+align-items: center
   min-width: 95px;
   padding: 8px;
   gap: 8px;
@@ -35,10 +35,5 @@ const TopMenuLink = styled(Link)`
   font-weight: 700;
   color: ${({ theme }) => theme.colors.blue_dark_400};
   background-color: transparent;
-  &:hover {
-    background-color: lavender;
-  }
-  &:focus {
-    background-color: black;
   }
 `;
