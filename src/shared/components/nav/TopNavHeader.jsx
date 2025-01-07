@@ -39,14 +39,16 @@ export default function TopNavHeader({ activeMenuLink, setIsMenuOpen }) {
           ) : (
             <TextBtn>회원가입</TextBtn>
           )}
-          <Button
-            variant="primary"
-            size="medium"
-            state="default"
-            onClick={() => setIsLogin(true)}
-          >
-            로그인
-          </Button>
+          <Link to="login">
+            <Button
+              variant="primary"
+              size="medium"
+              state="default"
+              onClick={() => setIsLogin(true)}
+            >
+              로그인
+            </Button>
+          </Link>
         </AuthButtonsContainer>
       )}
     </TopNavHeaderLayout>
