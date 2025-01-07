@@ -42,19 +42,18 @@ const FooterContainer = styled.footer(
   position: relative;
   padding: 36px;
   box-sizing: border-box;
-  & > :nth-of-type(2) {
-    margin-top: 20px; 
-  }
+  display: flex;
+  gap: 24px;
+  flex-direction: column;
 `
 );
 const LinkWrapper = styled.div`
   font-size: 14px;
-  margin-bottom: 20px;
   display: flex;
+  gap: 24px;
 `;
 const Text = styled.p`
   color: #fcf9f4;
-  margin-right: 24px;
   font-size: 14px;
 `;
 const LinkIcon = styled.span`
@@ -65,12 +64,9 @@ const LinkIcon = styled.span`
   right: 45px;
   top: 96px;
 `;
-const Copy = styled.span`
-  color: "";
-`;
+
 const Logo = styled.strong`
   width: 140px;
   height: 38px;
   display: inline-block;
-  margin-bottom: 20px;
 `;
