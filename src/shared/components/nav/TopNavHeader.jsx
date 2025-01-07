@@ -1,23 +1,22 @@
 import styled from "@emotion/styled";
+import { Link } from "react-router-dom";
 import Logo from "../../../assets/images/logo.svg?react";
 import { Button } from "../buttons/Button";
 import { useState } from "react";
 import MenuIcon from "../../../assets/icons/black/hamburger_menu.svg?react";
 
-export default function TopNavHeader({
-  activeMenuLink,
-  isMenuOpen,
-  setIsMenuOpen,
-}) {
+export default function TopNavHeader({ activeMenuLink, setIsMenuOpen }) {
   const [isLogin, setIsLogin] = useState(false);
 
   const handleToggleMenu = () => {
     setIsMenuOpen((prev) => !prev);
-    console.log(isMenuOpen);
   };
   return (
     <TopNavHeaderLayout>
-      <Logo />
+      <Link to="home">
+        <Logo />
+      </Link>
+
       {isLogin ? (
         <AuthButtonsContainer>
           {activeMenuLink === "map" ? (
@@ -67,6 +66,7 @@ const TopNavHeaderLayout = styled.div`
 
 const AuthButtonsContainer = styled.div`
   display: flex;
+  gap: 8px;
 `;
 
 const TextBtn = styled.button`
@@ -85,7 +85,7 @@ const ToggleBtn = styled.button`
   color: black;
   display: flex;
   justify-content: center;
-  align-items: center
+  align-items: center;
   padding: 8px;
   cursor: pointer;
   border: none;

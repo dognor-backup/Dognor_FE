@@ -25,6 +25,7 @@ export default function Nav() {
 
 const NavLayout = styled.div`
   width: 100%;
+  min-width: 1080px;
   position: fixed;
   top: 0;
 `;
