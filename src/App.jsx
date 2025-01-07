@@ -1,5 +1,6 @@
-import LogoNav from "./shared/components/nav/LogoNav";
-import Nav from "./shared/components/nav/Nav";
+import { Global, ThemeProvider } from "@emotion/react";
+import { theme } from "./shared/styles/theme";
+import { GlobalStyles } from "./shared/styles/global";
 
 function App() {
   return (
