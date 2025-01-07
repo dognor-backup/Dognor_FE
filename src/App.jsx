@@ -3,9 +3,9 @@ import Nav from "./shared/components/nav/Nav";
 
 function App() {
   return (
-    <>
-      <LogoNav />
-    </>
+    <ThemeProvider theme={theme}>
+      <Global styles={GlobalStyles} />
+    </ThemeProvider>
   );
 }
 
