@@ -11,23 +11,26 @@ const Footer = () => {
           <LogoFooter />
         </Logo>
         <LinkWrapper>
-          <Link to="/">
-            <Text>이용약관</Text>
-          </Link>
-          <Link to="/">
-            <Text>개인정보처리방법</Text>
-          </Link>
-          <Link to="/">
-            <Text>공지사항</Text>
-          </Link>
+          <Links>
+            <Link to="/">
+              <TextBtn>이용약관</TextBtn>
+            </Link>
+            <Link to="/">
+              <TextBtn>개인정보처리방법</TextBtn>
+            </Link>
+            <Link to="/">
+              <TextBtn>공지사항</TextBtn>
+            </Link>
+          </Links>
+          <LinkIcon>
+            <Instagram />
+          </LinkIcon>
         </LinkWrapper>
+
         <Text>Project Team: dognor | Email: dognor@naver.com</Text>
         <Text>
           <span>&copy;</span> dognor
         </Text>
-        <LinkIcon>
-          <Instagram />
-        </LinkIcon>
       </FooterContainer>
     </>
   );
@@ -36,9 +39,8 @@ export default Footer;
 
 const FooterContainer = styled.footer(
   ({ theme }) => `
-  height: 238px;
   background-color: ${theme.colors.neutrals_01};
-  width: 100vw;
+  width: 100%;
   position: relative;
   padding: 36px;
   box-sizing: border-box;
@@ -50,7 +52,16 @@ const FooterContainer = styled.footer(
 const LinkWrapper = styled.div`
   font-size: 14px;
   display: flex;
-  gap: 24px;
+  gap: 21px;
+  display: flex;
+  justify-content: space-between;
+`;
+const TextBtn = styled.p`
+  color: #fcf9f4;
+  font-size: 14px;
+  padding: 4px;
+  display: inline-block;
+  cursor: pointer;
 `;
 const Text = styled.p`
   color: #fcf9f4;
@@ -60,13 +71,14 @@ const LinkIcon = styled.span`
   width: 20px;
   height: 20px;
   display: inline-block;
-  position: absolute;
-  right: 45px;
-  top: 96px;
 `;
-
+const Links = styled.div`
+  display: flex;
+  gap: 24px;
+`;
 const Logo = styled.strong`
   width: 140px;
   height: 38px;
   display: inline-block;
+  cursor: pointer;
 `;
