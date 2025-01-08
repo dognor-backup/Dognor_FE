@@ -1,15 +1,5 @@
 import styled from "@emotion/styled";
 
-export const Btn = styled.button`
-  /* color: ${(props) => (props.selected ? "darkblue" : "black")}; */
-  background-color: ${(props) =>
-    props.color === "blue"
-      ? props.theme.colors.primary_blue
-      : props.theme.colors.primary_purple};
-  /* background-color: ${(props) => props.theme.colors.primary_blue}; */
-  color: ${(props) => (props.color == "blue" ? "fff" : "#000")};
-`;
-
 export const Flex = styled.div`
   display: flex;
   margin-top: 10px;

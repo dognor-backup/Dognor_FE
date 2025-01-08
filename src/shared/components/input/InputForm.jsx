@@ -1,22 +1,45 @@
 import { Flex, Input, Label, Info } from "./inputStyle";
 
-{
-  /* <InputForm
-placeholder="placeHolder"
-type="Email"
-info="Enter your email address"
-status="normal"
-/> */
-}
+// const { inputValues, getInputValue } = useGetValueFromTextInput();
 
-export const InputForm = ({ placeholder, text, type, info, status }) => {
+/* 
+  <InputForm
+        id="id"
+        name="InputName"
+        placeholder="placeHolder"
+        label="Email"
+        infoMessage="Enter your email address"
+        status="normal"
+        getInputValue={getInputValue}
+      />
+*/
+export const InputForm = ({
+  id,
+  name,
+  placeholder,
+  label,
+  infoMessage,
+  status,
+  getInputValue,
+}) => {
+  const handleInputValue = (e) => {
+    const { name, value } = e.target;
+    getInputValue({ name, value });
+  };
+
   return (
     <>
-      <Label htmlFor="">{type}</Label>
+      <Label htmlFor={id}>{label}</Label>
       <Flex>
-        <Input type="text" placeholder={placeholder} />
+        <Input
+          type="text"
+          id={id}
+          name={name}
+          placeholder={placeholder}
+          onChange={handleInputValue}
+        />
       </Flex>
-      <Info status={status}>{info}</Info>
+      <Info status={status}>{infoMessage}</Info>
     </>
   );
 };
