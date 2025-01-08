@@ -41,7 +41,7 @@ const LabelChk = styled.label(({ theme, checked, size }) => ({
     width: size === "small" ? "16px" : "24px",
     height: size === "small" ? "16px" : "24px",
     border: `1px solid ${theme.colors.neutrals_01}`,
-    backgroundColor: checked
+    backgroundColor: !checked
       ? theme.colors.neutrals_08
       : theme.colors.neutrals_01,
     borderRadius: "4px",

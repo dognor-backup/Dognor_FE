@@ -1,5 +1,4 @@
 import { Input } from "@/components/ui/input";
-import { InputWithLabel } from "@/components/ui/inputwithlabel";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/shared/components/buttons/Button";
 import Checkbox from "@/shared/components/checkbox/Checkbox";
@@ -31,8 +30,14 @@ export default function Login() {
             />
           </InputWrapper>
           <LoginOptionsContainer>
-            <Checkbox label="로그인 유지" />
-            <FindAccountText>아이디 및 비밀번호 찾기</FindAccountText>
+            <Checkbox
+              name={"체크박스 이름"}
+              size={"medium"}
+              label={"로그인 유지"}
+            />
+            <FindAccountLink to="/findaccount">
+              아이디 및 비밀번호 찾기
+            </FindAccountLink>
           </LoginOptionsContainer>
         </InputContainer>
         <AuthButtonContainer>
@@ -103,7 +108,7 @@ const LoginOptionsContainer = styled.div`
   justify-content: space-between;
 `;
 
-const FindAccountText = styled(Link)`
+const FindAccountLink = styled(Link)`
   padding: 4px;
   gap: 8px;
   font-size: 14px;

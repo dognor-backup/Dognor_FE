@@ -9,6 +9,7 @@ import MyPage from "../../pages/mypage/MyPage";
 import Community from "../../pages/community/Community";
 import Nav from "../../shared/components/nav/Nav";
 import Login from "@/pages/login/Login";
+import FindAccount from "@/pages/findaccount/FindAccount";
 
 const router = createBrowserRouter([
   {
@@ -57,15 +58,9 @@ const router = createBrowserRouter([
     ],
   },
 
-  // {
-  //   path: "login",
-  //   Component: Home,
-  //   children: [
-  //     { path: "findaccount", Component: Home },
-  //     { path: "guidepage", Component: Home },
-  //     { path: "changepassword", Component: Home },
-  //   ],
-  // },
+  { path: "findaccount", Component: FindAccount },
+  { path: "guidepage", Component: Home },
+  { path: "changepassword", Component: Home },
 
   { path: "welcome", Component: Home },
   { path: "이용약관", Component: Home },
