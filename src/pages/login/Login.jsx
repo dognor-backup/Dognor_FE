@@ -141,9 +141,9 @@ const InputContainer = styled.form`
 const InputWrapper = styled.div`
   display: grid;
   width: 100%;
-  max-width: 24rem;
+  max-width: 384px; 
   align-items: center;
-  gap: 0.375rem;
+  gap: 6px; 
 `;
 
 const LoginOptionsContainer = styled.div`
