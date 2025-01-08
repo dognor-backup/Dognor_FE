@@ -10,6 +10,7 @@ import Community from "../../pages/community/Community";
 import Nav from "../../shared/components/nav/Nav";
 import Login from "@/pages/login/Login";
 import FindAccount from "@/pages/findaccount/FindAccount";
+import SignUp from "@/pages/signup/SignUp";
 
 const router = createBrowserRouter([
   {
@@ -18,7 +19,7 @@ const router = createBrowserRouter([
     children: [
       { path: "/", Component: Home },
       { path: "login", Component: Login },
-      { path: "signup", Component: Home },
+      { path: "signup", Component: SignUp },
       { path: "donationinfo", Component: DonationInfo },
       { path: "aboutus", Component: AboutUs },
       { path: "showcase", Component: Showcase },

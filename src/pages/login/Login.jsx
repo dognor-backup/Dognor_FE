@@ -5,9 +5,10 @@ import Checkbox from "@/shared/components/checkbox/Checkbox";
 import { validateId, validatePassword } from "@/shared/utils/validation";
 import styled from "@emotion/styled";
 import { useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Login() {
+  const navigate = useNavigate();
   const idRef = useRef(null);
   const pwRef = useRef(null);
   const [isIdValid, setIsIdValid] = useState("true");
@@ -20,6 +21,10 @@ export default function Login() {
 
     if (!validateId(id)) setIsIdValid("false");
     if (!validatePassword(password)) return setIsPasswordValid("false");
+  };
+
+  const handleSignupClick = () => {
+    navigate("/signup");
   };
   return (
     <LoginLayout>
@@ -73,7 +78,9 @@ export default function Login() {
           <Button type="submit" form="loginForm">
             로그인
           </Button>
-          <Button state="outline">회원가입</Button>
+          <Button onClick={handleSignupClick} state="outline">
+            회원가입
+          </Button>
         </AuthButtonContainer>
       </LoginContainer>
     </LoginLayout>
