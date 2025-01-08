@@ -1,7 +1,7 @@
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Button } from "@/shared/components/buttons/Button";
 import Checkbox from "@/shared/components/checkbox/Checkbox";
+import { InputForm } from "@/shared/components/input/InputForm";
+import useGetValueFromTextInput from "@/shared/hooks/useGetValueFromTextInput";
 import { validateId, validatePassword } from "@/shared/utils/validation";
 import styled from "@emotion/styled";
 import { useRef, useState } from "react";
@@ -11,18 +11,21 @@ export default function Login() {
   const navigate = useNavigate();
   const idRef = useRef(null);
   const pwRef = useRef(null);
-  const [isIdValid, setIsIdValid] = useState("true");
-  const [isPasswordValid, setIsPasswordValid] = useState("true");
+  const [isIdValid, setIsIdValid] = useState("");
+  const [isPasswordValid, setIsPasswordValid] = useState("");
+  const { inputValues, getInputValue } = useGetValueFromTextInput();
 
   const handleLoginSubmit = (e) => {
     e.preventDefault();
-    const id = idRef.current.value;
-    const password = pwRef.current.value;
 
-    if (!validateId(id)) setIsIdValid("false");
-    if (!validatePassword(password)) return setIsPasswordValid("false");
+    const id = inputValues.idInput;
+    const password = inputValues.pwInput;
+
+    if (!validateId(id)) setIsIdValid("error");
+    if (!validatePassword(password)) return setIsPasswordValid("error");
   };
 
+  getInputValue;
   const handleSignupClick = () => {
     navigate("/signup");
   };
@@ -38,31 +41,32 @@ export default function Login() {
       <LoginContainer>
         <InputContainer onSubmit={handleLoginSubmit} id="loginForm">
           <InputWrapper>
-            <Label htmlFor="id">아이디</Label>
-            <Input
+            <InputForm
               ref={idRef}
-              type="text"
-              name="id"
+              id="id"
+              name="idInput"
               placeholder="아이디를 입력해주세요"
-              required
+              label="아이디"
+              infoMessage={isIdValid === "error" ? "다시 확인해주세요" : ""}
+              status={isIdValid}
+              getInputValue={getInputValue}
             />
-            <InputDescription isVisible={isIdValid}>
-              다시 확인해주세요
-            </InputDescription>
           </InputWrapper>
           <InputWrapper>
-            <Label htmlFor="password">비밀번호</Label>
-            <Input
+            <InputForm
               ref={pwRef}
-              type="password"
-              name="password"
+              id="id"
+              name="pwInput"
               placeholder="비밀번호를 입력해주세요"
-              required
+              label="비밀번호"
+              infoMessage={
+                isPasswordValid === "error" ? "다시 확인해주세요" : ""
+              }
+              status={isPasswordValid}
+              getInputValue={getInputValue}
             />
-            <InputDescription isVisible={isPasswordValid}>
-              다시 확인해주세요
-            </InputDescription>
           </InputWrapper>
+
           <LoginOptionsContainer>
             <Checkbox
               name={"체크박스 이름"}
@@ -135,15 +139,10 @@ const WelcomeText = styled.p`
 const InputContainer = styled.form`
   display: flex;
   flex-direction: column;
-  gap: 18px;
 `;
 
 const InputWrapper = styled.div`
-  display: grid;
-  width: 100%;
-  max-width: 384px; 
-  align-items: center;
-  gap: 6px; 
+  margin-bottom: 18px;
 `;
 
 const LoginOptionsContainer = styled.div`
