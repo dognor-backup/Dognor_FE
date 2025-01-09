@@ -9,8 +9,8 @@ export default function SubMenuBar({ subMenuList }) {
 
   const handleSubMenuClick = (menu) => {
     setActiveSubMenu(menu);
-    const currentPath = location.pathname;
-    navigate(`/${currentPath}/${menu}`);
+    const currentPath = location.pathname.split("/").slice(0, 2).join("/");
+    navigate(`${currentPath}/${menu}`);
   };
 
   return (
@@ -18,6 +18,7 @@ export default function SubMenuBar({ subMenuList }) {
       {subMenuList.map((menu) => (
         <SubMenuBarBtn
           key={menu.path}
+          data-label={menu.label}
           isActive={activeSubMenu === menu.path}
           onClick={() => {
             handleSubMenuClick(menu.path);
@@ -36,10 +37,12 @@ const SubMenuBarLayout = styled.div`
   border-radius: 30px;
   padding: 4px;
   background-color: ${({ theme }) => theme.colors.neutrals_08};
-  box-sizing: border-box;
 `;
 
 const SubMenuBarBtn = styled.button`
+  padding: 8px 24px;
+  color: ${({ isActive, theme }) =>
+    isActive ? theme.colors.primary_blue : theme.colors.neutrals_03};
   background-color: ${({ isActive, theme }) =>
     isActive ? theme.colors.blue_light_200 : theme.colors.neutrals_08};
   border-radius: 20px;
@@ -47,9 +50,7 @@ const SubMenuBarBtn = styled.button`
     isActive
       ? `1px solid ${theme.colors.primary_blue}`
       : "1px solid transparent"};
-  padding: 8px 24px;
-  color: ${({ isActive, theme }) =>
-    isActive ? theme.colors.primary_blue : theme.colors.neutrals_03};
+  text-align: center;
   font-size: 18px;
   font-weight: ${({ isActive }) => (isActive ? 700 : 400)};
 

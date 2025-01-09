@@ -6,11 +6,11 @@ import SubMenuBar from "./shared/components/submenubar/SubMenuBar";
 function App() {
   const subMenuList = [
     {
-      path: "home",
-      label: "홈",
+      path: "all",
+      label: "ALL",
     },
     {
-      path: "donationinfo",
+      path: "free",
       label: "헌혈 안내",
     },
     {
@@ -31,7 +31,7 @@ function App() {
     },
     {
       path: "aboutus",
-      label: "About Us",
+      label: "어바웃어스",
     },
   ];
 
