@@ -1,0 +1,60 @@
+import styled from "@emotion/styled";
+import { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+
+export default function SubMenuBar({ subMenuList }) {
+  const [activeSubMenu, setActiveSubMenu] = useState(null);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleSubMenuClick = (menu) => {
+    setActiveSubMenu(menu);
+    const currentPath = location.pathname;
+    navigate(`/${currentPath}/${menu}`);
+  };
+
+  return (
+    <SubMenuBarLayout>
+      {subMenuList.map((menu) => (
+        <SubMenuBarBtn
+          key={menu.path}
+          isActive={activeSubMenu === menu.path}
+          onClick={() => {
+            handleSubMenuClick(menu.path);
+          }}
+        >
+          {menu.label}
+        </SubMenuBarBtn>
+      ))}
+    </SubMenuBarLayout>
+  );
+}
+
+const SubMenuBarLayout = styled.div`
+  display: inline-block;
+  border: 1px solid ${({ theme }) => theme.colors.neutrals_04};
+  border-radius: 30px;
+  padding: 4px;
+  background-color: ${({ theme }) => theme.colors.neutrals_08};
+  box-sizing: border-box;
+`;
+
+const SubMenuBarBtn = styled.button`
+  background-color: ${({ isActive, theme }) =>
+    isActive ? theme.colors.blue_light_200 : theme.colors.neutrals_08};
+  border-radius: 20px;
+  border: ${({ isActive, theme }) =>
+    isActive
+      ? `1px solid ${theme.colors.primary_blue}`
+      : "1px solid transparent"};
+  padding: 8px 24px;
+  color: ${({ isActive, theme }) =>
+    isActive ? theme.colors.primary_blue : theme.colors.neutrals_03};
+  font-size: 18px;
+  font-weight: ${({ isActive }) => (isActive ? 700 : 400)};
+
+  &:hover {
+    color: ${({ theme }) => theme.colors.purple_normal_100};
+    font-weight: 700;
+  }
+`;
