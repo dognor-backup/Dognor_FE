@@ -7,7 +7,7 @@ function App() {
   const subMenuList = [
     {
       path: "all",
-      label: "ALL",
+      label: "전체",
     },
     {
       path: "free",
