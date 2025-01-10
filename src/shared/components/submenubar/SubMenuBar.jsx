@@ -47,7 +47,7 @@ const SubMenuBarBtn = styled.button`
       ? theme.colors.primary_blue
       : color === "red"
       ? theme.colors.point_orange_normal_100
-      : theme.colors.neutrals_04};
+      : theme.colors.neutrals_03};
   background-color: ${({ isActive, theme }) =>
     isActive ? theme.colors.blue_light_200 : theme.colors.neutrals_08};
   border-radius: 20px;
@@ -57,7 +57,7 @@ const SubMenuBarBtn = styled.button`
       : "1px solid transparent"};
   text-align: center;
   font-size: 18px;
-  font-weight: ${({ isActive }) => (isActive ? 700 : 700)};
+  font-weight: ${({ isActive }) => (isActive ? 700 : 400)};
 
   &:hover {
     color: ${({ theme }) => theme.colors.purple_normal_100};
