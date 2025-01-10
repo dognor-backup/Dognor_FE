@@ -2,14 +2,15 @@ import styled from "@emotion/styled";
 import { Button } from "../buttons/Button";
 import useModalStore from "@/shared/hooks/useModalStore";
 
-//size 600, 320
-const Modal = ({ children, BtnText, title, size, isModalOpen }) => {
+
+const Modal = ({ children, BtnText, title, size, isModalOpen, BtnColor }) => {
   const { closeModal } = useModalStore();
+  const handleModalClick =(e)=>e.stopPropagation()
 
   return (
     <>
-      <ModalDimmed isModalOpen={isModalOpen}>
-        <ModalContainer size={size} isModalOpen={isModalOpen}>
+      <ModalDimmed isModalOpen={isModalOpen} onClick={closeModal}>
+        <ModalContainer size={size} isModalOpen={isModalOpen} onClick={handleModalClick}>
           <ModalContent>
             <ModalHeader>
               <CloseBtn onClick={closeModal} />
@@ -19,7 +20,7 @@ const Modal = ({ children, BtnText, title, size, isModalOpen }) => {
               {children}
             </ModalBody>
             <ModalFooter>
-              <Button style={{ width: "100%" }} onClick={closeModal}>
+              <Button BtnColor style={{ width: "100%" }} onClick={closeModal}>
                 {BtnText}
               </Button>
             </ModalFooter>
