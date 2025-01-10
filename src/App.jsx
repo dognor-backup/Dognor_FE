@@ -7,31 +7,24 @@ function App() {
   const subMenuList = [
     {
       path: "all",
-      label: "전체",
+      label: "All",
     },
     {
       path: "free",
-      label: "헌혈 안내",
+      label: "자유게시판",
     },
     {
       path: "map",
-      label: "병원 소식",
+      label: "질문있어요",
     },
     {
       path: "showcase",
-      label: "헌혈견 자랑",
-    },
-    {
-      path: "community",
-      label: "커뮤니티",
-    },
-    {
-      path: "campaigns",
-      label: "캠페인",
+      label: "고마워요",
     },
     {
       path: "aboutus",
-      label: "어바웃어스",
+      label: "헐액이 필요해요",
+      color: "red",
     },
   ];
 

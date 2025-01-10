@@ -23,6 +23,7 @@ export default function SubMenuBar({ subMenuList }) {
           onClick={() => {
             handleSubMenuClick(menu.path);
           }}
+          color={menu.color}
         >
           {menu.label}
         </SubMenuBarBtn>
@@ -41,8 +42,12 @@ const SubMenuBarLayout = styled.div`
 
 const SubMenuBarBtn = styled.button`
   padding: 8px 24px;
-  color: ${({ isActive, theme }) =>
-    isActive ? theme.colors.primary_blue : theme.colors.neutrals_03};
+  color: ${({ isActive, theme, color }) =>
+    isActive
+      ? theme.colors.primary_blue
+      : color === "red"
+      ? theme.colors.point_orange_normal_100
+      : theme.colors.neutrals_04};
   background-color: ${({ isActive, theme }) =>
     isActive ? theme.colors.blue_light_200 : theme.colors.neutrals_08};
   border-radius: 20px;
@@ -52,7 +57,7 @@ const SubMenuBarBtn = styled.button`
       : "1px solid transparent"};
   text-align: center;
   font-size: 18px;
-  font-weight: ${({ isActive }) => (isActive ? 700 : 400)};
+  font-weight: ${({ isActive }) => (isActive ? 700 : 700)};
 
   &:hover {
     color: ${({ theme }) => theme.colors.purple_normal_100};
