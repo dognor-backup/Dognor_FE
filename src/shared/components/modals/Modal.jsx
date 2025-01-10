@@ -3,7 +3,7 @@ import { Button } from "../buttons/Button";
 import useModalStore from "@/shared/hooks/useModalStore";
 
 
-const Modal = ({ children, BtnText, title, size, isModalOpen, BtnColor }) => {
+const Modal = ({ children, BtnText, title, size, isModalOpen}) => {
   const { closeModal } = useModalStore();
   const handleModalClick =(e)=>e.stopPropagation()
 
@@ -20,7 +20,7 @@ const Modal = ({ children, BtnText, title, size, isModalOpen, BtnColor }) => {
               {children}
             </ModalBody>
             <ModalFooter>
-              <Button BtnColor style={{ width: "100%" }} onClick={closeModal}>
+              <Button style={{ width: "100%" }} onClick={closeModal}>
                 {BtnText}
               </Button>
             </ModalFooter>
