@@ -4,31 +4,31 @@ import { InputForm } from "@/shared/components/input/InputForm";
 import useGetValueFromTextInput from "@/shared/hooks/useGetValueFromTextInput";
 import { validateId, validatePassword } from "@/shared/utils/validation";
 import styled from "@emotion/styled";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function Login() {
   const navigate = useNavigate();
-  const idRef = useRef(null);
-  const pwRef = useRef(null);
   const [isIdValid, setIsIdValid] = useState("");
   const [isPasswordValid, setIsPasswordValid] = useState("");
   const { inputValues, getInputValue } = useGetValueFromTextInput();
+  const [rememberMe, setRememberMe] = useState(false);
+  const checkboxRef = useRef(null);
 
   const handleLoginSubmit = (e) => {
     e.preventDefault();
 
-    const id = inputValues.idInput;
-    const password = inputValues.pwInput;
+    const userId = inputValues.idInput;
+    const pw = inputValues.pwInput;
 
-    if (!validateId(id)) setIsIdValid("error");
-    if (!validatePassword(password)) return setIsPasswordValid("error");
+    if (!validateId(userId)) setIsIdValid("error");
+    if (!validatePassword(pw)) return setIsPasswordValid("error");
   };
 
-  getInputValue;
   const handleSignupClick = () => {
     navigate("/signup");
   };
+
   return (
     <LoginLayout>
       <TextWrapper>
@@ -42,7 +42,6 @@ export default function Login() {
         <InputContainer onSubmit={handleLoginSubmit} id="loginForm">
           <InputWrapper>
             <InputForm
-              ref={idRef}
               id="id"
               name="idInput"
               placeholder="아이디를 입력해주세요"
@@ -54,7 +53,6 @@ export default function Login() {
           </InputWrapper>
           <InputWrapper>
             <InputForm
-              ref={pwRef}
               id="id"
               name="pwInput"
               placeholder="비밀번호를 입력해주세요"
@@ -66,13 +64,19 @@ export default function Login() {
               getInputValue={getInputValue}
             />
           </InputWrapper>
-
           <LoginOptionsContainer>
-            <Checkbox
-              name={"체크박스 이름"}
-              size={"medium"}
-              label={"로그인 유지"}
-            />
+            <span
+              onClick={() => {
+                setRememberMe((prev) => !prev);
+                console.log(rememberMe);
+              }}
+            >
+              <Checkbox
+                name={"체크박스 이름"}
+                size={"medium"}
+                label={"로그인 유지"}
+              />
+            </span>
             <FindAccountLink to="/findaccount">
               아이디 및 비밀번호 찾기
             </FindAccountLink>
@@ -96,7 +100,6 @@ const LoginLayout = styled.div`
   justify-content: center;
   width: 100%;
   flex-direction: column;
-  /* height: 100%; */
   margin-top: 130px;
 `;
 
@@ -105,7 +108,6 @@ const LoginContainer = styled.div`
   flex-direction: column;
   width: 320px;
   margin: 0 auto;
-  /* padding: 100px 0; */
   gap: 32px;
   padding-bottom: 100px;
 `;
@@ -117,7 +119,6 @@ const TextWrapper = styled.div`
   justify-content: center;
   align-items: center;
   padding: 100px 0 32px 0;
-  /* margin: 130px 0 32px 0; */
 `;
 
 const LoginText = styled.p`
@@ -163,12 +164,4 @@ const AuthButtonContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
-`;
-
-const InputDescription = styled.p`
-  display: ${({ isVisible }) => (isVisible === "true" ? "none" : "block")};
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 24px;
-  color: ${({ theme }) => theme.colors.point_orange_normal_300};
 `;

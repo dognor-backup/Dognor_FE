@@ -13,7 +13,7 @@ export default function TopNavHeader({ activeMenuLink, setIsMenuOpen }) {
   };
   return (
     <TopNavHeaderLayout>
-      <Link to="/">
+      <Link to="/home">
         <Logo />
       </Link>
 

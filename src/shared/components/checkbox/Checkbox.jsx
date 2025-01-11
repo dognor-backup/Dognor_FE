@@ -3,6 +3,7 @@ import { useState } from "react";
 
 const Checkbox = ({ name, size, label }) => {
   const [isChecked, setChecked] = useState(false);
+  console.log(isChecked);
   return (
     <div>
       <InputChk
