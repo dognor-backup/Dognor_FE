@@ -2,7 +2,6 @@ import styled from "@emotion/styled";
 import TopNavHeader from "./TopNavHeader";
 import TopNavMenuContainer from "./TopNavMenuContainer";
 import { useState } from "react";
-import { Outlet } from "react-router-dom";
 
 export default function Nav() {
   const [activeMenuLink, setActiveMenuLink] = useState("");
@@ -22,7 +21,6 @@ export default function Nav() {
           isMenuOpen={isMenuOpen}
         />
       </NavLayout>
-      <Outlet />
     </>
   );
 }

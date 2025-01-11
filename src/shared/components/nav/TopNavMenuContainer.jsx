@@ -56,14 +56,16 @@ const TopNavMenuLayout = styled.div`
   width: 100%;
   justify-content: center;
   align-content: center;
+  background-color: ${({ theme }) => theme.colors.neutrals_08};
   padding: 8px 36px;
   gap: 24px;
   box-sizing: border-box;
-  top: 75px;
+  top: 74px;
   position: absolute;
   transform: ${({ isMenuOpen }) =>
     isMenuOpen ? "translateY(0)" : "translateY(-100%)"};
   transition: 0.5s;
+  z-index: 1;
 `;
 
 const TopNavMenuLink = styled(Link)`

@@ -1,10 +1,11 @@
+import { useLogin } from "@/hooks/useLogin";
 import { Button } from "@/shared/components/buttons/Button";
 import Checkbox from "@/shared/components/checkbox/Checkbox";
 import { InputForm } from "@/shared/components/input/InputForm";
 import useGetValueFromTextInput from "@/shared/hooks/useGetValueFromTextInput";
 import { validateId, validatePassword } from "@/shared/utils/validation";
 import styled from "@emotion/styled";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function Login() {
@@ -13,7 +14,7 @@ export default function Login() {
   const [isPasswordValid, setIsPasswordValid] = useState("");
   const { inputValues, getInputValue } = useGetValueFromTextInput();
   const [rememberMe, setRememberMe] = useState(false);
-  const checkboxRef = useRef(null);
+  const mutation = useLogin();
 
   const handleLoginSubmit = (e) => {
     e.preventDefault();
@@ -21,8 +22,12 @@ export default function Login() {
     const userId = inputValues.idInput;
     const pw = inputValues.pwInput;
 
+    const credentials = { userId, pw, rememberMe };
+
     if (!validateId(userId)) setIsIdValid("error");
     if (!validatePassword(pw)) return setIsPasswordValid("error");
+
+    mutation.mutate(credentials);
   };
 
   const handleSignupClick = () => {
@@ -66,9 +71,8 @@ export default function Login() {
           </InputWrapper>
           <LoginOptionsContainer>
             <span
-              onClick={() => {
+              onChange={() => {
                 setRememberMe((prev) => !prev);
-                console.log(rememberMe);
               }}
             >
               <Checkbox
@@ -101,6 +105,8 @@ const LoginLayout = styled.div`
   width: 100%;
   flex-direction: column;
   margin-top: 130px;
+  overflow: hidden;
+  z-index: -1;
 `;
 
 const LoginContainer = styled.div`

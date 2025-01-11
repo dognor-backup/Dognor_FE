@@ -7,17 +7,17 @@ import HospitalMap from "../../pages/hospitalmap/HospitalMap";
 import Campaigns from "../../pages/campaigns/Campaigns";
 import MyPage from "../../pages/mypage/MyPage";
 import Community from "../../pages/community/Community";
-import Nav from "../../shared/components/nav/Nav";
 import Login from "@/pages/login/Login";
 import FindAccount from "@/pages/findaccount/FindAccount";
 import SignUp from "@/pages/signup/SignUp";
+import App from "@/App";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    Component: Nav,
+    Component: App,
     children: [
-      { path: "/", Component: Home },
+      { path: "home", Component: Home },
       { path: "login", Component: Login },
       { path: "signup", Component: SignUp },
       { path: "donationinfo", Component: DonationInfo },
