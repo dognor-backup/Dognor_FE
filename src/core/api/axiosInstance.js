@@ -1,11 +1,11 @@
 import axios from "axios";
 
-const apiInstance = axios.create({
-  baseURL: "http://mj3000.iptime.org:8889",
+const AxiosInstance = axios.create({
+  baseURL: import.meta.env.VITE_API_BASE_URL,
   headers: {
     Authorization: "Bearer ".concat(localStorage.getItem("accessToken")),
     "Content-Type": "application/json",
   },
 });
 
-export default apiInstance;
+export default AxiosInstance;

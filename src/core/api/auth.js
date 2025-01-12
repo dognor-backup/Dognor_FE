@@ -1,43 +1,32 @@
-import apiInstance from "./apiInstance";
+import AxiosInstance from "./axiosInstance";
 
 export const login = async (credentials) => {
-  const { userId, pw, rememberMe } = credentials;
   try {
-    const response = await apiInstance.post("/login", {
-      userId,
-      pw,
-      rememberMe,
-    });
-    console.log(response);
-    switch (response.data.code) {
-      case 200:
-        return response.data;
-      case 400:
-        throw new Error(response.data.msg);
-      default:
-        throw new Error(response.data.msg || "Unexpected error occurred.");
+    const response = await AxiosInstance.post("/login", credentials);
+
+    if (response.data.code === 200) {
+      return { success: true, data: response.data };
     }
+    if (response.data.code === 400) {
+      return { success: false, msg: response.data.msg || "로그인 실패" };
+    }
+
+    return {
+      success: false,
+      msg: response.data.msg || "예상치 못한 에러 발생",
+    };
   } catch (error) {
-    console.log(error);
-    console.log(error.response);
-    console.log(typeof error);
     if (error.response) {
-      const { status } = error.response;
-      console.log(error.response);
-      console.log(error.response.status);
-      console.log(error.response.data);
-      console.log(status);
+      const { status, data } = error.response;
       if (status === 400) {
-        throw new Error("HTTP 400: Bad Request - 요청이 잘못되었습니다.");
+        return {
+          success: false,
+          msg: data.msg || "Bad Request: 잘못된 요청입니다.",
+        };
       } else if (status === 500) {
-        throw new Error(
-          "HTTP 500: Server Error - 서버에서 문제가 발생했습니다."
-        );
-      } else {
-        throw new Error("Unexpected HTTP error.");
+        return { success: false, msg: "서버 오류가 발생했습니다." };
       }
-    } else {
-      throw new Error("Network error. Please check your connection.");
     }
+    return { success: false, msg: "네트워크 오류. 연결 상태를 확인해주세요." };
   }
 };

@@ -1,19 +1,19 @@
-import apiInstance from "@/core/api/apiInstance";
-import { login } from "@/core/api/auth";
 import { useMutation } from "@tanstack/react-query";
+import { login } from "@/core/api/auth";
 
-export const useLogin = () => {
+export const useLogin = (setErrorText) => {
   return useMutation({
     mutationFn: login,
-    onSuccess: (data) => {
-      localStorage.setItem("accessToken", data.data.accessToken);
-      apiInstance.defaults.headers.Authorization = "Bearer ".concat(
-        localStorage.getItem("accessToken")
-      );
+    onSuccess: (result) => {
+      if (result.success) {
+        localStorage.setItem("accessToken", result.data.data.accessToken);
+        console.log("로그인 성공:", result.data);
+      } else {
+        setErrorText(result.msg);
+      }
     },
     onError: (error) => {
-      alert(error.message || "로그인 실패");
-      console.error("Login error:", error);
+      setErrorText(error.message || "로그인 요청 중 문제가 발생했습니다.");
     },
   });
 };

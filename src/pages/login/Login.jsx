@@ -14,8 +14,9 @@ export default function Login() {
   const [isPasswordValid, setIsPasswordValid] = useState("");
   const { inputValues, getInputValue } = useGetValueFromTextInput();
   const [rememberMe, setRememberMe] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("다시 확인해주세요");
-  const mutation = useLogin();
+  const [errorText, setErrorText] = useState("");
+  const mutation = useLogin(setErrorText);
+  const [isValid, setIsValid] = useState(false);
 
   const handleLoginSubmit = (e) => {
     e.preventDefault();
@@ -25,19 +26,20 @@ export default function Login() {
 
     const credentials = { userId, pw, rememberMe };
 
-    if (!validateId(userId)) setIsIdValid("error");
-    if (!validatePassword(pw)) return setIsPasswordValid("error");
+    setIsIdValid("");
+    setIsPasswordValid("");
+    setErrorText("");
 
-    mutation.mutate(credentials, {
-      onError: (data) => {
-        const errorMsg =
-          error.response.data.msg || "아이디 및 비밀번호가 잘못되었습니다.";
-        setErrorMessage(errorMsg);
-      },
-      onSuccess: () => {
-        navigate("/home");
-      },
-    });
+    const isUserIdValid = validateId(userId);
+    const isPwValid = validatePassword(pw);
+
+    setIsIdValid(isUserIdValid ? "success" : "error");
+    setIsPasswordValid(isPwValid ? "success" : "error");
+
+    if (isUserIdValid && isPwValid) {
+      setIsValid(true);
+      mutation.mutate(credentials);
+    }
   };
 
   const handleSignupClick = () => {
@@ -72,10 +74,13 @@ export default function Login() {
               name="pwInput"
               placeholder="비밀번호를 입력해주세요"
               label="비밀번호"
-              infoMessage={isPasswordValid === "error" ? errorMessage : ""}
+              infoMessage={
+                isPasswordValid === "error" ? "다시 확인해주세요" : ""
+              }
               status={isPasswordValid}
               getInputValue={getInputValue}
             />
+            {isIdValid && <ErrorDescription>{errorText}</ErrorDescription>}
           </InputWrapper>
           <LoginOptionsContainer>
             <span
@@ -178,4 +183,10 @@ const AuthButtonContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
+`;
+
+const ErrorDescription = styled.p`
+  color: ${({ theme }) => theme.colors.point_orange_normal_100};
+  font-weight: 400;
+  font-size: 14px;
 `;
