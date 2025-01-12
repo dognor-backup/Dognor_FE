@@ -14,6 +14,7 @@ export default function Login() {
   const [isPasswordValid, setIsPasswordValid] = useState("");
   const { inputValues, getInputValue } = useGetValueFromTextInput();
   const [rememberMe, setRememberMe] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("다시 확인해주세요");
   const mutation = useLogin();
 
   const handleLoginSubmit = (e) => {
@@ -27,7 +28,16 @@ export default function Login() {
     if (!validateId(userId)) setIsIdValid("error");
     if (!validatePassword(pw)) return setIsPasswordValid("error");
 
-    mutation.mutate(credentials);
+    mutation.mutate(credentials, {
+      onError: (data) => {
+        const errorMsg =
+          error.response.data.msg || "아이디 및 비밀번호가 잘못되었습니다.";
+        setErrorMessage(errorMsg);
+      },
+      onSuccess: () => {
+        navigate("/home");
+      },
+    });
   };
 
   const handleSignupClick = () => {
@@ -62,9 +72,7 @@ export default function Login() {
               name="pwInput"
               placeholder="비밀번호를 입력해주세요"
               label="비밀번호"
-              infoMessage={
-                isPasswordValid === "error" ? "다시 확인해주세요" : ""
-              }
+              infoMessage={isPasswordValid === "error" ? errorMessage : ""}
               status={isPasswordValid}
               getInputValue={getInputValue}
             />
