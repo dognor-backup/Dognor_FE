@@ -1,19 +1,24 @@
 import { useMutation } from "@tanstack/react-query";
 import { login } from "@/core/api/auth";
+import { useNavigate } from "react-router-dom";
 
 export const useLogin = (setErrorText) => {
+  const navigate = useNavigate();
+
   return useMutation({
     mutationFn: login,
-    onSuccess: (result) => {
-      if (result.success) {
-        localStorage.setItem("accessToken", result.data.data.accessToken);
-        console.log("로그인 성공:", result.data);
+    onSuccess: ({ success, data }) => {
+      if (success) {
+        const token = data.data.accessToken;
+        localStorage.setItem("accessToken", token);
+        navigate("/home", { replace: true });
       } else {
-        setErrorText(result.msg);
+        setErrorText("아이디 혹은 비밀번호가 틀렸습니다");
       }
     },
     onError: (error) => {
-      setErrorText(error.message || "로그인 요청 중 문제가 발생했습니다.");
+      const errorMsg = error.message || "로그인 요청 중 문제가 발생했습니다.";
+      setErrorText(errorMsg);
     },
   });
 };

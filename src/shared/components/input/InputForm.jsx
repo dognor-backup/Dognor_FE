@@ -18,6 +18,7 @@ export const InputForm = ({
   name,
   placeholder,
   label,
+  type,
   infoMessage,
   status,
   getInputValue,
@@ -32,11 +33,12 @@ export const InputForm = ({
       <Label htmlFor={id}>{label}</Label>
       <Flex>
         <Input
-          type="text"
+          type={type || "text"}
           id={id}
           name={name}
           placeholder={placeholder}
           onChange={handleInputValue}
+          maxlen
         />
       </Flex>
       <Info status={status}>{infoMessage}</Info>

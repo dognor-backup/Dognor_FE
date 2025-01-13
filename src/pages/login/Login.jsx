@@ -10,41 +10,41 @@ import { Link, useNavigate } from "react-router-dom";
 
 export default function Login() {
   const navigate = useNavigate();
-  const [isIdValid, setIsIdValid] = useState("");
-  const [isPasswordValid, setIsPasswordValid] = useState("");
+  const [validationState, setValidationState] = useState({
+    isIdValid: "",
+    isPasswordValid: "",
+  });
   const { inputValues, getInputValue } = useGetValueFromTextInput();
   const [rememberMe, setRememberMe] = useState(false);
   const [errorText, setErrorText] = useState("");
   const mutation = useLogin(setErrorText);
-  const [isValid, setIsValid] = useState(false);
+
+  const validateInputs = (userId, pw) => {
+    const isIdValid = validateId(userId);
+    const isPasswordValid = validatePassword(pw);
+
+    setValidationState({
+      isIdValid: isIdValid ? "" : "error",
+      isPasswordValid: isPasswordValid ? "" : "error",
+    });
+
+    return isIdValid && isPasswordValid;
+  };
 
   const handleLoginSubmit = (e) => {
     e.preventDefault();
-
-    const userId = inputValues.idInput;
-    const pw = inputValues.pwInput;
-
-    const credentials = { userId, pw, rememberMe };
-
-    setIsIdValid("");
-    setIsPasswordValid("");
     setErrorText("");
 
-    const isUserIdValid = validateId(userId);
-    const isPwValid = validatePassword(pw);
+    const { userId, pw } = inputValues;
 
-    setIsIdValid(isUserIdValid ? "success" : "error");
-    setIsPasswordValid(isPwValid ? "success" : "error");
-
-    if (isUserIdValid && isPwValid) {
-      setIsValid(true);
-      mutation.mutate(credentials);
+    if (validateInputs(userId, pw)) {
+      mutation.mutate({ userId, pw, rememberMe });
     }
   };
 
-  const handleSignupClick = () => {
-    navigate("/signup");
-  };
+  const handleSignupClick = () => navigate("/signup");
+
+  const handleRememberMe = () => setRememberMe((prev) => !prev);
 
   return (
     <LoginLayout>
@@ -63,37 +63,38 @@ export default function Login() {
               name="idInput"
               placeholder="아이디를 입력해주세요"
               label="아이디"
-              infoMessage={isIdValid === "error" ? "다시 확인해주세요" : ""}
-              status={isIdValid}
+              infoMessage={
+                validationState.isIdValid === "error" ? "다시 확인해주세요" : ""
+              }
+              status={validationState.isIdValid}
               getInputValue={getInputValue}
             />
           </InputWrapper>
           <InputWrapper>
             <InputForm
-              id="id"
+              id="password"
               name="pwInput"
               placeholder="비밀번호를 입력해주세요"
               label="비밀번호"
+              type="password"
               infoMessage={
-                isPasswordValid === "error" ? "다시 확인해주세요" : ""
+                validationState.isPasswordValid === "error"
+                  ? "다시 확인해주세요"
+                  : ""
               }
-              status={isPasswordValid}
+              status={validationState.isPasswordValid}
               getInputValue={getInputValue}
             />
-            {isIdValid && <ErrorDescription>{errorText}</ErrorDescription>}
+            {errorText && <ErrorDescription>{errorText}</ErrorDescription>}
           </InputWrapper>
           <LoginOptionsContainer>
-            <span
-              onChange={() => {
-                setRememberMe((prev) => !prev);
-              }}
-            >
-              <Checkbox
-                name={"체크박스 이름"}
-                size={"medium"}
-                label={"로그인 유지"}
-              />
-            </span>
+            <Checkbox
+              name="rememberMe"
+              size="medium"
+              label="로그인 유지"
+              checked={rememberMe}
+              onChange={handleRememberMe}
+            />
             <FindAccountLink to="/findaccount">
               아이디 및 비밀번호 찾기
             </FindAccountLink>
@@ -114,12 +115,12 @@ export default function Login() {
 
 const LoginLayout = styled.div`
   display: flex;
-  justify-content: center;
-  width: 100%;
   flex-direction: column;
-  margin-top: 130px;
-  overflow: hidden;
-  z-index: -1;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 230px 0 100px;
+  box-sizing: border-box;
 `;
 
 const LoginContainer = styled.div`
@@ -128,37 +129,28 @@ const LoginContainer = styled.div`
   width: 320px;
   margin: 0 auto;
   gap: 32px;
-  padding-bottom: 100px;
 `;
 
 const TextWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  justify-content: center;
-  align-items: center;
-  padding: 100px 0 32px 0;
+  text-align: center;
+  margin-bottom: 32px;
 `;
 
 const LoginText = styled.p`
   font-size: 24px;
   font-weight: 700;
-  line-height: 34px;
-  text-align: center;
-  color: ${({ theme }) => theme.colors.neutrals_00};
+  margin-bottom: 8px;
 `;
 
 const WelcomeText = styled.p`
-  text-align: center;
   font-size: 18px;
-  font-weight: 700;
-  line-height: 24px;
-  color: ${({ theme }) => theme.colors.neutrals_00};
+  line-height: 1.4;
 `;
 
 const InputContainer = styled.form`
   display: flex;
   flex-direction: column;
+  gap: 18px;
 `;
 
 const InputWrapper = styled.div`
@@ -168,14 +160,11 @@ const InputWrapper = styled.div`
 const LoginOptionsContainer = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
 `;
 
 const FindAccountLink = styled(Link)`
-  padding: 4px;
-  gap: 8px;
   font-size: 14px;
-  line-height: 16px;
-  font-weight: 400;
   color: ${({ theme }) => theme.colors.neutrals_01};
 `;
 
@@ -186,7 +175,6 @@ const AuthButtonContainer = styled.div`
 `;
 
 const ErrorDescription = styled.p`
-  color: ${({ theme }) => theme.colors.point_orange_normal_100};
-  font-weight: 400;
   font-size: 14px;
+  color: ${({ theme }) => theme.colors.point_orange_normal_100};
 `;
