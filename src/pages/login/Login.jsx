@@ -10,41 +10,33 @@ import { Link, useNavigate } from "react-router-dom";
 
 export default function Login() {
   const navigate = useNavigate();
-  const [validationState, setValidationState] = useState({
-    isIdValid: "",
-    isPasswordValid: "",
-  });
+  const [validationError, setValidationError] = useState("");
   const { inputValues, getInputValue } = useGetValueFromTextInput();
   const [rememberMe, setRememberMe] = useState(false);
-  const [errorText, setErrorText] = useState("");
-  const mutation = useLogin(setErrorText);
+  const mutation = useLogin(setValidationError);
 
-  const validateInputs = (userId, pw) => {
-    const isIdValid = validateId(userId);
-    const isPasswordValid = validatePassword(pw);
+  const validateInputs = (id, password) => {
+    setValidationError("");
+    const isIdValid = validateId(id);
+    const isPasswordValid = validatePassword(password);
 
-    setValidationState({
-      isIdValid: isIdValid ? "" : "error",
-      isPasswordValid: isPasswordValid ? "" : "error",
-    });
+    const isValid = isIdValid && isPasswordValid;
+    setValidationError(isValid ? "" : "error");
 
-    return isIdValid && isPasswordValid;
+    return isValid;
   };
 
   const handleLoginSubmit = (e) => {
     e.preventDefault();
-    setErrorText("");
+    setValidationError("");
+    const { idInput, pwInput } = inputValues;
 
-    const { userId, pw } = inputValues;
-
-    if (validateInputs(userId, pw)) {
-      mutation.mutate({ userId, pw, rememberMe });
+    if (validateInputs(idInput, pwInput)) {
+      mutation.mutate({ userId: idInput, pw: pwInput, rememberMe });
     }
   };
 
   const handleSignupClick = () => navigate("/signup");
-
-  const handleRememberMe = () => setRememberMe((prev) => !prev);
 
   return (
     <LoginLayout>
@@ -64,9 +56,9 @@ export default function Login() {
               placeholder="아이디를 입력해주세요"
               label="아이디"
               infoMessage={
-                validationState.isIdValid === "error" ? "다시 확인해주세요" : ""
+                validationError === "error" ? "다시 확인해주세요" : ""
               }
-              status={validationState.isIdValid}
+              status={validationError}
               getInputValue={getInputValue}
             />
           </InputWrapper>
@@ -78,14 +70,11 @@ export default function Login() {
               label="비밀번호"
               type="password"
               infoMessage={
-                validationState.isPasswordValid === "error"
-                  ? "다시 확인해주세요"
-                  : ""
+                validationError === "error" ? "다시 확인해주세요" : ""
               }
-              status={validationState.isPasswordValid}
+              status={validationError}
               getInputValue={getInputValue}
             />
-            {errorText && <ErrorDescription>{errorText}</ErrorDescription>}
           </InputWrapper>
           <LoginOptionsContainer>
             <Checkbox
@@ -93,7 +82,7 @@ export default function Login() {
               size="medium"
               label="로그인 유지"
               checked={rememberMe}
-              onChange={handleRememberMe}
+              onChange={() => setRememberMe((prev) => !prev)}
             />
             <FindAccountLink to="/findaccount">
               아이디 및 비밀번호 찾기
@@ -172,9 +161,4 @@ const AuthButtonContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
-`;
-
-const ErrorDescription = styled.p`
-  font-size: 14px;
-  color: ${({ theme }) => theme.colors.point_orange_normal_100};
 `;
