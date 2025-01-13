@@ -6,16 +6,18 @@ export const useLogin = (setValidationError) => {
   const navigate = useNavigate();
   return useMutation({
     mutationFn: login,
-    onSuccess: (result) => {
-      if (result.success) {
-        localStorage.setItem("accessToken", result.data.data.accessToken);
+    onSuccess: ({ success, data }) => {
+      if (success) {
+        const token = data.data.accessToken;
+        localStorage.setItem("accessToken", token);
         navigate("/home", { replace: true });
       } else {
         setValidationError("error");
       }
     },
-    onError: (error) => {
-      setValidationError(error.message || "error");
+
+    onError: () => {
+      setValidationError("error");
     },
   });
 };
