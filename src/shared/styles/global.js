@@ -163,4 +163,30 @@ export const GlobalStyles = css`
     width: 100%;
     height: 100vh;
   }
+  .radioFlex {
+    display: flex;
+    gap: 24px;
+  }
+  .mgTop16 {
+    margin-top: 16px;
+  }
+  .mgTop26 {
+    margin-top: 26px;
+  }
+  .mgTop32 {
+    margin-top: 32px;
+  }
+  .mgTop56 {
+    margin-top: 56px;
+  }
+  .mgBtm56 {
+    margin-bottom: 56px;
+  }
+  .pdLeft48 {
+    padding-left: 48px;
+  }
+  .center {
+    display: flex;
+    justify-content: center;
+  }
 `;

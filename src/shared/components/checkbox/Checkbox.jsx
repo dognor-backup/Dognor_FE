@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import { useState } from "react";
 
-const Checkbox = ({ name, size, label }) => {
+const Checkbox = ({ name, size, label, ...props }) => {
   const [isChecked, setChecked] = useState(false);
 
   return (
@@ -13,7 +13,7 @@ const Checkbox = ({ name, size, label }) => {
         onChange={() => setChecked((prev) => !prev)}
         checked={isChecked}
       />
-      <LabelChk htmlFor={name} checked={isChecked} size={size}>
+      <LabelChk htmlFor={name} checked={isChecked} size={size} {...props}>
         {label}
       </LabelChk>
     </div>

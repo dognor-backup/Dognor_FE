@@ -4,7 +4,6 @@ import styled from "@emotion/styled";
 export const Flex = styled.div`
   display: flex;
   margin-top: 10px;
-  margin-bottom: 10px;
 `;
 export const Input = styled.input(({ theme }) => ({
   width: "100%",
@@ -56,4 +55,5 @@ export const Info = styled.p(({ theme, status }) => ({
       : theme.colors.neutrals_03,
   fontWeight: 400,
   fontSize: "14px",
+  marginTop: "10px",
 }));

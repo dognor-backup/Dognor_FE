@@ -22,13 +22,14 @@ export const InputBtn = ({
   infoMessage,
   status,
   getInputValue,
+  className,
 }) => {
   const handleInputValue = (e) => {
     const { name, value } = e.target;
     getInputValue({ name, value });
   };
   return (
-    <>
+    <div className={className}>
       <Label htmlFor={id}>{label}</Label>
       <Flex>
         <Input
@@ -41,6 +42,6 @@ export const InputBtn = ({
         <Button status={status}>{BtnText}</Button>
       </Flex>
       <Info status={status}>{infoMessage}</Info>
-    </>
+    </div>
   );
 };
