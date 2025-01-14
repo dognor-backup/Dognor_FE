@@ -137,6 +137,7 @@ export const GlobalStyles = css`
   input::-webkit-search-results-decoration {
     display: none;
   }
+
   input[type="number"]::-webkit-outer-spin-button,
   input[type="number"]::-webkit-inner-spin-button {
     -webkit-appearance: none;
