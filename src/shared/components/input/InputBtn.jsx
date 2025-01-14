@@ -23,6 +23,7 @@ export const InputBtn = ({
   status,
   getInputValue,
   className,
+  ...props
 }) => {
   const handleInputValue = (e) => {
     const { name, value } = e.target;
@@ -38,6 +39,7 @@ export const InputBtn = ({
           id={id}
           placeholder={placeholder}
           onChange={handleInputValue}
+          {...props}
         />
         <Button status={status}>{BtnText}</Button>
       </Flex>

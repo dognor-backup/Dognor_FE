@@ -13,6 +13,7 @@ import {
   validateId,
   validatePassword,
   validatePhoneNumber,
+  validateEmail,
 } from "@/shared/utils/validation";
 
 const SignUp = () => {
@@ -35,8 +36,33 @@ const SignUp = () => {
       setInfoMessage("숫자만 입력해주세요");
     }
     const isValidPhoneNumber = validatePhoneNumber(input);
-    console.log("isValidPhoneNumber", isValidPhoneNumber);
   };
+  const handleValidation = (inputName, inputValue) => {
+    switch (inputName) {
+      case "email":
+        const isEmailValid = validateEmail(inputValue);
+        console.log("Email validation result:", isEmailValid);
+        break;
+
+      case "userId":
+        const isUserIdValid = validateId(inputValue);
+        console.log("User ID validation result:", isUserIdValid);
+        break;
+
+      case "pw":
+        const isUserpwValid = validatePassword(inputValue);
+        console.log("User PW validation result:", isUserpwValid);
+        break;
+
+      default:
+        break;
+    }
+  };
+
+  const { userId, pw, email } = inputValues;
+  handleValidation("userId", userId); //아이디
+  handleValidation("email", email); // 이메일 검증
+  handleValidation("pw", pw);
 
   return (
     <form>
@@ -49,11 +75,7 @@ const SignUp = () => {
 
         <FormSection>회원구분</FormSection>
 
-        <RadioGroup
-          defaultValue="user"
-          className="radioFlex"
-          onChange={getValue}
-        >
+        <RadioGroup defaultValue="user" className="radioFlex">
           <div className="flex items-center space-x-2 ">
             <RadioGroupItem value="user" id="user" />
             <Label htmlFor="user">일반회원</Label>
@@ -109,6 +131,7 @@ const SignUp = () => {
             status="normal"
             getInputValue={getInputValue}
           />
+
           <InputForm
             className="mgTop16"
             id="pw"
@@ -144,8 +167,8 @@ const SignUp = () => {
 
           <InputBtn
             className="mgTop16 "
-            id="id"
-            name="InputName"
+            id="data"
+            name="data"
             BtnText="인증 코드 확인"
             placeholder="메일로 발송된 코드 6자리를 입력해 주세요"
             label="본인인증(코드작성)"
