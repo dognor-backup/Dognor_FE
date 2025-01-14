@@ -1,4 +1,4 @@
-import { useLogin } from "@/hooks/useLogin";
+import { useLogin } from "@/domains/auth/hooks/useLogin";
 import { Button } from "@/shared/components/buttons/Button";
 import Checkbox from "@/shared/components/checkbox/Checkbox";
 import { InputForm } from "@/shared/components/input/InputForm";
