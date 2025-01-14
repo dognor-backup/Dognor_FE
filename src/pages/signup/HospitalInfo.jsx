@@ -3,7 +3,7 @@ import { InputForm } from "@/shared/components/input/InputForm";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import Checkbox from "@/shared/components/checkbox/Checkbox";
-// import PostCode from "./PostCode";
+import PostCode from "./PostCode";
 import { Label as RadioTitle } from "@/shared/components/input/inputStyle";
 
 const HospitalInfo = () => {
@@ -29,7 +29,7 @@ const HospitalInfo = () => {
         status="normal"
         // getInputValue={getInputValue}
       />
-      {/* <PostCode /> */}
+      <PostCode />
       <InputForm
         className="mgTop26"
         id="hospitalPhone"
