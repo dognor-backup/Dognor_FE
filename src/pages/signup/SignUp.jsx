@@ -7,7 +7,7 @@ import styled from "@emotion/styled";
 import { Button } from "@/shared/components/buttons/Button";
 import Checkbox from "@/shared/components/checkbox/Checkbox";
 import { useState } from "react";
-
+import HospitalInfo from "./HospitalInfo";
 import { PageTop, PageWrapper } from "@/shared/layout/PageTopTitle";
 
 const SignUp = () => {
@@ -111,7 +111,7 @@ const SignUp = () => {
         />
 
         <InputBtn
-          className="mgTop16"
+          className="mgTop16 "
           id="id"
           name="InputName"
           BtnText="인증 코드 확인"
@@ -127,7 +127,7 @@ const SignUp = () => {
       {isHospitalStaff && (
         <>
           <FormSection>병원정보[필수]</FormSection>
-          {/* <HospitalInfo /> */}
+          <HospitalInfo />
         </>
       )}
 
