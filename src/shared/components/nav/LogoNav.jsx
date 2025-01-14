@@ -6,7 +6,7 @@ import Logo from "../../../assets/images/logo.svg?react";
 export default function LogoNav() {
   return (
     <LogoNavLayout>
-      <Link to="home">
+      <Link to="/">
         <Logo />
       </Link>
     </LogoNavLayout>

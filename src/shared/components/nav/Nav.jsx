@@ -8,18 +8,20 @@ export default function Nav() {
   const [isMenuOpen, setIsMenuOpen] = useState(true);
 
   return (
-    <NavLayout>
-      <TopNavHeader
-        activeMenuLink={activeMenuLink}
-        isMenuOpen={isMenuOpen}
-        setIsMenuOpen={setIsMenuOpen}
-      />
-      <TopNavMenuContainer
-        activeMenuLink={activeMenuLink}
-        setActiveMenuLink={setActiveMenuLink}
-        isMenuOpen={isMenuOpen}
-      />
-    </NavLayout>
+    <>
+      <NavLayout>
+        <TopNavHeader
+          activeMenuLink={activeMenuLink}
+          isMenuOpen={isMenuOpen}
+          setIsMenuOpen={setIsMenuOpen}
+        />
+        <TopNavMenuContainer
+          activeMenuLink={activeMenuLink}
+          setActiveMenuLink={setActiveMenuLink}
+          isMenuOpen={isMenuOpen}
+        />
+      </NavLayout>
+    </>
   );
 }
 

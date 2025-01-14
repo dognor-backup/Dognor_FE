@@ -7,16 +7,19 @@ import HospitalMap from "../../pages/hospitalmap/HospitalMap";
 import Campaigns from "../../pages/campaigns/Campaigns";
 import MyPage from "../../pages/mypage/MyPage";
 import Community from "../../pages/community/Community";
-import Nav from "../../shared/components/nav/Nav";
+import Login from "@/pages/login/Login";
+import FindAccount from "@/pages/findaccount/FindAccount";
+import SignUp from "@/pages/signup/SignUp";
+import App from "@/App";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    Component: Nav,
-    HydrateFallback: Nav, // 데이터 비동기 로드 중 보여줄 컴포넌트
+    Component: App,
     children: [
-      { path: "/", Component: Home },
-      { path: "signup", Component: Home },
+      { path: "home", Component: Home },
+      { path: "login", Component: Login },
+      { path: "signup", Component: SignUp },
       { path: "donationinfo", Component: DonationInfo },
       { path: "aboutus", Component: AboutUs },
       { path: "showcase", Component: Showcase },
@@ -56,15 +59,9 @@ const router = createBrowserRouter([
     ],
   },
 
-  {
-    path: "login",
-    Component: Home,
-    children: [
-      { path: "findaccount", Component: Home },
-      { path: "guidepage", Component: Home },
-      { path: "changepassword", Component: Home },
-    ],
-  },
+  { path: "findaccount", Component: FindAccount },
+  { path: "guidepage", Component: Home },
+  { path: "changepassword", Component: Home },
 
   { path: "welcome", Component: Home },
   { path: "이용약관", Component: Home },
