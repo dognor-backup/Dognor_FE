@@ -8,6 +8,7 @@ export const useLogin = (setValidationError) => {
     mutationFn: login,
     onSuccess: ({ success, data }) => {
       if (success) {
+        const userRole = data.data.userRole;
         const token = data.data.accessToken;
         localStorage.setItem("accessToken", token);
         navigate("/home", { replace: true });
