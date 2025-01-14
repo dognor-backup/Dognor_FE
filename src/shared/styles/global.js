@@ -141,6 +141,17 @@ export const GlobalStyles = css`
   input[type="number"]::-webkit-inner-spin-button {
     -webkit-appearance: none;
   }
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: #dde0e8;
+    border: 2px solid #fff;
+    border-radius: 6px;
+  }
+  ::webkit-scrollbar-track {
+    background-color: #fff;
+  }
   body {
     font-family: "SpoqaHanSansNeo", Arial, sans-serif;
     margin: 0;
