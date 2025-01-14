@@ -38,7 +38,6 @@ export const InputForm = ({
           name={name}
           placeholder={placeholder}
           onChange={handleInputValue}
-          maxlen
         />
       </Flex>
       <Info status={status}>{infoMessage}</Info>
