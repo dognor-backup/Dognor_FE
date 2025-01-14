@@ -1,16 +1,8 @@
 import styled from "@emotion/styled";
 import HeartFilled from "../../../assets/icons/red/heart_filled_r.svg?react";
-import DotsVertical from "../../../assets/icons/white/dots_vertical_w.svg?react";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import Heart from "../../../assets/icons/red/Heart_R.svg?react";
 import ActionSelect from "./ActionSelect";
+import { useState } from "react";
 
 export default function PostCard({
   imageUrl,
@@ -20,19 +12,33 @@ export default function PostCard({
   isAuthor,
   handleEdit,
   handleDelete,
-  onLike,
 }) {
   const imageurl = "/src/assets/images/dog.jpeg";
   const profile = "/src/assets/images/profile.jpeg";
 
+  const [like, setLike] = useState(likes);
+  const [isLiked, setIsLiked] = useState(false);
 
+  const handleLike = () => {
+    if (isLiked) {
+      if (like === 0) return;
+      setLike((prev) => prev - 1);
+    } else {
+      setLike((prev) => prev + 1);
+    }
+    setIsLiked(!isLiked);
+  };
   return (
     <PostCardLayout>
       <ImageWrapper>
         <CardImage src={imageurl} />
-       {isAuthor?  <ActionButtonWrapper>
-          <ActionSelect handleEdit={handleEdit} handleDelete={handleDelete} />
-        </ActionButtonWrapper> : "" }
+        {isAuthor ? (
+          <ActionButtonWrapper>
+            <ActionSelect handleEdit={handleEdit} handleDelete={handleDelete} />
+          </ActionButtonWrapper>
+        ) : (
+          ""
+        )}
       </ImageWrapper>
       <TextWrapper>{text}</TextWrapper>
       <InfoContainer>
@@ -41,7 +47,12 @@ export default function PostCard({
           {dogName}
         </ProfileWrapper>
         <LikesWrapper>
-          {likes} <HeartFilled onClick={onLike} />
+          {like}{" "}
+          {isLiked ? (
+            <HeartFilled onClick={handleLike} />
+          ) : (
+            <Heart onClick={handleLike} />
+          )}
         </LikesWrapper>
       </InfoContainer>
     </PostCardLayout>

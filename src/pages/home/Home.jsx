@@ -2,7 +2,7 @@ import PostCard from "@/shared/components/postcard/PostCard";
 import { useState } from "react";
 
 export default function Home() {
-  const [likes, setLikes] = useState(0);
+  const [likes, setLikes] = useState(2);
   const imageURL = "/src/assets/images/dog";
   return (
     <>
@@ -20,12 +20,9 @@ export default function Home() {
           text="강아지가 헌혈을 했어요! 강아지가 헌혈을 했어요! 강아지가 헌혈을 했어요! 강아지가 헌혈을 했어요! 강아지가 헌혈을 했어요! 강아지가 헌혈을 했어요! "
           dogName="바둑이"
           likes={likes}
-          hashtags={["헌혈", "반려견"]}
           isAuthor={true}
-          isAdmin={false}
           handleEdit={() => console.log("수정 클릭!")}
           handleDelete={() => console.log("삭제 클릭!")}
-          onLike={() => setLikes((prev) => prev + 1)}
         />
       </div>
     </>
