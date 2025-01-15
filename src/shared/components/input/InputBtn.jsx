@@ -39,9 +39,10 @@ export const InputBtn = ({
           id={id}
           placeholder={placeholder}
           onChange={handleInputValue}
-          {...props}
         />
-        <Button status={status}>{BtnText}</Button>
+        <Button status={status} {...props} type="submit">
+          {BtnText}
+        </Button>
       </Flex>
       <Info status={status}>{infoMessage}</Info>
     </div>

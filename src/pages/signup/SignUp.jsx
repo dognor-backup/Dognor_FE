@@ -5,7 +5,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import styled from "@emotion/styled";
 import { Button } from "@/shared/components/buttons/Button";
 import Checkbox from "@/shared/components/checkbox/Checkbox";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import HospitalInfo from "./HospitalInfo";
 import { PageTop, PageWrapper } from "@/shared/layout/PageTopTitle";
 import useGetValueFromTextInput from "@/shared/hooks/useGetValueFromTextInput";
@@ -15,14 +15,25 @@ import {
   validatePhoneNumber,
   validateEmail,
 } from "@/shared/utils/validation";
+import { useCheckDuplicate } from "@/domains/auth/hooks/useSignup";
+import { useIdCheckStore } from "@/domains/auth/store/useSignupStore";
 
 const SignUp = () => {
   const [status, setStatus] = useState("normal");
   const [infoMessage, setInfoMessage] = useState("");
   const [inputValue, setInputValue] = useState("");
+  const [isHospitalStaff, setHospitalStaff] = useState(false);
   const { inputValues, getInputValue } = useGetValueFromTextInput();
-  const [isHospitalStaff, setHospitalStaff] = useState(true);
-  const [validationError, setValidationError] = useState("");
+  const mutation = useCheckDuplicate();
+
+  //아이디 인증
+  // const [isUserIdVerified, setIsUserIdVerified] = useState(false);
+  const { duplicateId } = useIdCheckStore();
+
+  //이메일 인증
+  const [isEmailVerified, setIsEmailVertified] = useState(false);
+
+  const { pw, checkpw, userId } = inputValues;
 
   const handleKeyPress = (e) => {
     // 숫자가 아닌 키를 누르면 입력 차단
@@ -37,35 +48,20 @@ const SignUp = () => {
     }
     const isValidPhoneNumber = validatePhoneNumber(input);
   };
-  const handleValidation = (inputName, inputValue) => {
-    switch (inputName) {
-      case "email":
-        const isEmailValid = validateEmail(inputValue);
-        console.log("Email validation result:", isEmailValid);
-        break;
 
-      case "userId":
-        const isUserIdValid = validateId(inputValue);
-        console.log("User ID validation result:", isUserIdValid);
-        break;
-
-      case "pw":
-        const isUserpwValid = validatePassword(inputValue);
-        console.log("User PW validation result:", isUserpwValid);
-        break;
-
-      default:
-        break;
+  //아이디 중복 확인 요청
+  const handleCheckIdDuplicate = () => {
+    const idValid = validateId(userId);
+    if (idValid) {
+      mutation.mutate({ userId: userId });
     }
   };
 
-  const { userId, pw, email } = inputValues;
-  handleValidation("userId", userId); //아이디
-  handleValidation("email", email); // 이메일 검증
-  handleValidation("pw", pw);
-
+  const handleCheckIdAvailable = (e) => {
+    e.preventDefault();
+  };
   return (
-    <form>
+    <form onSubmit={handleCheckIdAvailable} id="signupForm">
       <PageWrapper>
         <PageTop>
           <h2>회원가입</h2>
@@ -127,9 +123,16 @@ const SignUp = () => {
             BtnText="중복조회"
             placeholder="아이디를 입력해주세요"
             label="아이디"
-            infoMessage="5~20자의 영문 소문자, 숫자 만 사용"
+            infoMessage={
+              duplicateId.data == null
+                ? "5~20자의 영문 소문자, 숫자 만 사용"
+                : duplicateId.data
+                ? "사용가능한 아이디입니다"
+                : "이미 존재하는 아이디입니다"
+            }
             status="normal"
             getInputValue={getInputValue}
+            onClick={handleCheckIdDuplicate}
           />
 
           <InputForm
@@ -160,15 +163,15 @@ const SignUp = () => {
             BtnText="인증 코드 발송"
             placeholder="이메일을 전체 작성해주세요"
             label="이메일"
-            infoMessage=""
+            infoMessage="5~20자의 영문 소문자, 숫자 만 사용"
             status="normal"
             getInputValue={getInputValue}
           />
 
           <InputBtn
-            className="mgTop16 "
-            id="data"
-            name="data"
+            className="mgTop16"
+            id="code"
+            name="code"
             BtnText="인증 코드 확인"
             placeholder="메일로 발송된 코드 6자리를 입력해 주세요"
             label="본인인증(코드작성)"
@@ -220,7 +223,7 @@ const SignUp = () => {
           label="[선택] 이벤트 ・ 혜택 정보 수신 "
         />
         <div className="center">
-          <Button style={{ width: "320px" }}>
+          <Button style={{ width: "320px" }} form="signupForm">
             {isHospitalStaff ? "의료관계자 가입요청" : "회원 가입하기"}
           </Button>
         </div>
