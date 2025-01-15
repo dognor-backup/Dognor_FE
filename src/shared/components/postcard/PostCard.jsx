@@ -18,7 +18,7 @@ export default function PostCard({
 
   const [like, setLike] = useState(likes);
   const [isLiked, setIsLiked] = useState(false);
-
+  console.log(isAuthorr);
   const handleLike = () => {
     if (isLiked) {
       if (like === 0) return;
@@ -33,9 +33,9 @@ export default function PostCard({
       <ImageWrapper>
         <CardImage src={imageurl} />
         {isAuthor ? (
-          <ActionButtonWrapper>
+          <ActionSelectWrapper>
             <ActionSelect handleEdit={handleEdit} handleDelete={handleDelete} />
-          </ActionButtonWrapper>
+          </ActionSelectWrapper>
         ) : (
           ""
         )}
@@ -129,7 +129,7 @@ const LikesWrapper = styled.div`
   cursor: pointer;
 `;
 
-const ActionButtonWrapper = styled.button`
+const ActionSelectWrapper = styled.div`
   position: absolute;
   background-color: transparent;
   top: 16px;

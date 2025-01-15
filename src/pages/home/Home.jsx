@@ -1,9 +1,12 @@
+import useUserStore from "@/domains/auth/store/useUserStore";
 import PostCard from "@/shared/components/postcard/PostCard";
 import { useState } from "react";
 
 export default function Home() {
   const [likes, setLikes] = useState(2);
   const imageURL = "/src/assets/images/dog";
+  const { user } = useUserStore();
+  console.log(user);
   return (
     <>
       <div
