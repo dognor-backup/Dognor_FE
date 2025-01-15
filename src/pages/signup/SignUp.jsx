@@ -5,7 +5,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import styled from "@emotion/styled";
 import { Button } from "@/shared/components/buttons/Button";
 import Checkbox from "@/shared/components/checkbox/Checkbox";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import HospitalInfo from "./HospitalInfo";
 import { PageTop, PageWrapper } from "@/shared/layout/PageTopTitle";
 import useGetValueFromTextInput from "@/shared/hooks/useGetValueFromTextInput";
@@ -15,8 +15,14 @@ import {
   validatePhoneNumber,
   validateEmail,
 } from "@/shared/utils/validation";
-import { useCheckDuplicate } from "@/domains/auth/hooks/useSignup";
-import { useIdCheckStore } from "@/domains/auth/store/useSignupStore";
+import {
+  useCheckDuplicate,
+  useVerifyEmail,
+} from "@/domains/auth/hooks/useSignup";
+import {
+  useEmailCheckStore,
+  useIdCheckStore,
+} from "@/domains/auth/store/useSignupStore";
 
 const SignUp = () => {
   const [status, setStatus] = useState("normal");
@@ -24,16 +30,20 @@ const SignUp = () => {
   const [inputValue, setInputValue] = useState("");
   const [isHospitalStaff, setHospitalStaff] = useState(false);
   const { inputValues, getInputValue } = useGetValueFromTextInput();
-  const mutation = useCheckDuplicate();
+
+  const idCheckMutation = useCheckDuplicate();
+  //이메일 인증
+  const [isEmailVerified, setIsEmailVertified] = useState();
+
+  const emailVerificationMutation = useVerifyEmail();
 
   //아이디 인증
   // const [isUserIdVerified, setIsUserIdVerified] = useState(false);
-  const { duplicateId } = useIdCheckStore();
+  const { checkedId } = useIdCheckStore();
 
-  //이메일 인증
-  const [isEmailVerified, setIsEmailVertified] = useState(false);
+  const { pw, checkpw, userId, email, code } = inputValues;
 
-  const { pw, checkpw, userId } = inputValues;
+  const { emailCode } = useEmailCheckStore();
 
   const handleKeyPress = (e) => {
     // 숫자가 아닌 키를 누르면 입력 차단
@@ -51,14 +61,31 @@ const SignUp = () => {
 
   //아이디 중복 확인 요청
   const handleCheckIdDuplicate = () => {
-    const idValid = validateId(userId);
-    if (idValid) {
-      mutation.mutate({ userId: userId });
+    const isIdValid = validateId(userId);
+    if (isIdValid) idCheckMutation.mutate({ userId });
+  };
+
+  //이메일 인증 코드 요청
+  const handleRequestEmailCode = () => {
+    const isEmailValid = validateEmail(email);
+    if (isEmailValid) emailVerificationMutation.mutate({ email });
+  };
+
+  //인증 코드 확인
+  const handleConfirmEmailCode = () => {
+    if (emailCode.data && code == emailCode.data) {
+      setIsEmailVertified(true);
+    } else {
+      setIsEmailVertified(false);
     }
   };
 
   const handleCheckIdAvailable = (e) => {
     e.preventDefault();
+  };
+
+  const getCheckValues = (e) => {
+    console.log(e.target);
   };
   return (
     <form onSubmit={handleCheckIdAvailable} id="signupForm">
@@ -103,7 +130,6 @@ const SignUp = () => {
             status="normal"
             getInputValue={getInputValue}
           />
-
           <InputForm
             className="mgTop16"
             id="phone"
@@ -115,7 +141,6 @@ const SignUp = () => {
             status={status}
             onChange={handleKeyPress}
           />
-
           <InputBtn
             className="mgTop32"
             id="userId"
@@ -124,9 +149,9 @@ const SignUp = () => {
             placeholder="아이디를 입력해주세요"
             label="아이디"
             infoMessage={
-              duplicateId.data == null
+              checkedId.data == null
                 ? "5~20자의 영문 소문자, 숫자 만 사용"
-                : duplicateId.data
+                : checkedId.data
                 ? "사용가능한 아이디입니다"
                 : "이미 존재하는 아이디입니다"
             }
@@ -134,7 +159,6 @@ const SignUp = () => {
             getInputValue={getInputValue}
             onClick={handleCheckIdDuplicate}
           />
-
           <InputForm
             className="mgTop16"
             id="pw"
@@ -155,17 +179,17 @@ const SignUp = () => {
             status="normal"
             getInputValue={getInputValue}
           />
-
           <InputBtn
             className="mgTop32"
             id="email"
             name="email"
-            BtnText="인증 코드 발송"
+            BtnText={isEmailVerified ? "인증 코드 재발송" : "인증 코드 발송"}
             placeholder="이메일을 전체 작성해주세요"
             label="이메일"
             infoMessage="5~20자의 영문 소문자, 숫자 만 사용"
             status="normal"
             getInputValue={getInputValue}
+            onClick={handleRequestEmailCode}
           />
 
           <InputBtn
@@ -175,9 +199,16 @@ const SignUp = () => {
             BtnText="인증 코드 확인"
             placeholder="메일로 발송된 코드 6자리를 입력해 주세요"
             label="본인인증(코드작성)"
-            infoMessage=""
+            infoMessage={
+              isEmailVerified == null
+                ? ""
+                : isEmailVerified
+                ? "인증이 확인되었습니다"
+                : "다시 확인해주세요"
+            }
             status="normal"
             getInputValue={getInputValue}
+            onClick={handleConfirmEmailCode}
           />
         </UserInfo>
 
@@ -194,32 +225,33 @@ const SignUp = () => {
         </div>
         <Checkbox
           className="mgTop26 pdLeft48"
-          name={"체크박스 이름"}
+          name={"agreement1"}
           label="전체 동의하기"
+          onChange={getCheckValues}
         />
         <Checkbox
           className="mgTop26 pdLeft48"
-          name={"체크박스 이름"}
+          name={"agreement2"}
           label="[필수] 만 14세 이상입니다."
         />
         <Checkbox
           className="mgTop26 pdLeft48"
-          name={"체크박스 이름"}
+          name={"agreement3"}
           label="[필수] 이용약관"
         />
         <Checkbox
           className="mgTop26 pdLeft48"
-          name={"체크박스 이름"}
+          name={"agreement4"}
           label="[필수] 개인정보 수집 및 이용"
         />
         <Checkbox
           className="mgTop26 pdLeft48"
-          name={"체크박스 이름"}
+          name={"agreement5"}
           label="[선택] 위치기반서비스 이용약관"
         />
         <Checkbox
           className="mgTop26 pdLeft48"
-          name={"체크박스 이름"}
+          name={"agreement6"}
           label="[선택] 이벤트 ・ 혜택 정보 수신 "
         />
         <div className="center">

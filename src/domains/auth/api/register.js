@@ -1,7 +1,7 @@
 import AxiosInstance from "../../../shared/utils/axiosInstance";
 
+//아이디 중복 확인
 export const checkDuplicate = async (userIdValue) => {
-  console.log("dd", userIdValue);
   try {
     const response = await AxiosInstance.post(
       "/user/check-duplicate",
@@ -14,6 +14,24 @@ export const checkDuplicate = async (userIdValue) => {
       return {
         success: false,
         msg: response.data.msg || "아이디 중복 조회 실패",
+      };
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+//이메일 인증
+export const checkUserEmail = async (userEmail) => {
+  try {
+    const response = await AxiosInstance.post("/user/email-verify", userEmail);
+    if (response.data.code === 200) {
+      return { success: true, data: response.data };
+    }
+    if (response.data.code === 400) {
+      return {
+        success: false,
+        msg: response.data.msg || "이메일 인증 코드발송 실패",
       };
     }
   } catch (error) {
