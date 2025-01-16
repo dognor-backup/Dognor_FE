@@ -3,6 +3,7 @@ import RoleCard from "./RoleCard";
 import QuoteLeft from "../../assets/icons/black/QuoteLeft.svg?react";
 import QuoteRight from "../../assets/icons/black/QuoteRight.svg?react";
 import PurposeCard from "./PurposeCard";
+import MemberCard from "./MemberCard";
 
 export default function AboutUs() {
   const roleList = [
@@ -108,6 +109,53 @@ export default function AboutUs() {
           ))}
         </PurposeCardContainer>
       </PurposeWrapper>
+      <MemberInfoLayout>
+        <MemberCard
+          role="frontend"
+          engName="kyoungjoo Lee"
+          korName="이경주"
+          roleText="Frontend Developer"
+        />
+        <MemberInfoTextWrapper>
+          <MemberInfoTextTitle>Team member</MemberInfoTextTitle>
+          <MemberInfoTextContent>
+            헌혈하개 팀은 “공혈견을 지양하고 헌혈 문화를 지향하는 세상"을
+            <br />
+            만들고자 모인 개발자들과 디자이너가 협업한 팀입니다.
+            <br />
+            <br />
+            강아지들이 더 이상 공혈의 고통을 겪지 않고,
+            <br /> 모두가 따뜻한 마음으로 생명을 나눌 수 있는
+            <br /> 문화를 만들어가는 데 기여하고자 합니다.
+          </MemberInfoTextContent>
+        </MemberInfoTextWrapper>
+        <MemberCard
+          role="backend"
+          engName="Minjun Kim"
+          korName="김민준"
+          roleText="Backend Developer"
+        />
+        <MemberCard
+          role="frontend"
+          engName="Jungyu Park"
+          korName="박준규"
+          roleText="Frontend Developer"
+        />
+        <MemberCard
+          role="designer"
+          engName="Soyoung Kim"
+          korName="김소영"
+          roleText="UX.UI Designer"
+        />
+        <MemberCard />
+
+        <MemberCard
+          role="backend"
+          engName="Sanghoon Kim"
+          korName="김상훈"
+          roleText="Backend Developer"
+        />
+      </MemberInfoLayout>
     </AboutUsLayout>
   );
 }
@@ -245,14 +293,39 @@ const PurposeTextContent = styled.p`
 const PurposeCardContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
+  width: 100%;
+  overflow: visible;
   gap: 24px;
   justify-content: center;
-  align-items: center;
 `;
 
 const MemberInfoLayout = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
   padding: 100px 36px;
   gap: 24px;
+`;
+
+const MemberInfoTextWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 492px;
+  height: 234px;
+  border-radius: 16px;
+  padding: 16px;
+  gap: 24px;
+`;
+
+const MemberInfoTextTitle = styled.p`
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 42px;
+  text-align: center;
+`;
+
+const MemberInfoTextContent = styled.p`
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  text-align: center;
 `;
