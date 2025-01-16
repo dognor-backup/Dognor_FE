@@ -18,7 +18,7 @@ export default function PostCard({
 
   const [like, setLike] = useState(likes);
   const [isLiked, setIsLiked] = useState(false);
-  console.log(isAuthorr);
+  console.log(isAuthor);
   const handleLike = () => {
     if (isLiked) {
       if (like === 0) return;
@@ -67,8 +67,8 @@ const PostCardLayout = styled.div`
     theme.colors.neutrals_08;
   }};
   border-radius: 16px;
-  min-width: 234px;
-  max-width: 364px;
+  width: 320px;
+  height: 408px;
   padding: 12px;
   gap: 12px;
 `;
@@ -80,8 +80,9 @@ const ImageWrapper = styled.div`
 `;
 
 const CardImage = styled.img`
-  width: 100%;
-  max-height: 280px;
+  width: 296px;
+
+  height: 280px;
   object-fit: cover;
   border-radius: 10px;
 `;
