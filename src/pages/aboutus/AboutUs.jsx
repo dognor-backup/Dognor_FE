@@ -2,6 +2,7 @@ import styled from "@emotion/styled";
 import RoleCard from "./RoleCard";
 import QuoteLeft from "../../assets/icons/black/QuoteLeft.svg?react";
 import QuoteRight from "../../assets/icons/black/QuoteRight.svg?react";
+import PurposeCard from "./PurposeCard";
 
 export default function AboutUs() {
   const roleList = [
@@ -19,6 +20,34 @@ export default function AboutUs() {
       title: "의식 개선",
       content:
         "공혈견의 현실을 알리고, 이를 대체할 수 있는 새로운 대안을 제시하며 동물 복지 문화를 선도합니다.",
+    },
+  ];
+
+  const purposeList = [
+    {
+      title: "공혈견 없는 세상",
+      content:
+        "공혈견이 아닌 자발적 헌혈 문화를 확산시켜, 강아지들이 헌혈로 인한 고통을 겪지 않아도 되는 사회를 실현합니다.",
+    },
+    {
+      title: "헌혈 생태계의 중심 플랫폼",
+      content:
+        "반려동물 헌혈에 필요한 정보와 자원을 한곳에 모아 헌혈을 활성화하고, 헌혈 관련 의료진과 보호자들이 신뢰하고 활용하는 대표적인 플랫폼이 되는 것을 목표로 합니다.",
+    },
+    {
+      title: "의료진과 보호자 간의 협력 증대",
+      content:
+        "커뮤니티 기능을 통해 의료진과 반려동물 보호자, 그리고 관심 있는 일반 사용자가 소통하며 서로 도움을 주고받는 협력 생태계를 구축합니다.",
+    },
+    {
+      title: "글로벌 헌혈 네트워크 확장",
+      content:
+        "국내를 넘어 글로벌 시장에서도 공혈견 문제 해결과 헌혈 문화 개선에 기여하며, 국제적인 협력 모델을 만들어 나갑니다.",
+    },
+    {
+      title: "반려동물 복지 선도",
+      content:
+        "동물 복지에 대한 인식을 확산시키고, 공혈견 문제를 포함해 더 나은 반려동물 의료 환경과 문화를 조성합니다.",
     },
   ];
   return (
@@ -68,6 +97,16 @@ export default function AboutUs() {
             <br /> 생명 존중의 가치를 실현하는 플랫폼으로 자리 잡는 것입니다.
           </PurposeTextContent>
         </PurposeTextContainer>
+        <PurposeCardContainer>
+          {purposeList.map((purpose, index) => (
+            <PurposeCard
+              key={index}
+              number={index + 1}
+              title={purpose.title}
+              content={purpose.content}
+            />
+          ))}
+        </PurposeCardContainer>
       </PurposeWrapper>
     </AboutUsLayout>
   );
@@ -168,6 +207,8 @@ const RoleCardContainer = styled.div`
 `;
 
 const PurposeWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
   width: 100%;
   background: linear-gradient(
     0deg,
@@ -199,4 +240,19 @@ const PurposeTextContent = styled.p`
   line-height: 24px;
   text-align: center;
   color: ${({ theme }) => theme.colors.neutrals_00};
+`;
+
+const PurposeCardContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  justify-content: center;
+  align-items: center;
+`;
+
+const MemberInfoLayout = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 100px 36px;
+  gap: 24px;
 `;
