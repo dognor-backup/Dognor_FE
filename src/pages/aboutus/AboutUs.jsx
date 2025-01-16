@@ -67,11 +67,11 @@ export default function AboutUs() {
       <DognorRoleWrapper>
         <DognorRoleTextContainer>
           <DognorRoleTextTitle>
-            <HighlightedText>
+            <DognorRoleTextTitleHighlighted>
               <QuoteLeft />
               헌혈하개
               <QuoteRight />
-            </HighlightedText>
+            </DognorRoleTextTitleHighlighted>
             의 역할
           </DognorRoleTextTitle>
           <DognorRoleTextContent>
@@ -79,7 +79,7 @@ export default function AboutUs() {
             <br /> 헌혈 문화에 대한 깊이 있는 논의를 나눌 수 있는 공간
           </DognorRoleTextContent>
         </DognorRoleTextContainer>
-        <RoleCardContainer>
+        <DognorRoleCardContainer>
           {roleList.map((role, index) => (
             <RoleCard
               key={index}
@@ -88,37 +88,39 @@ export default function AboutUs() {
               number={index + 1}
             />
           ))}
-        </RoleCardContainer>
+        </DognorRoleCardContainer>
       </DognorRoleWrapper>
-      <PurposeWrapper>
-        <PurposeTextContainer>
-          <PurposeTextTitle>비전과 목표</PurposeTextTitle>
-          <PurposeTextContent>
+      <DognorPurposeWrapper>
+        <DognorPurposeTextContainer>
+          <DognorPurposeTextTitle>비전과 목표</DognorPurposeTextTitle>
+          <DognorPurposeTextContent>
             혈견 문제를 해결하고 헌혈 문화를 활성화함으로써
             <br /> 생명 존중의 가치를 실현하는 플랫폼으로 자리 잡는 것입니다.
-          </PurposeTextContent>
-        </PurposeTextContainer>
-        <PurposeCardContainer>
-          {purposeList.map((purpose, index) => (
-            <PurposeCard
-              key={index}
-              number={index + 1}
-              title={purpose.title}
-              content={purpose.content}
-            />
-          ))}
-        </PurposeCardContainer>
-      </PurposeWrapper>
-      <MemberInfoLayout>
+          </DognorPurposeTextContent>
+        </DognorPurposeTextContainer>
+        <DognorPurposeCardWrapper>
+          <DognorPurposeContainer>
+            {purposeList.map((purpose, index) => (
+              <PurposeCard
+                key={index}
+                number={index + 1}
+                title={purpose.title}
+                content={purpose.content}
+              />
+            ))}
+          </DognorPurposeContainer>
+        </DognorPurposeCardWrapper>
+      </DognorPurposeWrapper>
+      <DognorMemberInfoWrapper>
         <MemberCard
           role="frontend"
           engName="kyoungjoo Lee"
           korName="이경주"
           roleText="Frontend Developer"
         />
-        <MemberInfoTextWrapper>
-          <MemberInfoTextTitle>Team member</MemberInfoTextTitle>
-          <MemberInfoTextContent>
+        <DognorMemberInfoTextContainer>
+          <DongorMemberInfoTextTitle>Team member</DongorMemberInfoTextTitle>
+          <DognorMemberInfoTextContent>
             헌혈하개 팀은 “공혈견을 지양하고 헌혈 문화를 지향하는 세상"을
             <br />
             만들고자 모인 개발자들과 디자이너가 협업한 팀입니다.
@@ -127,8 +129,8 @@ export default function AboutUs() {
             강아지들이 더 이상 공혈의 고통을 겪지 않고,
             <br /> 모두가 따뜻한 마음으로 생명을 나눌 수 있는
             <br /> 문화를 만들어가는 데 기여하고자 합니다.
-          </MemberInfoTextContent>
-        </MemberInfoTextWrapper>
+          </DognorMemberInfoTextContent>
+        </DognorMemberInfoTextContainer>
         <MemberCard
           role="backend"
           engName="Minjun Kim"
@@ -155,7 +157,7 @@ export default function AboutUs() {
           korName="김상훈"
           roleText="Backend Developer"
         />
-      </MemberInfoLayout>
+      </DognorMemberInfoWrapper>
     </AboutUsLayout>
   );
 }
@@ -164,6 +166,7 @@ const AboutUsLayout = styled.div`
   display: flex;
   flex-direction: column;
   padding-top: 130px;
+  align-items: center;
 `;
 
 const DognorInfoWrapper = styled.div`
@@ -238,7 +241,7 @@ const DognorRoleTextContent = styled.p`
   text-align: center;
 `;
 
-const HighlightedText = styled.span`
+const DognorRoleTextTitleHighlighted = styled.span`
   display: flex;
   gap: 4px;
   font-family: "BMJUA";
@@ -246,7 +249,7 @@ const HighlightedText = styled.span`
   color: ${({ theme }) => theme.colors.primary_blue};
 `;
 
-const RoleCardContainer = styled.div`
+const DognorRoleCardContainer = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
@@ -254,7 +257,7 @@ const RoleCardContainer = styled.div`
   gap: 24px;
 `;
 
-const PurposeWrapper = styled.div`
+const DognorPurposeWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -267,14 +270,22 @@ const PurposeWrapper = styled.div`
   gap: 48px;
 `;
 
-const PurposeTextContainer = styled.div`
+const DognorPurposeContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 48px;
+  max-width: 1280px;
+`;
+
+const DognorPurposeTextContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
   gap: 16px;
 `;
 
-const PurposeTextTitle = styled.p`
+const DognorPurposeTextTitle = styled.p`
   font-weight: 700;
   font-size: 32px;
   line-height: 42px;
@@ -282,7 +293,7 @@ const PurposeTextTitle = styled.p`
   color: ${({ theme }) => theme.colors.neutrals_00};
 `;
 
-const PurposeTextContent = styled.p`
+const DognorPurposeTextContent = styled.p`
   font-weight: 400;
   font-size: 14px;
   line-height: 24px;
@@ -290,7 +301,7 @@ const PurposeTextContent = styled.p`
   color: ${({ theme }) => theme.colors.neutrals_00};
 `;
 
-const PurposeCardContainer = styled.div`
+const DognorPurposeCardWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
   width: 100%;
@@ -299,14 +310,16 @@ const PurposeCardContainer = styled.div`
   justify-content: center;
 `;
 
-const MemberInfoLayout = styled.div`
+const DognorMemberInfoWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
-  padding: 100px 36px;
+  max-width: 1280px;
+  padding: 100px 72px;
+  justify-content: center;
   gap: 24px;
 `;
 
-const MemberInfoTextWrapper = styled.div`
+const DognorMemberInfoTextContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 492px;
@@ -316,14 +329,14 @@ const MemberInfoTextWrapper = styled.div`
   gap: 24px;
 `;
 
-const MemberInfoTextTitle = styled.p`
+const DongorMemberInfoTextTitle = styled.p`
   font-weight: 700;
   font-size: 32px;
   line-height: 42px;
   text-align: center;
 `;
 
-const MemberInfoTextContent = styled.p`
+const DognorMemberInfoTextContent = styled.p`
   font-weight: 400;
   font-size: 14px;
   line-height: 20px;

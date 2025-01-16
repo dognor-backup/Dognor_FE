@@ -24,6 +24,7 @@ const RoleCardLayout = styled.div`
   border-top: 1px solid ${({ theme }) => theme.colors.neutrals_04};
   border-bottom: 1px solid ${({ theme }) => theme.colors.neutrals_04};
   padding: 24px 0;
+  z-index: 0;
 `;
 
 const TextContainer = styled.div`
