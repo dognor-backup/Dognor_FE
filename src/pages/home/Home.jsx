@@ -1,11 +1,14 @@
+import useUserStore from "@/domains/auth/store/useUserStore";
 import { useSearchDonationStories } from "@/domains/donationstory/hooks/useSearchDonationStories";
-import PostCard from "@/shared/components/postcard/PostCard";
+import PostCard from "@/shared/components/cards/postcard/PostCard";
+import TagCard from "@/shared/components/cards/tagcard/TagCard";
 import { useEffect, useState } from "react";
 
 export default function Home() {
   const [showcaseList, setShowcaseList] = useState([]);
   const mutation = useSearchDonationStories(setShowcaseList);
-
+  const { user } = useUserStore();
+  console.log(user.userData.userSeq);
   useEffect(() => {
     mutation.mutate({
       searchParam: {
@@ -13,14 +16,11 @@ export default function Home() {
         sortByHitCnt: false,
         sortByLatest: true,
         myPostsOnly: false,
-        userSeq: 1,
+        userSeq: user.userData.userSeq,
       },
     });
   }, []);
 
-  useEffect(() => {
-    console.log("데이터임", showcaseList);
-  }, [showcaseList]);
   return (
     <>
       <div
@@ -41,6 +41,7 @@ export default function Home() {
             handleDelete={() => console.log("삭제 클릭!")}
           />
         ))}
+        <TagCard />
       </div>
     </>
   );

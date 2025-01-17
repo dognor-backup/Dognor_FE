@@ -1,10 +1,11 @@
 import styled from "@emotion/styled";
-import HeartFilled from "../../../assets/icons/red/heart_filled_r.svg?react";
-import Heart from "../../../assets/icons/red/Heart_R.svg?react";
+import HeartFilled from "../../../../assets/icons/red/heart_filled_r.svg?react";
+import Heart from "../../../../assets/icons/red/Heart_R.svg?react";
 import ActionSelect from "./ActionSelect";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useUserStore from "@/domains/auth/store/useUserStore";
 import { useLikeDonationStory } from "@/domains/donationstory/hooks/useLikeDonationStory";
+import { useNavigate } from "react-router-dom";
 
 export default function PostCard({ story, handleDelete, handleEdit }) {
   const {
@@ -22,18 +23,37 @@ export default function PostCard({ story, handleDelete, handleEdit }) {
   const [isLiked, setIsLiked] = useState(likeYn);
   const [isAuthor, setIsAuthor] = useState(false);
   const mutation = useLikeDonationStory();
+  const userId = user.userData.userId;
+  const navigate = useNavigate();
+  console.log(story);
 
-  if (user.userId === firstSaveUser) setIsAuthor(true);
+  useEffect(() => {
+    if (!userId) {
+      setIsAuthor(false);
+    } else {
+      if (userId === firstSaveUser) {
+        setIsAuthor(true);
+      } else {
+        setIsAuthor(false);
+      }
+    }
+  }, [userId, firstSaveUser]);
 
   const handleLike = () => {
+    if (!userId) return navigate("/login");
     if (isLiked) {
       if (like === 0) return;
       setLike((prev) => prev - 1);
     } else {
       setLike((prev) => prev + 1);
     }
+
     setIsLiked(!isLiked);
-    mutation.mutate({ donationStorySeq, likeEvent: isLiked, userSeq: "1" });
+    mutation.mutate({
+      donationStorySeq: donationStorySeq,
+      likeEvent: isLiked === true ? "like" : "unlike",
+      userSeq: user.userData.userSeq,
+    });
   };
   return (
     <PostCardLayout>
