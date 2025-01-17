@@ -4,6 +4,7 @@ import PrimaryDogFoot from "../../assets/icons/primary/dog_foot_primary.svg?reac
 import SecondaryDogFoot from "../../assets/icons/secondary/dog_foot_secondary.svg?react";
 import RedDogFoot from "../../assets/icons/red/dog_foot_r.svg?react";
 
+
 export default function MemberCard({ role, engName, korName, roleText }) {
   const icons = {
     frontend: <SecondaryDogFoot />,

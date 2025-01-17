@@ -1,9 +1,21 @@
 import styled from "@emotion/styled";
+import OneIcon from "../../assets/icons/number/1_W_H05.svg?react";
+import TwoIcon from "../../assets/icons/number/2_W_H05.svg?react";
+import ThreeIcon from "../../assets/icons/number/3_W_H05.svg?react";
+import FourIcon from "../../assets/icons/number/4_W_H05.svg?react";
+import FiveIcon from "../../assets/icons/number/5_W_H05.svg?react";
 
 export default function PurposeCard({ number, title, content }) {
+  const Number = [
+    <OneIcon key={number} />,
+    <TwoIcon key={number} />,
+    <ThreeIcon key={number} />,
+    <FourIcon key={number} />,
+    <FiveIcon key={number} />,
+  ];
   return (
     <PurposeCardLayout>
-      <PurposeCardNumber>{number}</PurposeCardNumber>
+      <PurposeCardNumber>{Number[number]}</PurposeCardNumber>
       <PurposeCardTitleText>{title}</PurposeCardTitleText>
       <PurposeCardContentText>{content}</PurposeCardContentText>
     </PurposeCardLayout>

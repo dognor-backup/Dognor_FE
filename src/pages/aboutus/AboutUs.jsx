@@ -103,7 +103,7 @@ export default function AboutUs() {
             {purposeList.map((purpose, index) => (
               <PurposeCard
                 key={index}
-                number={index + 1}
+                number={index}
                 title={purpose.title}
                 content={purpose.content}
               />
@@ -275,7 +275,8 @@ const DognorPurposeContainer = styled.div`
   flex-wrap: wrap;
   justify-content: center;
   gap: 48px;
-  max-width: 1280px;
+  max-width: 1080px;
+  min-width: 1080px;
 `;
 
 const DognorPurposeTextContainer = styled.div`
@@ -313,8 +314,9 @@ const DognorPurposeCardWrapper = styled.div`
 const DognorMemberInfoWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
-  max-width: 1280px;
-  padding: 100px 72px;
+  max-width: 1080px;
+  min-width: 1080px;
+  padding: 100px 36px;
   justify-content: center;
   gap: 24px;
 `;
