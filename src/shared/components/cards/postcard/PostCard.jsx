@@ -51,8 +51,10 @@ export default function PostCard({ story, handleDelete, handleEdit }) {
     setIsLiked(!isLiked);
     mutation.mutate({
       donationStorySeq: donationStorySeq,
-      likeEvent: isLiked === true ? "like" : "unlike",
+      likeEvent: isLiked ? "like" : "unlike",
       userSeq: user.userData.userSeq,
+    },{
+      onError: () => setIsLiked(!isLiked)
     });
   };
   return (

@@ -21,7 +21,7 @@ export default function TagCard({ handleDelete, handleEdit }) {
   };
 
   return (
-    <PostCardLayout>
+    <TagCardLayout>
       <ImageWrapper>
         <CardImage src={dogImage} />
         {isAdmin ? (
@@ -43,11 +43,11 @@ export default function TagCard({ handleDelete, handleEdit }) {
           )}
         </LikesWrapper>
       </InfoContainer>
-    </PostCardLayout>
+    </TagCardLayout>
   );
 }
 
-const PostCardLayout = styled.div`
+const TagCardLayout = styled.div`
   display: flex;
   flex-direction: column;
   border: ${({ theme }) => `1px solid ${theme.colors.neutrals_05}`};
@@ -56,23 +56,21 @@ const PostCardLayout = styled.div`
   }};
   border-radius: 16px;
   width: 320px;
-  height: 408px;
-  padding: 12px;
-  gap: 12px;
+  height: 376px;
+  gap: 8px;
 `;
 
 const ImageWrapper = styled.div`
   position: relative;
-  max-height: 280px;
-  border-radius: 10px;
+  height: 260px;
 `;
 
 const CardImage = styled.img`
-  width: 296px;
-
-  height: 280px;
+  width: 320px;
+  height: 260px;
   object-fit: cover;
-  border-radius: 10px;
+  border-top-right-radius: 16px;
+  border-top-left-radius: 16px;
 `;
 
 const TextWrapper = styled.div`
@@ -88,6 +86,7 @@ const TextWrapper = styled.div`
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   text-overflow: ellipsis;
+  padding: 0 4px 8px 4px;
 `;
 
 const InfoContainer = styled.div`
