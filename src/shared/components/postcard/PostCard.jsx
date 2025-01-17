@@ -3,22 +3,28 @@ import HeartFilled from "../../../assets/icons/red/heart_filled_r.svg?react";
 import Heart from "../../../assets/icons/red/Heart_R.svg?react";
 import ActionSelect from "./ActionSelect";
 import { useState } from "react";
+import useUserStore from "@/domains/auth/store/useUserStore";
+import { useLikeDonationStory } from "@/domains/donationstory/hooks/useLikeDonationStory";
 
-export default function PostCard({
-  imageUrl,
-  text,
-  dogName,
-  likes,
-  isAuthor,
-  handleEdit,
-  handleDelete,
-}) {
-  const imageurl = "/src/assets/images/dog.jpeg";
-  const profile = "/src/assets/images/profile.jpeg";
+export default function PostCard({ story, handleDelete, handleEdit }) {
+  const {
+    donationStorySeq,
+    cardImgUrl,
+    likeCnt,
+    likeYn,
+    content,
+    name,
+    profileImgUrl,
+    firstSaveUser,
+  } = story;
+  const { user } = useUserStore();
+  const [like, setLike] = useState(likeCnt);
+  const [isLiked, setIsLiked] = useState(likeYn);
+  const [isAuthor, setIsAuthor] = useState(false);
+  const mutation = useLikeDonationStory();
 
-  const [like, setLike] = useState(likes);
-  const [isLiked, setIsLiked] = useState(false);
-  console.log(isAuthor);
+  if (user.userId === firstSaveUser) setIsAuthor(true);
+
   const handleLike = () => {
     if (isLiked) {
       if (like === 0) return;
@@ -27,11 +33,12 @@ export default function PostCard({
       setLike((prev) => prev + 1);
     }
     setIsLiked(!isLiked);
+    mutation.mutate({ donationStorySeq, likeEvent: isLiked, userSeq: "1" });
   };
   return (
     <PostCardLayout>
       <ImageWrapper>
-        <CardImage src={imageurl} />
+        <CardImage src={cardImgUrl} />
         {isAuthor ? (
           <ActionSelectWrapper>
             <ActionSelect handleEdit={handleEdit} handleDelete={handleDelete} />
@@ -40,11 +47,11 @@ export default function PostCard({
           ""
         )}
       </ImageWrapper>
-      <TextWrapper>{text}</TextWrapper>
+      <TextWrapper>{content}</TextWrapper>
       <InfoContainer>
         <ProfileWrapper>
-          <ProfileImage src={profile} />
-          {dogName}
+          <ProfileImage src={profileImgUrl} />
+          {name}
         </ProfileWrapper>
         <LikesWrapper>
           {like}{" "}
