@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
 import HeartFilled from "../../../../assets/icons/red/heart_filled_r.svg?react";
 import Heart from "../../../../assets/icons/red/Heart_R.svg?react";
+import DefaultProfile from "../../../../assets/icons/default/Default_profile_32.svg?react";
 import ActionSelect from "./ActionSelect";
 import { useEffect, useState } from "react";
 import useUserStore from "@/domains/auth/store/useUserStore";
@@ -77,7 +78,11 @@ export default function PostCard({ story, handleDelete, handleEdit }) {
       <TextWrapper>{content}</TextWrapper>
       <InfoContainer>
         <ProfileWrapper>
-          <ProfileImage src={profileImgUrl} />
+          {profileImgUrl ? (
+            <ProfileImage src={profileImgUrl} />
+          ) : (
+            <DefaultProfile />
+          )}
           {name}
         </ProfileWrapper>
         <LikesWrapper>
