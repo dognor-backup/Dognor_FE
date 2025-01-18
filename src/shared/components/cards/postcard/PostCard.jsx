@@ -25,7 +25,6 @@ export default function PostCard({ story, handleDelete, handleEdit }) {
   const mutation = useLikeDonationStory();
   const userId = user.userData.userId;
   const navigate = useNavigate();
-  console.log(story);
 
   useEffect(() => {
     if (!userId) {
@@ -48,15 +47,21 @@ export default function PostCard({ story, handleDelete, handleEdit }) {
       setLike((prev) => prev + 1);
     }
 
+    mutation.mutate(
+      {
+        donationStorySeq: donationStorySeq,
+        likeEvent: isLiked ? "unlike" : "like",
+        userSeq: user.userData.userSeq,
+      },
+      {
+        onError: () => setIsLiked(!isLiked),
+      }
+    );
     setIsLiked(!isLiked);
-    mutation.mutate({
-      donationStorySeq: donationStorySeq,
-      likeEvent: isLiked ? "like" : "unlike",
-      userSeq: user.userData.userSeq,
-    },{
-      onError: () => setIsLiked(!isLiked)
-    });
   };
+  useEffect(() => {
+    console.log(isLiked);
+  }, [isLiked]);
   return (
     <PostCardLayout>
       <ImageWrapper>
