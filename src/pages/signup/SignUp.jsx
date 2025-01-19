@@ -28,7 +28,7 @@ import {
 
 const SignUp = () => {
   const { inputValues, getInputValue } = useGetValueFromTextInput();
-  const { userId, email, code } = inputValues;
+  const { userId, email, code, pw, checkpw } = inputValues;
   const [numberValue, setNumberValue] = useState("");
 
   //에러일 때
@@ -40,6 +40,29 @@ const SignUp = () => {
     email: "",
     agreement: "",
   });
+
+  useEffect(() => {
+    const defaultPw = pw || "";
+    const defaultCheckPw = checkpw || "";
+    const pwErrors = {};
+
+    //비밀번호 유효성 검사
+    defaultPw.length > 0 && !validatePassword(pw)
+      ? (errors.pw = "다시 확인해주세요")
+      : (errors.pw = "");
+
+    //비밀번호 재확인
+    defaultPw.length > 0 &&
+    defaultCheckPw.length > 0 &&
+    defaultPw !== defaultCheckPw
+      ? (errors.checkpw = "다시 확인해주세요")
+      : (errors.checkpw = "");
+
+    setErrors((prev) => ({
+      ...prev,
+      ...pwErrors,
+    }));
+  }, [pw, checkpw]);
 
   //체크박스
   const [checkbox, setCheckbox] = useState({
@@ -68,8 +91,7 @@ const SignUp = () => {
   const { emailCode } = useEmailCheckStore();
   const { registInfo } = useSignupStore();
 
-  //아이디 중복 체크 요청
-  // true면 중복 false면 중복 아님
+  //아이디 중복 체크 요청 true면 중복 false면 중복 아님
   const signupMutation = useUserRegist();
 
   const handleCheckIdDuplicate = () => {
@@ -83,7 +105,6 @@ const SignUp = () => {
     if (isIdValid) idCheckMutation.mutate({ userId });
   };
 
-  console.log("ddd", isUserIdVerified);
   //이메일 인증 코드 요청
   const handleRequestEmailCode = () => {
     const isEmailValid = validateEmail(email);
@@ -98,6 +119,7 @@ const SignUp = () => {
     console.log(isEmailVerified);
   };
 
+  //휴대폰 번호
   const handleKeyPress = (e) => {
     const { value } = e.target;
     if (/^[0-9]*$/.test(value)) setNumberValue(value);
@@ -112,8 +134,6 @@ const SignUp = () => {
     e.preventDefault();
 
     // 필수 체크 항목 확인
-
-    console.log("ddsdsd", isRequiredChecked);
     const formData = new FormData(e.target);
     const data = Object.fromEntries(formData.entries());
     //const { userId, pw, name, phone, email, userRole } = data;
@@ -130,17 +150,9 @@ const SignUp = () => {
         }
       })
     )
-      if (isUserIdVerified) {
-        return setErrors((prev) => ({
-          ...prev,
-          userId: !isUserIdVerified
-            ? "사용가능한 아이디 입니다."
-            : "이미 존재하는 아이디 입니다",
-        }));
+      if (isUserIdVerified || !isEmailVerified) {
+        return console.log("인증해쥇요");
       }
-    if (isUserIdVerified || !isEmailVerified) {
-      return console.log("인증해쥇요");
-    }
     /*  signupMutation.mutate({
       userId,
       pw,
@@ -263,10 +275,10 @@ const SignUp = () => {
             label="비밀번호"
             infoMessage={
               errors.pw
-                ? "다시 확인해주세요"
+                ? errors.pw
                 : "8~16자의 영 소문자, 숫자, 특수문자 만 사용"
             }
-            status="normal"
+            status={errors.pw && "error"}
             getInputValue={getInputValue}
           />
           <InputForm
@@ -276,7 +288,7 @@ const SignUp = () => {
             placeholder="비밀번호를 한 번 더 입력해 주세요"
             label="비밀번호 확인"
             infoMessage={errors.checkpw && errors.checkpw}
-            status="normal"
+            status={errors.checkpw && "error"}
             getInputValue={getInputValue}
           />
           <InputBtn
@@ -363,13 +375,9 @@ const SignUp = () => {
             isChecked={checkbox.agreement5}
           />
         </CheckBoxContainer>
-        {!isRequiredChecked && (
-          <Error style={{ textAlign: "center", marginBottom: "56px" }}>
-            {errors.agreement}
-          </Error>
-        )}
+        {!isRequiredChecked && <Error>{errors.agreement}</Error>}
         <div className="center">
-          <span style={{ position: "relative" }}>
+          <BtnContainer>
             <Button
               style={{ width: "320px", marginBottom: "100px" }}
               form="signupForm"
@@ -383,7 +391,7 @@ const SignUp = () => {
                 *추가 확인이 필요할 시 안내 메일이 발송됩니다.
               </InfoBlue>
             )}
-          </span>
+          </BtnContainer>
         </div>
       </PageWrapper>
     </form>
@@ -421,9 +429,14 @@ const Error = styled.div(
 font-weight: 700;
 color:${theme.colors.point_orange};
 line-height: 1.8;
-
+text-align: center;
+margin-bottom: 56px
 `
 );
+
+const BtnContainer = styled.div`
+  position: relative;
+`;
 const FormSection = styled.p`
   font-weight: 700;
   font-size: 22px;
