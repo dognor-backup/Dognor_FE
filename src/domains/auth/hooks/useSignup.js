@@ -1,21 +1,34 @@
 import { useMutation } from "@tanstack/react-query";
-import { checkDuplicate, checkUserEmail } from "../api/register";
-import { useEmailCheckStore, useIdCheckStore } from "../store/useSignupStore";
+import { checkDuplicate, checkUserEmail, registerUser } from "../api/register";
+import {
+  useEmailCheckStore,
+  useIdCheckStore,
+  useSignupStore,
+} from "../store/useSignupStore";
 
-// 조건이 모두 맞으면 (양식을 전부 입력, 유효성 검사 true) 데이터를 서버로 보내고,
-//성공하면 메인페이지로 실패하면 에러메세지
-
-//아이디 중복 확인
-export const useCheckDuplicate = () => {
+//아이디 중복 확인 응담
+export const useCheckDuplicate = (setErrors, setIsUserIdVerified) => {
   const { setUserId } = useIdCheckStore();
   return useMutation({
     mutationFn: checkDuplicate,
     onSuccess: ({ success, data }) => {
       if (success) {
         const { msg, code, data: nestedData } = data;
+
         setUserId({ msg, code, data: nestedData });
+        setIsUserIdVerified(nestedData);
+        console.log("결과", nestedData);
+        setErrors((prev) => ({
+          ...prev,
+          userId: nestedData
+            ? "이미 존재하는 아이디 입니다"
+            : "사용 가능한 아이디 입니다",
+        }));
       } else {
-        console.log("Error");
+        setErrors((prev) => ({
+          ...prev,
+          userId: "중복 확인에 실패했습니다. 다시 시도해주세요.",
+        }));
       }
     },
     onError: () => {
@@ -24,6 +37,7 @@ export const useCheckDuplicate = () => {
   });
 };
 
+//이메일 인증 응답
 export const useVerifyEmail = () => {
   const { setECode } = useEmailCheckStore();
   return useMutation({
@@ -33,6 +47,28 @@ export const useVerifyEmail = () => {
         console.log("이메일인증", data);
         const { msg, code, data: nestedData } = data;
         setECode({ msg, code, data: nestedData });
+      } else {
+        console.log("error");
+      }
+    },
+    onError: () => {
+      console.log("error!!!");
+    },
+  });
+};
+
+//회원가입 요청 응답
+// 조건이 모두 맞으면 (양식을 전부 입력, 유효성 검사 true) 데이터를 서버로 보내고,
+//성공하면 메인페이지로 실패하면 에러메세지
+export const useUserRegist = () => {
+  const { setRegistInfo } = useSignupStore();
+  return useMutation({
+    mutationFn: registerUser,
+    onSuccess: ({ success, data }) => {
+      if (success) {
+        console.log("회원가입", data);
+        const { msg, code, data: nestedData } = data;
+        setRegistInfo({ msg, code, data: nestedData });
       } else {
         console.log("error");
       }

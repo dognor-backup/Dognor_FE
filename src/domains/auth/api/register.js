@@ -38,3 +38,21 @@ export const checkUserEmail = async (userEmail) => {
     console.log(error);
   }
 };
+
+//회원가입 요청
+export const registerUser = async (userRegistInfo) => {
+  try {
+    const response = await AxiosInstance.post("/regist", userRegistInfo);
+    if (response.data.code === 200) {
+      return { success: true, data: response.data };
+    }
+    if (response.data.code === 400) {
+      return {
+        success: false,
+        msg: response.data.msg || "회원가입 요청 실패",
+      };
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};

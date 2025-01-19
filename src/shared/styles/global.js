@@ -171,6 +171,9 @@ export const GlobalStyles = css`
   .mgTop16 {
     margin-top: 16px;
   }
+  .mgTop20 {
+    margin-top: 20px;
+  }
   .mgTop26 {
     margin-top: 26px;
   }

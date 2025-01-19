@@ -1,11 +1,11 @@
-import { InputBtn } from "@/shared/components/input/InputBtn";
-import { InputForm } from "@/shared/components/input/InputForm";
+import { useEffect, useState } from "react";
+import styled from "@emotion/styled";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import styled from "@emotion/styled";
+import { InputBtn } from "@/shared/components/input/InputBtn";
+import { InputForm } from "@/shared/components/input/InputForm";
 import { Button } from "@/shared/components/buttons/Button";
 import Checkbox from "@/shared/components/checkbox/Checkbox";
-import { useState } from "react";
 import HospitalInfo from "./HospitalInfo";
 import { PageTop, PageWrapper } from "@/shared/layout/PageTopTitle";
 import useGetValueFromTextInput from "@/shared/hooks/useGetValueFromTextInput";
@@ -17,54 +17,73 @@ import {
 } from "@/shared/utils/validation";
 import {
   useCheckDuplicate,
+  useUserRegist,
   useVerifyEmail,
 } from "@/domains/auth/hooks/useSignup";
 import {
   useEmailCheckStore,
   useIdCheckStore,
+  useSignupStore,
 } from "@/domains/auth/store/useSignupStore";
 
 const SignUp = () => {
-  const [status, setStatus] = useState("normal");
-  const [infoMessage, setInfoMessage] = useState("");
-  const [inputValue, setInputValue] = useState("");
-  const [isHospitalStaff, setHospitalStaff] = useState(false);
   const { inputValues, getInputValue } = useGetValueFromTextInput();
+  const { userId, email, code } = inputValues;
+  const [numberValue, setNumberValue] = useState("");
 
-  const idCheckMutation = useCheckDuplicate();
+  //에러일 때
+  const [errors, setErrors] = useState({
+    userId: "",
+    pw: "",
+    checkpw: "",
+    phone: "",
+    email: "",
+    agreement: "",
+  });
+
+  //체크박스
+  const [checkbox, setCheckbox] = useState({
+    agreementAll: false,
+    agreement1: false,
+    agreement2: false,
+    agreement3: false,
+    agreement4: false,
+    agreement5: false,
+  });
+
+  const { agreement1, agreement2, agreement3 } = checkbox;
+  const isRequiredChecked = agreement1 && agreement2 && agreement3;
+  //회원구분
+  const [memberType, setMemberType] = useState("user");
+
   //이메일 인증
   const [isEmailVerified, setIsEmailVertified] = useState();
-
   const emailVerificationMutation = useVerifyEmail();
 
   //아이디 인증
-  // const [isUserIdVerified, setIsUserIdVerified] = useState(false);
+  const [isUserIdVerified, setIsUserIdVerified] = useState();
+  const idCheckMutation = useCheckDuplicate(setErrors, setIsUserIdVerified);
+
   const { checkedId } = useIdCheckStore();
-
-  const { pw, checkpw, userId, email, code } = inputValues;
-
   const { emailCode } = useEmailCheckStore();
+  const { registInfo } = useSignupStore();
 
-  const handleKeyPress = (e) => {
-    // 숫자가 아닌 키를 누르면 입력 차단
-    const input = e.target.value;
-    if (/^[0-9]*$/.test(input)) {
-      setInputValue(input);
-      setStatus("normal");
-      setInfoMessage("");
-    } else {
-      setStatus("error");
-      setInfoMessage("숫자만 입력해주세요");
-    }
-    const isValidPhoneNumber = validatePhoneNumber(input);
-  };
+  //아이디 중복 체크 요청
+  // true면 중복 false면 중복 아님
+  const signupMutation = useUserRegist();
 
-  //아이디 중복 확인 요청
   const handleCheckIdDuplicate = () => {
     const isIdValid = validateId(userId);
+    if (!userId || !validateId(userId)) {
+      return setErrors((prev) => ({
+        ...prev,
+        userId: "다시 확인해주세요",
+      }));
+    }
     if (isIdValid) idCheckMutation.mutate({ userId });
   };
 
+  console.log("ddd", isUserIdVerified);
   //이메일 인증 코드 요청
   const handleRequestEmailCode = () => {
     const isEmailValid = validateEmail(email);
@@ -73,22 +92,94 @@ const SignUp = () => {
 
   //인증 코드 확인
   const handleConfirmEmailCode = () => {
-    if (emailCode.data && code == emailCode.data) {
-      setIsEmailVertified(true);
-    } else {
-      setIsEmailVertified(false);
-    }
+    emailCode.data && code == emailCode.data
+      ? setIsEmailVertified(true)
+      : setIsEmailVertified(false);
+    console.log(isEmailVerified);
   };
 
-  const handleCheckIdAvailable = (e) => {
+  const handleKeyPress = (e) => {
+    const { value } = e.target;
+    if (/^[0-9]*$/.test(value)) setNumberValue(value);
+    const isValidPhoneNumber = validatePhoneNumber(value);
+    setErrors((prev) => ({
+      ...prev,
+      phone: isValidPhoneNumber ? "" : "숫자만 입력 가능합니다",
+    }));
+  };
+
+  const handleSubmitSignupForm = (e) => {
     e.preventDefault();
+
+    // 필수 체크 항목 확인
+
+    console.log("ddsdsd", isRequiredChecked);
+    const formData = new FormData(e.target);
+    const data = Object.fromEntries(formData.entries());
+    //const { userId, pw, name, phone, email, userRole } = data;
+    if (!isRequiredChecked) {
+      return setErrors((prev) => ({
+        ...prev,
+        agreement: "필수 동의 항목을 다시 확인해세요", // 에러 메시지 추가
+      }));
+    }
+    if (
+      Object.entries(data).forEach(([key, value]) => {
+        if (value.trim() === "") {
+          return setErrors((prev) => ({ ...prev, [key]: "다시 확인해주세요" }));
+        }
+      })
+    )
+      if (isUserIdVerified) {
+        return setErrors((prev) => ({
+          ...prev,
+          userId: !isUserIdVerified
+            ? "사용가능한 아이디 입니다."
+            : "이미 존재하는 아이디 입니다",
+        }));
+      }
+    if (isUserIdVerified || !isEmailVerified) {
+      return console.log("인증해쥇요");
+    }
+    /*  signupMutation.mutate({
+      userId,
+      pw,
+      name,
+      phone,
+      email,
+      userRole,
+      agreement1,
+      agreement2,
+      agreement3,
+      agreement4,
+      agreement5,
+    });
+    console.log("폼제출 성공", data); */
   };
 
   const getCheckValues = (e) => {
-    console.log(e.target);
+    const { name, checked } = e.target;
+
+    if (name === "agreementAll") {
+      setCheckbox({
+        agreementAll: checked,
+        agreement1: checked,
+        agreement2: checked,
+        agreement3: checked,
+        agreement4: checked,
+        agreement5: checked,
+      });
+    } else {
+      setCheckbox((prev) => ({
+        ...prev,
+        [name]: checked,
+        agreementAll: false,
+      }));
+    }
   };
+
   return (
-    <form onSubmit={handleCheckIdAvailable} id="signupForm">
+    <form onSubmit={handleSubmitSignupForm} id="signupForm">
       <PageWrapper>
         <PageTop>
           <h2>회원가입</h2>
@@ -98,7 +189,11 @@ const SignUp = () => {
 
         <FormSection>회원구분</FormSection>
 
-        <RadioGroup defaultValue="user" className="radioFlex">
+        <RadioGroup
+          defaultValue="user"
+          className="radioFlex"
+          onValueChange={(value) => setMemberType(value)}
+        >
           <div className="flex items-center space-x-2 ">
             <RadioGroupItem value="user" id="user" />
             <Label htmlFor="user">일반회원</Label>
@@ -109,7 +204,7 @@ const SignUp = () => {
           </div>
         </RadioGroup>
 
-        {isHospitalStaff && (
+        {memberType === "hospital" ? (
           <Info>
             <p>* 동물병원 당, 한개의 아이디를 생성 할 수 있습니다</p>
             <p>* 동물병원 대표원장/대표자 님께서 가입을 부탁드립니다. </p>
@@ -118,6 +213,8 @@ const SignUp = () => {
               진행됩니다
             </p>
           </Info>
+        ) : (
+          ""
         )}
         <FormSection>회원정보[필수]</FormSection>
         <UserInfo>
@@ -126,19 +223,20 @@ const SignUp = () => {
             name="name"
             placeholder="실명을 입력해주세요"
             label="이름"
-            infoMessage=""
+            infoMessage={errors.name && errors.name}
             status="normal"
             getInputValue={getInputValue}
           />
           <InputForm
-            className="mgTop16"
+            className="mgTop20"
             id="phone"
             name="phone"
             placeholder="01012341234 와 같이 입력해주세요"
             label="휴대폰"
-            infoMessage={infoMessage}
-            value={inputValue}
-            status={status}
+            infoMessage={errors.phone && errors.phone}
+            status={errors.phone && "error"}
+            value={numberValue}
+            getInputValue={getInputValue}
             onChange={handleKeyPress}
           />
           <InputBtn
@@ -149,33 +247,35 @@ const SignUp = () => {
             placeholder="아이디를 입력해주세요"
             label="아이디"
             infoMessage={
-              checkedId.data == null
+              errors.userId === ""
                 ? "5~20자의 영문 소문자, 숫자 만 사용"
-                : checkedId.data
-                ? "사용가능한 아이디입니다"
-                : "이미 존재하는 아이디입니다"
+                : errors.userId
             }
-            status="normal"
+            status={checkedId.data && "error"}
             getInputValue={getInputValue}
             onClick={handleCheckIdDuplicate}
           />
           <InputForm
-            className="mgTop16"
+            className="mgTop20"
             id="pw"
             name="pw"
             placeholder="비밀번호를 입력해주세요"
             label="비밀번호"
-            infoMessage="8~16자의 영 소문자, 숫자, 특수문자 만 사용"
+            infoMessage={
+              errors.pw
+                ? "다시 확인해주세요"
+                : "8~16자의 영 소문자, 숫자, 특수문자 만 사용"
+            }
             status="normal"
             getInputValue={getInputValue}
           />
           <InputForm
-            className="mgTop16"
+            className="mgTop20"
             id="checkpw"
             name="checkpw"
             placeholder="비밀번호를 한 번 더 입력해 주세요"
             label="비밀번호 확인"
-            infoMessage=""
+            infoMessage={errors.checkpw && errors.checkpw}
             status="normal"
             getInputValue={getInputValue}
           />
@@ -193,19 +293,13 @@ const SignUp = () => {
           />
 
           <InputBtn
-            className="mgTop16"
+            className="mgTop20"
             id="code"
             name="code"
             BtnText="인증 코드 확인"
             placeholder="메일로 발송된 코드 6자리를 입력해 주세요"
             label="본인인증(코드작성)"
-            infoMessage={
-              isEmailVerified == null
-                ? ""
-                : isEmailVerified
-                ? "인증이 확인되었습니다"
-                : "다시 확인해주세요"
-            }
+            infoMessage=""
             status="normal"
             getInputValue={getInputValue}
             onClick={handleConfirmEmailCode}
@@ -213,51 +307,83 @@ const SignUp = () => {
         </UserInfo>
 
         {/*   병원 정보 입력 */}
-        {isHospitalStaff && (
+        {memberType === "hospital" ? (
           <>
             <FormSection>병원정보[필수]</FormSection>
             <HospitalInfo />
           </>
+        ) : (
+          ""
         )}
 
         <div className="center">
           <Button variant="normal">정보 수집 동의서 설명 읽기</Button>
         </div>
-        <Checkbox
-          className="mgTop26 pdLeft48"
-          name={"agreement1"}
-          label="전체 동의하기"
-          onChange={getCheckValues}
-        />
-        <Checkbox
-          className="mgTop26 pdLeft48"
-          name={"agreement2"}
-          label="[필수] 만 14세 이상입니다."
-        />
-        <Checkbox
-          className="mgTop26 pdLeft48"
-          name={"agreement3"}
-          label="[필수] 이용약관"
-        />
-        <Checkbox
-          className="mgTop26 pdLeft48"
-          name={"agreement4"}
-          label="[필수] 개인정보 수집 및 이용"
-        />
-        <Checkbox
-          className="mgTop26 pdLeft48"
-          name={"agreement5"}
-          label="[선택] 위치기반서비스 이용약관"
-        />
-        <Checkbox
-          className="mgTop26 pdLeft48"
-          name={"agreement6"}
-          label="[선택] 이벤트 ・ 혜택 정보 수신 "
-        />
+        <CheckBoxContainer>
+          <Checkbox
+            className="mgTop26 pdLeft48"
+            name="agreementAll"
+            label="전체 동의하기"
+            onChange={getCheckValues}
+            isChecked={checkbox.agreementAll}
+          />
+          <Checkbox
+            className="mgTop26 pdLeft48"
+            name="agreement1"
+            label="[필수] 만 14세 이상입니다."
+            onChange={getCheckValues}
+            isChecked={checkbox.agreement1}
+          />
+          <Checkbox
+            className="mgTop26 pdLeft48"
+            name="agreement2"
+            label="[필수] 이용약관"
+            onChange={getCheckValues}
+            isChecked={checkbox.agreement2}
+          />
+          <Checkbox
+            className="mgTop26 pdLeft48"
+            name="agreement3"
+            label="[필수] 개인정보 수집 및 이용"
+            onChange={getCheckValues}
+            isChecked={checkbox.agreement3}
+          />
+          <Checkbox
+            className="mgTop26 pdLeft48"
+            name="agreement4"
+            label="[선택] 위치기반서비스 이용약관"
+            onChange={getCheckValues}
+            isChecked={checkbox.agreement4}
+          />
+          <Checkbox
+            className="mgTop26 pdLeft48"
+            name="agreement5"
+            label="[선택] 이벤트 ・ 혜택 정보 수신 "
+            onChange={getCheckValues}
+            isChecked={checkbox.agreement5}
+          />
+        </CheckBoxContainer>
+        {!isRequiredChecked && (
+          <Error style={{ textAlign: "center", marginBottom: "56px" }}>
+            {errors.agreement}
+          </Error>
+        )}
         <div className="center">
-          <Button style={{ width: "320px" }} form="signupForm">
-            {isHospitalStaff ? "의료관계자 가입요청" : "회원 가입하기"}
-          </Button>
+          <span style={{ position: "relative" }}>
+            <Button
+              style={{ width: "320px", marginBottom: "100px" }}
+              form="signupForm"
+            >
+              {memberType === "hospital"
+                ? "의료관계자 가입요청"
+                : "회원 가입하기"}
+            </Button>
+            {memberType === "hospital" && (
+              <InfoBlue>
+                *추가 확인이 필요할 시 안내 메일이 발송됩니다.
+              </InfoBlue>
+            )}
+          </span>
         </div>
       </PageWrapper>
     </form>
@@ -268,6 +394,7 @@ export default SignUp;
 const UserInfo = styled.div`
   display: flex;
   flex-direction: column;
+  margin-bottom: 56px;
 `;
 
 const Info = styled.div(
@@ -278,10 +405,31 @@ line-height: 1.8;
 margin-top: 48px
 `
 );
+const InfoBlue = styled.div(
+  ({ theme }) => `
+  font-weight: 700;
+  color:${theme.colors.primary_blue};
+  position: absolute;
+  top: 60px;
+      right: 0;
+    left: 0;
+    text-align: center;
+   `
+);
+const Error = styled.div(
+  ({ theme }) => `
+font-weight: 700;
+color:${theme.colors.point_orange};
+line-height: 1.8;
 
+`
+);
 const FormSection = styled.p`
   font-weight: 700;
   font-size: 22px;
   margin-bottom: 32px;
-  margin-top: 50px;
+  padding-top: 50px;
+`;
+const CheckBoxContainer = styled.div`
+  margin-bottom: 56px;
 `;

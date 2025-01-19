@@ -20,34 +20,12 @@ export const useEmailCheckStore = create((set) => ({
   setECode: (status) => set({ emailCode: { ...status } }),
 }));
 
-//회원가입
+//회원가입 요청
 export const useSignupStore = create((set) => ({
-  register: {
-    userId: "",
-    pw: "",
-    name: "",
-    phone: "",
-    email: "",
-    userRole: "",
-    hospital: {
-      hospitalName: "",
-      representativeName: "",
-      address: "",
-      addressDetail: "",
-      postalCode: "",
-      hospitalPhone: "",
-      agreement1: null,
-      donationYn: null,
-      donationFreeYn: null,
-    },
-    agreement1: null,
-    agreement2: null,
-    agreement3: null,
-    agreement4: null,
-    agreement5: null,
+  registInfo: {
+    msg: "",
+    code: null,
+    data: {},
   },
-  setRegister: (registerData) =>
-    set((state) => ({
-      register: { ...state.register, ...registerData },
-    })),
+  setRegistInfo: (status) => set({ registInfo: { ...status } }),
 }));

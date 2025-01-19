@@ -40,7 +40,7 @@ export const InputBtn = ({
           placeholder={placeholder}
           onChange={handleInputValue}
         />
-        <Button status={status} {...props} type="submit">
+        <Button status={status} {...props} type="button">
           {BtnText}
         </Button>
       </Flex>
