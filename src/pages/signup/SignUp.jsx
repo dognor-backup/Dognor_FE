@@ -25,12 +25,12 @@ import {
   useIdCheckStore,
   useSignupStore,
 } from "@/domains/auth/store/useSignupStore";
-
+import { useNavigate } from "react-router-dom";
 const SignUp = () => {
   const { inputValues, getInputValue } = useGetValueFromTextInput();
   const { userId, email, code, pw, checkpw } = inputValues;
   const [numberValue, setNumberValue] = useState("");
-
+  const navigate = useNavigate();
   //에러일 때
   const [errors, setErrors] = useState({
     userId: "",
@@ -192,7 +192,16 @@ const SignUp = () => {
       }));
     }
   };
-
+  const openAgreementPage = () => {
+    const newWindow = window.open("/agreement", "_blank");
+    if (newWindow) {
+      // 새 창이 성공적으로 열렸을 경우
+      newWindow.focus();
+    } else {
+      // 팝업 차단으로 인해 새 창이 열리지 않은 경우
+      alert("새 창을 열 수 없습니다. 팝업 차단 설정을 확인하세요.");
+    }
+  };
   return (
     <form onSubmit={handleSubmitSignupForm} id="signupForm">
       <PageWrapper>
@@ -332,7 +341,9 @@ const SignUp = () => {
         )}
 
         <div className="center">
-          <Button variant="normal">정보 수집 동의서 설명 읽기</Button>
+          <Button variant="normal" onClick={openAgreementPage}>
+            정보 수집 동의서 설명 읽기
+          </Button>
         </div>
         <CheckBoxContainer>
           <Checkbox
