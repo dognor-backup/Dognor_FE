@@ -221,30 +221,30 @@ const Title = styled.h2(
 );
 const InfoWrapper = styled.div(
   ({ theme }) => `
-border: 2px solid ${theme.colors.neutrals_05};
-box-shadow: 4px 4px 16px 0 rgba(0,0,0,0.25);
-padding: 32px 24px 64px 24px;
-border-radius: 16px;
-margin-top: 48px;
-position: relative;
+  border: 2px solid ${theme.colors.neutrals_05};
+  box-shadow: 4px 4px 16px 0 rgba(0,0,0,0.25);
+  padding: 32px 24px 64px 24px;
+  border-radius: 16px;
+  margin-top: 48px;
+  position: relative;
 
-&::after {
- content: '';
-    position: absolute;
-    display:  inline-block;
-    width: 32px;
-    height: 32px;
-    bottom: 32px;
-    right: 24px;
-    background : url("/src/assets/icons/gray/dog_foot_g.svg");
-    background-size: contain;
+  &::after {
+  content: '';
+  position: absolute;
+  display:  inline-block;
+  width: 32px;
+  height: 32px;
+  bottom: 32px;
+  right: 24px;
+  background : url("/src/assets/icons/gray/dog_foot_g.svg");
+  background-size: contain;
 }
 `
 );
 const InfoSubTitle = styled.strong(
   ({ theme }) => `
-color: ${theme.colors.primary_purple};
-text-align: center;
+  color: ${theme.colors.primary_purple};
+  text-align: center;
   font-size: 24px;
   font-weight: 700;
   display: block;
@@ -253,51 +253,49 @@ text-align: center;
 );
 const InfoList = styled.li(
   ({ theme }) => `
-border-bottom: 1px solid ${theme.colors.neutrals_05};
-min-height: 36px;
-display: flex;
-align-items: center;
-margin-bottom: 16px;
-padding: 0 6px;
+  border-bottom: 1px solid ${theme.colors.neutrals_05};
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+  padding: 0 6px;
 `
 );
 
 const InfoSum = styled.span(
   ({ theme, num, narrow }) => `
-display: inline-block;
-width: ${narrow ? "220px" : "330px"};
-font-weight: 700;
-font-size: 18px;
-color: ${theme.colors.neutrals_00};
-position: relative;
-padding-left: 48px;
-margin-right: 28px;
+  display: inline-block;
+  width: ${narrow ? "220px" : "330px"};
+  font-weight: 700;
+  font-size: 18px;
+  color: ${theme.colors.neutrals_00};
+  position: relative;
+  padding-left: 48px;
+  margin-right: 28px;
  &::before {
-    content:"";
-    color: ${num ? `${theme.colors.primary_purple}` : "inherit"};
-    position: absolute;
-    display:  inline-block;
-    width: 24px;
-    height: 24px;
-    bottom: -4px;
-    left: 0;
-    background : ${
-      !num
-        ? "url('/src/assets/icons/secondary/check_secondary.svg')"
-        : `url('/src/assets/icons/number/purple_num${num}.svg')`
-    };
-    background-repeat: no-repeat;
-        background-position: center;
+  content:"";
+  color: ${num ? `${theme.colors.primary_purple}` : "inherit"};
+  position: absolute;
+  display:  inline-block;
+  width: 24px;
+  height: 24px;
+  bottom: -4px;
+  left: 0;
+  background : ${
+    !num
+      ? "url('/src/assets/icons/secondary/check_secondary.svg')"
+      : `url('/src/assets/icons/number/purple_num${num}.svg')`
+  };
+  background-repeat: no-repeat;
+  background-position: center;
   }
 `
 );
-const InfoText = styled.span(
-  ({ theme }) => `
-font-weight: 400;
-font-size: 14px;
-line-height: 24px;
-`
-);
+const InfoText = styled.span`
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 24px;
+`;
 const Article = styled.div(
   ({ pdTop }) => `
   padding-bottom: 100px;
@@ -346,53 +344,53 @@ const GridRight = styled.div`
 `;
 const GridTitle = styled.div(
   ({ theme, num }) => `
-color: ${theme.colors.neutrals_01};
-font-size: 22px;
-font-weight: 700;
-line-height: 28px;
-margin-bottom: 20px;
-    display: flex;
-    align-items: center;
- &::before {
- content: "";
- display: inline-block;
- width: 24px;
- height: 24px;
- background-image: url("/src/assets/icons/number/navy_num${num}.svg");
-   background-repeat: no-repeat;
-        background-position: center;
-        margin-right: 6px
+  color: ${theme.colors.neutrals_01};
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 28px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  &::before {
+  content: "";
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  background-image: url("/src/assets/icons/number/navy_num${num}.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  margin-right: 6px
  }
 `
 );
 const BgBox = styled.div(
   ({ theme }) => `
-background-color: ${theme.colors.neutrals_07};
+  background-color: ${theme.colors.neutrals_07};
   border: 2px solid ${theme.colors.neutrals_05};
-padding: 32px;
-border-radius: 16px;
-    display: flex;
-    padding: 32px;
-    border-radius: 16px;
-        align-items: center;
-        position: relative;
-        display: grid;
-    grid-template-columns: 260px auto;
-    gap: 55px;
-         &::before {
-    content: "";
-    display: inline-block;
-    border: 0.5px solid ${theme.colors.neutrals_04};
-    position: absolute;
-    height: calc(100% - 64px);
-    left: 300px;
-    margin: 0 20px;
+  padding: 32px;
+  border-radius: 16px;
+  display: flex;
+  padding: 32px;
+  border-radius: 16px;
+  align-items: center;
+  position: relative;
+  display: grid;
+  grid-template-columns: 260px auto;
+  gap: 55px;
+  &::before {
+  content: "";
+  display: inline-block;
+  border: 0.5px solid ${theme.colors.neutrals_04};
+  position: absolute;
+  height: calc(100% - 64px);
+  left: 300px;
+  margin: 0 20px;
   }
 `
 );
 const BgBoxes = styled.div(
   ({ theme }) => `
-flex-direction: column;
+  flex-direction: column;
   display: flex;
   gap: 24px;
  `
@@ -406,6 +404,5 @@ const BgBoxLeft = styled.span(
   position: relative;
   font-weight: 700;
   line-height: 24px;
- 
 `
 );
