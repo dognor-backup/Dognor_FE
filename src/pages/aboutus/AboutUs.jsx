@@ -68,11 +68,11 @@ export default function AboutUs() {
         <DognorRoleTextContainer>
           <DognorRoleTextTitle>
             <DognorRoleTextTitleHighlighted>
-              <QuoteLeft />
+              <QuoteLeft className="quote-left" />
               헌혈하개
-              <QuoteRight />
+              <QuoteRight className="quote-right" />
             </DognorRoleTextTitleHighlighted>
-            의 역할
+            &nbsp; 의 역할
           </DognorRoleTextTitle>
           <DognorRoleTextContent>
             정보 제공뿐만 아니라 다양한 참여자들이 서로 도움을 주고받고,
@@ -242,11 +242,26 @@ const DognorRoleTextContent = styled.p`
 `;
 
 const DognorRoleTextTitleHighlighted = styled.span`
-  display: flex;
+  display: inline-block;
   gap: 4px;
   font-family: "BMJUA";
   font-size: 32px;
   color: ${({ theme }) => theme.colors.primary_blue};
+  position: relative;
+
+  svg {
+    position: absolute;
+  }
+
+  .quote-left {
+    top: 6px;
+    left: -14px;
+  }
+
+  .quote-right {
+    top: 6px;
+    right: -14px;
+  }
 `;
 
 const DognorRoleCardContainer = styled.div`
