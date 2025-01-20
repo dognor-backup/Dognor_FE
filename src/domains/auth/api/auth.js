@@ -30,3 +30,7 @@ export const login = async (credentials) => {
     return { success: false, msg: "네트워크 오류. 연결 상태를 확인해주세요." };
   }
 };
+
+export const fetchUserData = async (token) => {
+  const response = await AxiosInstance.get("")
+}
