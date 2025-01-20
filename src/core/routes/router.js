@@ -11,6 +11,7 @@ import Login from "@/pages/login/Login";
 import FindAccount from "@/pages/findaccount/FindAccount";
 import SignUp from "@/pages/signup/SignUp";
 import App from "@/App";
+import { Agreement } from "@/pages/signup/Agreement";
 
 const router = createBrowserRouter([
   {
@@ -64,7 +65,7 @@ const router = createBrowserRouter([
   { path: "changepassword", Component: Home },
 
   { path: "welcome", Component: Home },
-  { path: "이용약관", Component: Home },
+  { path: "agreement", Component: Agreement },
   { path: "*", Component: Home }, // 모든 경로에 대해 에러 처리
 ]);
 

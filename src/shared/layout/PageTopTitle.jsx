@@ -1,16 +1,18 @@
 import styled from "@emotion/styled";
 
-const PageTop = ({ children }) => {
-  return <TopWrapper>{children}</TopWrapper>;
+const PageTop = ({ children, noNav }) => {
+  return <TopWrapper noNav>{children}</TopWrapper>;
 };
 
-const PageWrapper = ({ children }) => {
-  return <AlignCenter>{children}</AlignCenter>;
+const PageWrapper = ({ children, medium }) => {
+  return <AlignCenter medium>{children}</AlignCenter>;
 };
+
 export { PageTop, PageWrapper };
 
-const TopWrapper = styled.div`
-  margin-top: 130px;
+const TopWrapper = styled.div(
+  ({ noNav }) => `
+  margin-top: ${noNav ? "0px" : "130px"};
   text-align: center;
   padding-top: 100px;
   h2 {
@@ -30,8 +32,12 @@ const TopWrapper = styled.div`
     font-weight: 400;
     line-height: 1.5;
   }
-`;
-const AlignCenter = styled.div`
+`
+);
+const AlignCenter = styled.div(
+  ({ medium }) => `
   margin: 0 auto;
-  max-width: 836px;
-`;
+  max-width: ${medium ? "836px" : "1008px"}
+
+`
+);

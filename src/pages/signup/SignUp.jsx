@@ -39,6 +39,7 @@ const SignUp = () => {
     phone: "",
     email: "",
     agreement: "",
+    code: "",
   });
 
   useEffect(() => {
@@ -116,7 +117,9 @@ const SignUp = () => {
     emailCode.data && code == emailCode.data
       ? setIsEmailVertified(true)
       : setIsEmailVertified(false);
-    console.log(isEmailVerified);
+    isEmailVerified
+      ? setErrors((prev) => ({ ...prev, code: "인증 완료" }))
+      : setErrors((prev) => ({ ...prev, code: "다시 확인해주세요" }));
   };
 
   //휴대폰 번호
@@ -295,7 +298,7 @@ const SignUp = () => {
             className="mgTop32"
             id="email"
             name="email"
-            BtnText={isEmailVerified ? "인증 코드 재발송" : "인증 코드 발송"}
+            BtnText={emailCode.data ? "인증 코드 재발송" : "인증 코드 발송"}
             placeholder="이메일을 전체 작성해주세요"
             label="이메일"
             infoMessage="5~20자의 영문 소문자, 숫자 만 사용"
@@ -311,8 +314,8 @@ const SignUp = () => {
             BtnText="인증 코드 확인"
             placeholder="메일로 발송된 코드 6자리를 입력해 주세요"
             label="본인인증(코드작성)"
-            infoMessage=""
-            status="normal"
+            infoMessage={errors.code && errors.code}
+            status={!isEmailVerified && errors.code && "error"}
             getInputValue={getInputValue}
             onClick={handleConfirmEmailCode}
           />
