@@ -28,6 +28,8 @@ const RoleCardLayout = styled.div`
 `;
 
 const TextContainer = styled.div`
+  display: flex;
+  flex-direction: column;
   gap: 6px;
 `;
 

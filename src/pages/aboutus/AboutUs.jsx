@@ -289,7 +289,7 @@ const DognorPurposeContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 48px;
+  gap: 24px;
   max-width: 1080px;
   min-width: 1080px;
 `;

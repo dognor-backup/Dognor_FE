@@ -65,7 +65,6 @@ const TopNavMenuLayout = styled.div`
   transform: ${({ isMenuOpen }) =>
     isMenuOpen ? "translateY(0)" : "translateY(-100%)"};
   transition: 0.5s;
-  z-index: 1;
 `;
 
 const TopNavMenuLink = styled(Link)`
