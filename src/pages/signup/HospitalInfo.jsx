@@ -10,7 +10,7 @@ import { useState } from "react";
 
 const HospitalInfo = () => {
   const { inputValues, getInputValue } = useGetValueFromTextInput();
-  const [agreement1, setAgreement1] = useState(true);
+  const [agreement1, setAgreement1] = useState(false);
   const [numberValue, setNumberValue] = useState("");
 
   const handleKeyPress = (e) => {

@@ -5,6 +5,7 @@ import {
   useIdCheckStore,
   useSignupStore,
 } from "../store/useSignupStore";
+import { useNavigate } from "react-router-dom";
 
 //아이디 중복 확인 응담
 export const useCheckDuplicate = (setErrors, setIsUserIdVerified) => {
@@ -14,7 +15,6 @@ export const useCheckDuplicate = (setErrors, setIsUserIdVerified) => {
     onSuccess: ({ success, data }) => {
       if (success) {
         const { msg, code, data: nestedData } = data;
-
         setUserId({ msg, code, data: nestedData });
         setIsUserIdVerified(nestedData);
         console.log("결과", nestedData);
@@ -58,9 +58,8 @@ export const useVerifyEmail = () => {
 };
 
 //회원가입 요청 응답
-// 조건이 모두 맞으면 (양식을 전부 입력, 유효성 검사 true) 데이터를 서버로 보내고,
-//성공하면 메인페이지로 실패하면 에러메세지
 export const useUserRegist = () => {
+  const navigate = useNavigate();
   const { setRegistInfo } = useSignupStore();
   return useMutation({
     mutationFn: registerUser,
@@ -69,6 +68,7 @@ export const useUserRegist = () => {
         console.log("회원가입", data);
         const { msg, code, data: nestedData } = data;
         setRegistInfo({ msg, code, data: nestedData });
+        navigate("/welcome");
       } else {
         console.log("error");
       }

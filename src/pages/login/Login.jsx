@@ -35,7 +35,7 @@ export default function Login() {
       mutation.mutate({ userId: idInput, pw: pwInput, rememberMe });
     }
   };
-
+  console.log(rememberMe);
   const handleSignupClick = () => navigate("/signup");
 
   return (

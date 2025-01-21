@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 
 const PageTop = ({ children, noNav }) => {
-  return <TopWrapper noNav>{children}</TopWrapper>;
+  return <TopWrapper noNav={noNav}>{children}</TopWrapper>;
 };
 
 const PageWrapper = ({ children, medium }) => {

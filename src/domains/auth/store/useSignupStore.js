@@ -25,7 +25,7 @@ export const useSignupStore = create((set) => ({
   registInfo: {
     msg: "",
     code: null,
-    data: {},
+    data: null,
   },
   setRegistInfo: (status) => set({ registInfo: { ...status } }),
 }));

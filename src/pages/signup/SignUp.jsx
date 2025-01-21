@@ -25,12 +25,12 @@ import {
   useIdCheckStore,
   useSignupStore,
 } from "@/domains/auth/store/useSignupStore";
-import { useNavigate } from "react-router-dom";
+
 const SignUp = () => {
   const { inputValues, getInputValue } = useGetValueFromTextInput();
-  const { userId, email, code, pw, checkpw } = inputValues;
+  const { userId, email, code, pw, checkpw, phone } = inputValues;
   const [numberValue, setNumberValue] = useState("");
-  const navigate = useNavigate();
+
   //에러일 때
   const [errors, setErrors] = useState({
     userId: "",
@@ -75,14 +75,15 @@ const SignUp = () => {
     agreement5: false,
   });
 
-  const { agreement1, agreement2, agreement3 } = checkbox;
+  const { agreement1, agreement2, agreement3, agreement4, agreement5 } =
+    checkbox;
   const isRequiredChecked = agreement1 && agreement2 && agreement3;
   //회원구분
-  const [memberType, setMemberType] = useState("user");
+  const [memberType, setMemberType] = useState("USER");
 
   //이메일 인증
   const [isEmailVerified, setIsEmailVertified] = useState();
-  const emailVerificationMutation = useVerifyEmail();
+  const emailVerificationMutation = useVerifyEmail(setIsEmailVertified);
 
   //아이디 인증
   const [isUserIdVerified, setIsUserIdVerified] = useState();
@@ -114,12 +115,16 @@ const SignUp = () => {
 
   //인증 코드 확인
   const handleConfirmEmailCode = () => {
-    emailCode.data && code == emailCode.data
-      ? setIsEmailVertified(true)
-      : setIsEmailVertified(false);
-    isEmailVerified
-      ? setErrors((prev) => ({ ...prev, code: "인증 완료" }))
-      : setErrors((prev) => ({ ...prev, code: "다시 확인해주세요" }));
+    console.log("code", emailCode.data, code);
+
+    if (emailCode?.data === code) {
+      setIsEmailVertified(true);
+      setErrors((prev) => ({ ...prev, code: "인증 완료" }));
+    } else {
+      setIsEmailVertified(false);
+      setErrors((prev) => ({ ...prev, code: "다시 확인해주세요" }));
+    }
+    console.log(isEmailVerified);
   };
 
   //휴대폰 번호
@@ -139,7 +144,16 @@ const SignUp = () => {
     // 필수 체크 항목 확인
     const formData = new FormData(e.target);
     const data = Object.fromEntries(formData.entries());
-    //const { userId, pw, name, phone, email, userRole } = data;
+    const userRole = memberType;
+
+    let {
+      userId,
+      pw,
+      name,
+
+      email,
+    } = data;
+
     if (!isRequiredChecked) {
       return setErrors((prev) => ({
         ...prev,
@@ -156,11 +170,11 @@ const SignUp = () => {
       if (isUserIdVerified || !isEmailVerified) {
         return console.log("인증해쥇요");
       }
-    /*  signupMutation.mutate({
+    signupMutation.mutate({
       userId,
       pw,
       name,
-      phone,
+      phone: numberValue,
       email,
       userRole,
       agreement1,
@@ -169,26 +183,25 @@ const SignUp = () => {
       agreement4,
       agreement5,
     });
-    console.log("폼제출 성공", data); */
   };
 
   const getCheckValues = (e) => {
     const { name, checked } = e.target;
-
+    const value = checked ? 1 : 0;
     if (name === "agreementAll") {
       setCheckbox({
-        agreementAll: checked,
-        agreement1: checked,
-        agreement2: checked,
-        agreement3: checked,
-        agreement4: checked,
-        agreement5: checked,
+        agreementAll: value,
+        agreement1: value,
+        agreement2: value,
+        agreement3: value,
+        agreement4: value,
+        agreement5: value,
       });
     } else {
       setCheckbox((prev) => ({
         ...prev,
-        [name]: checked,
-        agreementAll: false,
+        [name]: value,
+        agreementAll: 0,
       }));
     }
   };
@@ -205,7 +218,7 @@ const SignUp = () => {
   return (
     <form onSubmit={handleSubmitSignupForm} id="signupForm">
       <PageWrapper>
-        <PageTop>
+        <PageTop noNav={false}>
           <h2>회원가입</h2>
           <h3>반려견의 헌혈문화 함께 만들어 볼까요?</h3>
           <span>회원 가입을 위해 필요한 정보를 입력해주세요.</span>
@@ -214,21 +227,21 @@ const SignUp = () => {
         <FormSection>회원구분</FormSection>
 
         <RadioGroup
-          defaultValue="user"
+          defaultValue="USER"
           className="radioFlex"
           onValueChange={(value) => setMemberType(value)}
         >
           <div className="flex items-center space-x-2 ">
-            <RadioGroupItem value="user" id="user" />
-            <Label htmlFor="user">일반회원</Label>
+            <RadioGroupItem value="USER" id="USER" />
+            <Label htmlFor="USER">일반회원</Label>
           </div>
           <div className="flex items-center space-x-2">
-            <RadioGroupItem value="hospital" id="hospital" />
-            <Label htmlFor="hospital">병원관계자</Label>
+            <RadioGroupItem value="HOSPITAL" id="HOSPITAL" />
+            <Label htmlFor="HOSPITAL">병원관계자</Label>
           </div>
         </RadioGroup>
 
-        {memberType === "hospital" ? (
+        {memberType === "HOSPITAL" ? (
           <Info>
             <p>* 동물병원 당, 한개의 아이디를 생성 할 수 있습니다</p>
             <p>* 동물병원 대표원장/대표자 님께서 가입을 부탁드립니다. </p>
@@ -331,7 +344,7 @@ const SignUp = () => {
         </UserInfo>
 
         {/*   병원 정보 입력 */}
-        {memberType === "hospital" ? (
+        {memberType === "HOSPITAL" ? (
           <>
             <FormSection>병원정보[필수]</FormSection>
             <HospitalInfo />
@@ -351,42 +364,42 @@ const SignUp = () => {
             name="agreementAll"
             label="전체 동의하기"
             onChange={getCheckValues}
-            isChecked={checkbox.agreementAll}
+            checked={checkbox.agreementAll}
           />
           <Checkbox
             className="mgTop26 pdLeft48"
             name="agreement1"
             label="[필수] 만 14세 이상입니다."
             onChange={getCheckValues}
-            isChecked={checkbox.agreement1}
+            checked={checkbox.agreement1}
           />
           <Checkbox
             className="mgTop26 pdLeft48"
             name="agreement2"
             label="[필수] 이용약관"
             onChange={getCheckValues}
-            isChecked={checkbox.agreement2}
+            checked={checkbox.agreement2}
           />
           <Checkbox
             className="mgTop26 pdLeft48"
             name="agreement3"
             label="[필수] 개인정보 수집 및 이용"
             onChange={getCheckValues}
-            isChecked={checkbox.agreement3}
+            checked={checkbox.agreement3}
           />
           <Checkbox
             className="mgTop26 pdLeft48"
             name="agreement4"
             label="[선택] 위치기반서비스 이용약관"
             onChange={getCheckValues}
-            isChecked={checkbox.agreement4}
+            checked={checkbox.agreement4}
           />
           <Checkbox
             className="mgTop26 pdLeft48"
             name="agreement5"
             label="[선택] 이벤트 ・ 혜택 정보 수신 "
             onChange={getCheckValues}
-            isChecked={checkbox.agreement5}
+            checked={checkbox.agreement5}
           />
         </CheckBoxContainer>
         {!isRequiredChecked && <Error>{errors.agreement}</Error>}
@@ -396,11 +409,11 @@ const SignUp = () => {
               style={{ width: "320px", marginBottom: "100px" }}
               form="signupForm"
             >
-              {memberType === "hospital"
+              {memberType === "HOSPITAL"
                 ? "의료관계자 가입요청"
                 : "회원 가입하기"}
             </Button>
-            {memberType === "hospital" && (
+            {memberType === "HOSPITAL" && (
               <InfoBlue>
                 *추가 확인이 필요할 시 안내 메일이 발송됩니다.
               </InfoBlue>

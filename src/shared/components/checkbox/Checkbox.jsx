@@ -1,18 +1,18 @@
 import styled from "@emotion/styled";
 
-const Checkbox = ({ name, size, label, className, isChecked, ...props }) => {
+const Checkbox = ({ name, size, label, className, checked, ...props }) => {
   return (
     <div>
       <InputChk
         type="checkbox"
         name={name}
         id={name}
-        checked={isChecked}
+        checked={checked}
         {...props}
       />
       <LabelChk
         htmlFor={name}
-        checked={isChecked}
+        checked={checked}
         size={size}
         className={className}
       >
