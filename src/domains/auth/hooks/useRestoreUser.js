@@ -18,11 +18,9 @@ const restoreUserFromDB = async (setUser, resetUser) => {
         if (currentTime >= user.expirationTime) {
           clearUserFromDB();
           resetUser();
-          console.log("로그인 세션이 만료되었습니다. 자동 로그아웃 처리.");
           resolve(null);
         } else {
           setUser(user);
-          console.log("유저 정보 복원 완료:", user);
           resolve(user);
         }
       } else {
@@ -45,7 +43,6 @@ const useRestoreUser = () => {
           setTimeout(() => {
             resetUser();
             clearUserFromDB();
-            console.log("자동 로그아웃 처리.");
           }, remainingTime); 
         }
       })

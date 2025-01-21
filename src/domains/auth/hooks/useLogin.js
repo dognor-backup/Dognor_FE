@@ -19,7 +19,6 @@ export const useLogin = (setValidationError) => {
         setUser({ userSeq, userId, userRole, name, accessToken });
 
         await saveUserToDB({ userSeq, userId, userRole, name, accessToken }, rememberMe);
-        console.log("유저 정보가 IndexedDB에 저장되었습니다.");
 
         navigate("/home", { replace: true });
       } else {
