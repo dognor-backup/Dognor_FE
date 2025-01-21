@@ -10,12 +10,15 @@ export const useLogin = (setValidationError) => {
 
   return useMutation({
     mutationFn: login,
-    onSuccess: async ({ success, data }) => {
+    onSuccess: async ({ success, data }, variables) => {
+      const { rememberMe } = variables; 
+      
       if (success) {
         const { userSeq, userId, userRole, name, accessToken } = data.data;
+
         setUser({ userSeq, userId, userRole, name, accessToken });
 
-        await saveUserToDB({ userSeq, userId, userRole, name, accessToken });
+        await saveUserToDB({ userSeq, userId, userRole, name, accessToken }, rememberMe);
         console.log("유저 정보가 IndexedDB에 저장되었습니다.");
 
         navigate("/home", { replace: true });
