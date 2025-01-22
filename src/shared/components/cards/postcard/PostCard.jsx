@@ -2,11 +2,11 @@ import styled from "@emotion/styled";
 import HeartFilled from "../../../../assets/icons/red/heart_filled_r.svg?react";
 import Heart from "../../../../assets/icons/red/Heart_R.svg?react";
 import DefaultProfile from "../../../../assets/icons/default/Default_profile_32.svg?react";
-import ActionSelect from "./ActionSelect";
 import { useEffect, useState } from "react";
 import useUserStore from "@/domains/auth/store/useUserStore";
 import { useLikeDonationStory } from "@/domains/donationstory/hooks/useLikeDonationStory";
 import { useNavigate } from "react-router-dom";
+import VerticalDotsSelect from "./VerticalDotsSelect";
 
 export default function PostCard({ story, handleDelete, handleEdit }) {
   const {
@@ -63,13 +63,17 @@ export default function PostCard({ story, handleDelete, handleEdit }) {
   useEffect(() => {
     console.log(isLiked);
   }, [isLiked]);
+
   return (
     <PostCardLayout>
       <ImageWrapper>
         <CardImage src={cardImgUrl} />
         {isAuthor ? (
           <ActionSelectWrapper>
-            <ActionSelect handleEdit={handleEdit} handleDelete={handleDelete} />
+            <VerticalDotsSelect
+              handleEdit={handleEdit}
+              handleDelete={handleDelete}
+            />
           </ActionSelectWrapper>
         ) : (
           ""
