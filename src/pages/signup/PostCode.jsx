@@ -29,6 +29,7 @@ export const PostCode = () => {
           placeholder="도로명"
           value={roadAddress}
           readOnly
+          onClick={handleClick}
         />
         <Button status="" onClick={handleClick}>
           주소검색

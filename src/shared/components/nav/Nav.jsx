@@ -10,11 +10,7 @@ export default function Nav() {
   return (
     <>
       <NavLayout>
-        <TopNavHeader
-          activeMenuLink={activeMenuLink}
-          isMenuOpen={isMenuOpen}
-          setIsMenuOpen={setIsMenuOpen}
-        />
+        <TopNavHeader activeMenuLink={activeMenuLink} isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
         <TopNavMenuContainer
           activeMenuLink={activeMenuLink}
           setActiveMenuLink={setActiveMenuLink}
@@ -30,4 +26,5 @@ const NavLayout = styled.div`
   min-width: 1080px;
   position: fixed;
   top: 0;
+  z-index: 5;
 `;

@@ -3,19 +3,8 @@ import styled from "@emotion/styled";
 const Checkbox = ({ name, size, label, className, checked, ...props }) => {
   return (
     <div>
-      <InputChk
-        type="checkbox"
-        name={name}
-        id={name}
-        checked={checked}
-        {...props}
-      />
-      <LabelChk
-        htmlFor={name}
-        checked={checked}
-        size={size}
-        className={className}
-      >
+      <InputChk type="checkbox" name={name} id={name} checked={checked} {...props} />
+      <LabelChk htmlFor={name} checked={checked} size={size} className={className}>
         {label}
       </LabelChk>
     </div>
@@ -44,9 +33,7 @@ const LabelChk = styled.label(({ theme, checked, size }) => ({
     width: size === "small" ? "16px" : "24px",
     height: size === "small" ? "16px" : "24px",
     border: `1px solid ${theme.colors.neutrals_01}`,
-    backgroundColor: !checked
-      ? theme.colors.neutrals_08
-      : theme.colors.neutrals_01,
+    backgroundColor: !checked ? theme.colors.neutrals_08 : theme.colors.neutrals_01,
     borderRadius: "4px",
     backgroundImage: "url('/src/assets/icons/Check_W.svg')",
     backgroundSize: "15px",
@@ -54,5 +41,6 @@ const LabelChk = styled.label(({ theme, checked, size }) => ({
     backgroundPosition: "center",
     position: "relative",
     top: "6px",
+    zIndex: "-1",
   },
 }));

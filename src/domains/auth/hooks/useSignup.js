@@ -1,10 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { checkDuplicate, checkUserEmail, registerUser } from "../api/register";
-import {
-  useEmailCheckStore,
-  useIdCheckStore,
-  useSignupStore,
-} from "../store/useSignupStore";
+import { useEmailCheckStore, useIdCheckStore, useSignupStore } from "../store/useSignupStore";
 import { useNavigate } from "react-router-dom";
 
 //아이디 중복 확인 응담
@@ -17,12 +13,9 @@ export const useCheckDuplicate = (setErrors, setIsUserIdVerified) => {
         const { msg, code, data: nestedData } = data;
         setUserId({ msg, code, data: nestedData });
         setIsUserIdVerified(nestedData);
-        console.log("결과", nestedData);
         setErrors((prev) => ({
           ...prev,
-          userId: nestedData
-            ? "이미 존재하는 아이디 입니다"
-            : "사용 가능한 아이디 입니다",
+          userId: nestedData ? "이미 존재하는 아이디 입니다" : "사용 가능한 아이디 입니다",
         }));
       } else {
         setErrors((prev) => ({
@@ -31,8 +24,11 @@ export const useCheckDuplicate = (setErrors, setIsUserIdVerified) => {
         }));
       }
     },
-    onError: () => {
-      console.log("error!!!");
+    onError: (error) => {
+      setErrors((prev) => ({
+        ...prev,
+        userId: "다시 시도해주세요.",
+      }));
     },
   });
 };
@@ -68,7 +64,7 @@ export const useUserRegist = () => {
         console.log("회원가입", data);
         const { msg, code, data: nestedData } = data;
         setRegistInfo({ msg, code, data: nestedData });
-        navigate("/welcome");
+        navigate("/welcome", { replace: true });
       } else {
         console.log("error");
       }

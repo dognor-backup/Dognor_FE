@@ -6,12 +6,14 @@ import Checkbox from "@/shared/components/checkbox/Checkbox";
 import PostCode from "./PostCode";
 import { Label as RadioTitle } from "@/shared/components/input/inputStyle";
 import useGetValueFromTextInput from "@/shared/hooks/useGetValueFromTextInput";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-const HospitalInfo = () => {
+const HospitalInfo = ({ getValueFromHospital }) => {
   const { inputValues, getInputValue } = useGetValueFromTextInput();
-  const [agreement1, setAgreement1] = useState(false);
+  const [checkbox, setCheckbox] = useState({ agreementHospital: false });
   const [numberValue, setNumberValue] = useState("");
+  const [isDonationPossible, setDonationPossible] = useState(0);
+  const [donationPrice, setDonationPrice] = useState(0);
 
   const handleKeyPress = (e) => {
     // 숫자가 아닌 키를 누르면 입력 차단
@@ -20,15 +22,25 @@ const HospitalInfo = () => {
       setNumberValue(value);
     }
   };
-  const getCheckValues = () => {
-    setAgreement1((prev) => !prev);
+
+  const getCheckValues = (e) => {
+    const { name, checked } = e.target;
+    setCheckbox((prev) => ({
+      ...prev,
+      [name]: checked,
+    }));
   };
+
+  useEffect(() => {
+    getValueFromHospital({ ...checkbox, isDonationPossible, donationPrice });
+  }, [isDonationPossible, donationPrice, checkbox]);
+
   return (
     <div className="mgBtm56">
       <InputForm
         className="mgTop20"
-        id="id"
-        name="InputName"
+        id="hospitalName"
+        name="hospitalName"
         placeholder="동물병원 상호명을 입력해주세요"
         label="병원 상호명 "
         infoMessage=""
@@ -37,8 +49,8 @@ const HospitalInfo = () => {
       />
       <InputForm
         className="mgTop20"
-        id="id"
-        name="InputName"
+        id="representativeName"
+        name="representativeName"
         placeholder="동물병원 대표자 성명을 입력해주세요"
         label="대표자"
         infoMessage=""
@@ -61,13 +73,13 @@ const HospitalInfo = () => {
       <div className="mgTop56">
         <div className="radioFlex">
           <RadioTitle>헌혈 가능여부</RadioTitle>
-          <RadioGroup defaultValue="donationN" className="radioFlex">
+          <RadioGroup defaultValue="0" className="radioFlex" onValueChange={(value) => setDonationPossible(value)}>
             <div className="flex items-center space-x-2 ">
-              <RadioGroupItem value="donationN" id="donationN" />
+              <RadioGroupItem value="0" id="donationN" />
               <Label htmlFor="donationN">불가능</Label>
             </div>
             <div className="flex items-center space-x-2">
-              <RadioGroupItem value="donationY" id="donationY" />
+              <RadioGroupItem value="1" id="donationY" />
               <Label htmlFor="donationY">가능</Label>
             </div>
           </RadioGroup>
@@ -75,13 +87,13 @@ const HospitalInfo = () => {
 
         <div className="radioFlex mgTop26">
           <RadioTitle>헌혈 금액</RadioTitle>
-          <RadioGroup defaultValue="donationFreeN" className="radioFlex">
+          <RadioGroup defaultValue="0" className="radioFlex" onValueChange={(value) => setDonationPrice(value)}>
             <div className="flex items-center space-x-2 ">
-              <RadioGroupItem value="donationFreeN" id="donationFreeN" />
+              <RadioGroupItem value="0" id="donationFreeN" />
               <Label htmlFor="donationFreeN">유료</Label>
             </div>
             <div className="flex items-center space-x-2">
-              <RadioGroupItem value="donationFreeY" id="donationFreeY" />
+              <RadioGroupItem value="1" id="donationFreeY" />
               <Label htmlFor="donationFreeY">무료</Label>
             </div>
           </RadioGroup>
@@ -89,10 +101,10 @@ const HospitalInfo = () => {
       </div>
       <div className="mgTop56 pdLeft48">
         <Checkbox
-          name="agreement1"
+          name="agreementHospital"
           label="[필수] 위와 같이 입력된 동물병원 정보와 동일하며, 본 병원의 대표자 입니다."
           onChange={getCheckValues}
-          isChecked={agreement1}
+          checked={checkbox.agreementHospital}
         />
       </div>
     </div>
