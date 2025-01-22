@@ -1,14 +1,29 @@
 import styled from "@emotion/styled";
-import HeartFilled from "../../../../assets/icons/primary/heart_filled_primary.svg?react";
-import Heart from "../../../../assets/icons/primary/Heart_Primary.svg?react";
+import HeartFilled from "../../../../assets/icons/secondary/heart_filled_secondary.svg?react";
+import Heart from "../../../../assets/icons/secondary/Heart_Secondary.svg?react";
 import { useState } from "react";
-import ActionSelect from "./ActionSelect.jsx";
-import dogImage from "./dog.jpeg";
+import useUserStore from "@/domains/auth/store/useUserStore";
+import VerticalDotsSelect from "../postcard/VerticalDotsSelect";
 
-export default function TagCard({ handleDelete, handleEdit }) {
+export default function TagCard({ handleDelete, handleEdit, campaign }) {
+  const {
+    camPaignSeq,
+    imgUrl,
+    title,
+    likeCnt,
+    likeYn,
+    keyword1,
+    keyword2,
+    keyword3,
+  } = campaign;
+
+  const { user } = useUserStore();
+
   const [isAdmin, setIsAdmin] = useState(false);
-  const [like, setLike] = useState(15);
-  const [isLiked, setIsLiked] = useState(false);
+  const [like, setLike] = useState(likeCnt);
+  const [isLiked, setIsLiked] = useState(likeYn);
+
+  if (user.userData.role === "admin") setIsAdmin(true);
 
   const handleLike = () => {
     if (isLiked) {
@@ -23,16 +38,22 @@ export default function TagCard({ handleDelete, handleEdit }) {
   return (
     <TagCardLayout>
       <ImageWrapper>
-        <CardImage src={dogImage} />
+        <CardImage src={imgUrl} />
         {isAdmin ? (
           <ActionSelectWrapper>
-            <ActionSelect handleEdit={handleEdit} handleDelete={handleDelete} />
+            <VerticalDotsSelect
+              handleEdit={handleEdit}
+              handleDelete={handleDelete}
+            />
           </ActionSelectWrapper>
         ) : (
           ""
         )}
       </ImageWrapper>
-      <TextWrapper>하이연</TextWrapper>
+      <TextWrapper>
+        <KeywordText>{`#${keyword1} #${keyword2} #${keyword3}`}</KeywordText>
+        <TitleText>{title}</TitleText>
+      </TextWrapper>
       <InfoContainer>
         <LikesWrapper>
           <LikeTextSpan>{like}</LikeTextSpan>
@@ -74,19 +95,31 @@ const CardImage = styled.img`
 `;
 
 const TextWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
   height: 48px;
-  font-size: 16px;
-  font-weight: 700;
   line-height: 24px;
-  color: ${({ theme }) => {
-    theme.colors.neutrals_00;
-  }};
   overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   text-overflow: ellipsis;
   padding: 0 4px 8px 4px;
+  gap: 8px;
+`;
+
+const KeywordText = styled.p`
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 24px;
+  color: ${({ theme }) => theme.colors.neutrals_01};
+`;
+
+const TitleText = styled.p`
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 22px;
+  color: ${({ theme }) => theme.colors.neutrals_01};
 `;
 
 const InfoContainer = styled.div`
