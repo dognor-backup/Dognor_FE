@@ -6,9 +6,7 @@ import { useState } from "react";
 export const PostCode = () => {
   const [roadAddress, setRoadAddress] = useState("");
   const [postCode, setPostCode] = useState("");
-
-  const postcodeScriptUrl =
-    "https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js";
+  const postcodeScriptUrl = "https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js";
   const open = useDaumPostcodePopup(postcodeScriptUrl);
 
   const handleComplete = (data) => {
@@ -36,12 +34,7 @@ export const PostCode = () => {
         </Button>
       </NoBtmMargin>
       <div className="mgTop16">
-        <Input
-          type="text"
-          name="addressDetail"
-          id="addressDetail"
-          placeholder="상세주소"
-        />
+        <Input type="text" name="addressDetail" id="addressDetail" placeholder="상세주소" />
       </div>
       <div className="mgTop16">
         <Input

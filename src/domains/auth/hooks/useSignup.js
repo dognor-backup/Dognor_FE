@@ -3,7 +3,6 @@ import { checkDuplicate, checkUserEmail, registerUser } from "../api/register";
 import { useEmailCheckStore, useIdCheckStore, useSignupStore } from "../store/useSignupStore";
 import { useNavigate } from "react-router-dom";
 
-//아이디 중복 확인 응담
 export const useCheckDuplicate = (setErrors, setIsUserIdVerified) => {
   const { setUserId } = useIdCheckStore();
   return useMutation({
@@ -33,8 +32,7 @@ export const useCheckDuplicate = (setErrors, setIsUserIdVerified) => {
   });
 };
 
-//이메일 인증 응답
-export const useVerifyEmail = () => {
+export const useVerifyEmail = (setErrors) => {
   const { setECode } = useEmailCheckStore();
   return useMutation({
     mutationFn: checkUserEmail,
@@ -44,16 +42,21 @@ export const useVerifyEmail = () => {
         const { msg, code, data: nestedData } = data;
         setECode({ msg, code, data: nestedData });
       } else {
-        console.log("error");
+        setErrors((prev) => ({
+          ...prev,
+          userId: "다시 확인해주세요.",
+        }));
       }
     },
     onError: () => {
-      console.log("error!!!");
+      setErrors((prev) => ({
+        ...prev,
+        userId: "다시 시도해주세요.",
+      }));
     },
   });
 };
 
-//회원가입 요청 응답
 export const useUserRegist = () => {
   const navigate = useNavigate();
   const { setRegistInfo } = useSignupStore();
@@ -61,16 +64,15 @@ export const useUserRegist = () => {
     mutationFn: registerUser,
     onSuccess: ({ success, data }) => {
       if (success) {
-        console.log("회원가입", data);
         const { msg, code, data: nestedData } = data;
         setRegistInfo({ msg, code, data: nestedData });
         navigate("/welcome", { replace: true });
       } else {
-        console.log("error");
+        console.log("회원가입에 실패");
       }
     },
-    onError: () => {
-      console.log("error!!!");
+    onError: (error) => {
+      console.log("회원가입에 실패");
     },
   });
 };

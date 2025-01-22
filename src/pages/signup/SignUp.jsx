@@ -42,7 +42,7 @@ const SignUp = () => {
   const [isUserIdVerified, setIsUserIdVerified] = useState();
   const [isEmailVerified, setIsEmailVertified] = useState();
   const idCheckMutation = useCheckDuplicate(setErrors, setIsUserIdVerified);
-  const emailVerificationMutation = useVerifyEmail(setIsEmailVertified);
+  const emailVerificationMutation = useVerifyEmail(setErrors);
   const { checkedId } = useIdCheckStore();
   const { emailCode } = useEmailCheckStore();
   const { agreement1, agreement2, agreement3, agreement4, agreement5 } = checkbox;
@@ -63,7 +63,6 @@ const SignUp = () => {
     }));
   }, [pw, checkpw]);
 
-  //아이디 중복 체크 요청 true면 중복 false면 중복 아님
   const handleCheckIdDuplicate = () => {
     const isIdValid = validateId(userId);
     if (!userId || !isIdValid) {
@@ -144,12 +143,12 @@ const SignUp = () => {
         agreement: "필수 동의 항목을 다시 확인하세요",
       }));
     }
-    console.log(data);
+
     const hasEmptyField = Object.entries(data).some(([_, value]) => {
       if (value.trim() === "") {
         setErrors((prev) => ({
           ...prev,
-          isnull: "빈 칸을 모두 채워주세요",
+          isnull: "빈칸을 모두 작성해 주세요",
         }));
         return true;
       }
@@ -183,10 +182,9 @@ const SignUp = () => {
     switch (memberType) {
       case "USER":
         signupMutation.mutate(userInfo);
-        console.log("유저회원가입");
         break;
       case "HOSPITAL":
-        isRequiredChecked = agreement1 && agreement2 && agreement3 && hospitalData.agreement1;
+        isRequiredChecked = agreement1 && agreement2 && agreement3 && hospitalData.agreementHospital;
         if (!isRequiredChecked) {
           return setErrors((prev) => ({
             ...prev,
@@ -204,6 +202,7 @@ const SignUp = () => {
           donationYn: Number(hospitalData.isDonationPossible),
           donationFreeYn: Number(hospitalData.donationPrice),
         };
+
         signupMutation.mutate(userInfo);
         break;
       default:

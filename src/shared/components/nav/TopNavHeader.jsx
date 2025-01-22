@@ -49,15 +49,10 @@ export default function TopNavHeader({ activeMenuLink, setIsMenuOpen }) {
               <MenuIcon />
             </ToggleBtn>
           ) : (
-            <TextBtn>회원가입</TextBtn>
+            <TextBtn onClick={() => navigate("/signup")}>회원가입</TextBtn>
           )}
 
-          <Button
-            variant="primary"
-            size="medium"
-            state="default"
-            onClick={handleLogin}
-          >
+          <Button variant="primary" size="medium" state="default" onClick={handleLogin}>
             로그인
           </Button>
         </AuthButtonsContainer>

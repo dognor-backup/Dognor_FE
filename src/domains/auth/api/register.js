@@ -1,58 +1,24 @@
 import AxiosInstance from "../../../shared/utils/axiosInstance";
 
-//아이디 중복 확인
-export const checkDuplicate = async (userIdValue) => {
+const apiRequest = async (url, payload, defaultErrorMessage) => {
   try {
-    const response = await AxiosInstance.post(
-      "/user/check-duplicate",
-      userIdValue
-    );
+    const response = await AxiosInstance.post(url, payload);
     if (response.data.code === 200) {
       return { success: true, data: response.data };
     }
-    if (response.data.code === 400) {
-      return {
-        success: false,
-        msg: response.data.msg || "아이디 중복 조회 실패",
-      };
-    }
+    return {
+      success: false,
+      msg: response.data.msg || defaultErrorMessage,
+    };
   } catch (error) {
-    console.log(error);
+    return {
+      success: false,
+      msg: "서버와의 통신 중 오류가 발생했습니다.",
+    };
   }
 };
 
-//이메일 인증
-export const checkUserEmail = async (userEmail) => {
-  try {
-    const response = await AxiosInstance.post("/user/email-verify", userEmail);
-    if (response.data.code === 200) {
-      return { success: true, data: response.data };
-    }
-    if (response.data.code === 400) {
-      return {
-        success: false,
-        msg: response.data.msg || "이메일 인증 코드발송 실패",
-      };
-    }
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-//회원가입 요청
-export const registerUser = async (userRegistInfo) => {
-  try {
-    const response = await AxiosInstance.post("/regist", userRegistInfo);
-    if (response.data.code === 200) {
-      return { success: true, data: response.data };
-    }
-    if (response.data.code === 400) {
-      return {
-        success: false,
-        msg: response.data.msg || "회원가입 요청 실패",
-      };
-    }
-  } catch (error) {
-    console.log(error);
-  }
-};
+export const checkDuplicate = (userIdValue) =>
+  apiRequest("/user/check-duplicate", userIdValue, "아이디 중복 조회 실패");
+export const checkUserEmail = (userEmail) => apiRequest("/user/email-verify", userEmail, "이메일 인증 코드 발송 실패");
+export const registerUser = (userRegistInfo) => apiRequest("/regist", userRegistInfo, "회원가입 요청 실패");

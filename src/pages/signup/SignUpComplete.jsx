@@ -1,10 +1,11 @@
 import LogoNav from "@/shared/components/nav/LogoNav";
 import styled from "@emotion/styled";
-import { PageTop, PageWrapper } from "@/shared/layout/PageTopTitle";
 import { Button } from "@/shared/components/buttons/Button";
 import Footer from "@/shared/components/footer/Footer";
+import { useNavigate } from "react-router-dom";
 
 export function SignUpComplete() {
+  const navigate = useNavigate();
   return (
     <>
       <LogoNav />
@@ -15,10 +16,10 @@ export function SignUpComplete() {
         </SubText>
 
         <BtnContainer>
-          <Button variant="primary" size="medium" state="default">
+          <Button variant="primary" size="medium" state="default" onClick={() => navigate("/home", { replace: true })}>
             HOME으로 가기
           </Button>
-          <Button variant="primary" size="medium" state="outline">
+          <Button variant="primary" size="medium" state="outline" onClick={() => navigate("/login", { replace: true })}>
             마이페이지로 가기
           </Button>
         </BtnContainer>

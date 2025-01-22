@@ -4,14 +4,16 @@ import { Accordians } from "./Accordians";
 import { Button } from "@/shared/components/buttons/Button";
 
 export function Agreement() {
+  const handleCloseWindow = () => {
+    window.close();
+  };
   return (
     <PageWrapper medium>
       <PageTop noNav>
         <h2>반가워요 :)</h2>
         <h3>이용약관 및 개인정보 수집 및 이용에 대한 상세 내용입니다. </h3>
         <span>
-          실명 인증된 아이디로 가입, 위치기반서비스 이용약관(선택), 이벤트・혜택
-          정보 수신(선택) 동의를 포함합니다.
+          실명 인증된 아이디로 가입, 위치기반서비스 이용약관(선택), 이벤트・혜택 정보 수신(선택) 동의를 포함합니다.
         </span>
       </PageTop>
       <ContentContainer>
@@ -22,18 +24,14 @@ export function Agreement() {
         ))}
       </ContentContainer>
       <AlignCenter>
-        <Button
-          variant="primary"
-          size="medium"
-          state="default"
-          style={{ width: "320px" }}
-        >
+        <Button variant="primary" size="medium" state="default" style={{ width: "320px" }} onClick={handleCloseWindow}>
           이전 페이지로 되돌아가기
         </Button>
       </AlignCenter>
     </PageWrapper>
   );
 }
+
 const ContentContainer = styled.div`
   margin-top: 80px;
 `;
@@ -51,8 +49,7 @@ const AgreementContents = [
   { title: "[필수]개인정보 수집 및 이용", content: "개인정보 수집 및 이용" },
   {
     title: "[선택]위치기반서비스 이용약관",
-    content:
-      "Yes. It's animated by default, but you can disable it if you prefer.",
+    content: "Yes. It's animated by default, but you can disable it if you prefer.",
   },
   { title: "[선택]개인정보 수집 및 이용", content: "개인정보 수집 및 이용" },
 ];

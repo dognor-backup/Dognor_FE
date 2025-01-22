@@ -9,7 +9,7 @@ import useGetValueFromTextInput from "@/shared/hooks/useGetValueFromTextInput";
 import { useEffect, useState } from "react";
 
 const HospitalInfo = ({ getValueFromHospital }) => {
-  const { inputValues, getInputValue } = useGetValueFromTextInput();
+  const { getInputValue } = useGetValueFromTextInput();
   const [checkbox, setCheckbox] = useState({ agreementHospital: false });
   const [numberValue, setNumberValue] = useState("");
   const [isDonationPossible, setDonationPossible] = useState(0);
