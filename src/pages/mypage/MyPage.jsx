@@ -1,3 +1,10 @@
+import styled from "@emotion/styled";
+import IndividualUser from "./IndividualUser";
+
 export default function MyPage() {
-  return <div>map</div>;
+  return (
+    <>
+      <IndividualUser />
+    </>
+  );
 }

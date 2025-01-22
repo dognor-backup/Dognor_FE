@@ -8,7 +8,7 @@ import { clearUserFromDB } from "@/domains/auth/utils/indexedDB";
 
 export default function TopNavHeader({ activeMenuLink, setIsMenuOpen }) {
   const { user, resetUser } = useUserStore();
-  
+
   const isLogin = !!user.userData?.userId;
   const navigate = useNavigate();
 
@@ -23,7 +23,7 @@ export default function TopNavHeader({ activeMenuLink, setIsMenuOpen }) {
   const handleLogout = async () => {
     resetUser();
     localStorage.removeItem("accessToken");
-    await clearUserFromDB()
+    await clearUserFromDB();
     navigate("/home");
   };
   return (
@@ -41,7 +41,12 @@ export default function TopNavHeader({ activeMenuLink, setIsMenuOpen }) {
           ) : (
             <TextBtn onClick={handleLogout}>로그아웃</TextBtn>
           )}
-          <Button variant="normal" size="medium" state="outline">
+          <Button
+            onClick={() => navigate("/mypage")}
+            variant="normal"
+            size="medium"
+            state="outline"
+          >
             마이페이지
           </Button>
         </AuthButtonsContainer>
