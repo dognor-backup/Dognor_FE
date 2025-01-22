@@ -40,7 +40,7 @@ const LabelChk = styled.label(({ theme, checked, size }) => ({
     backgroundRepeat: "no-repeat",
     backgroundPosition: "center",
     position: "relative",
-    top: "6px",
+    top: "8px",
     zIndex: "-1",
   },
 }));
