@@ -8,6 +8,13 @@ export const GlobalStyles = css`
     font-weight: 500;
     font-style: normal;
   }
+  @font-face {
+    font-family: "BMJUA";
+    src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/BMJUA.woff")
+      format("woff");
+    font-weight: 400;
+    font-style: normal;
+  }
   html,
   body,
   div,
@@ -161,5 +168,6 @@ export const GlobalStyles = css`
 
   #root {
     width: 100%;
+    height: 100vh;
   }
 `;

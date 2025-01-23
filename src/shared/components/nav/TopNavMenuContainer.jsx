@@ -35,16 +35,18 @@ export default function TopNavMenuContainer({
 
   return (
     <TopNavMenuLayout isMenuOpen={isMenuOpen}>
-      {menuList.map((menu, index) => (
-        <TopNavMenuLink
-          key={index}
-          isActive={activeMenuLink === menu.engTitle}
-          onClick={() => setActiveMenuLink(menu.engTitle)}
-          to={menu.engTitle}
-        >
-          {menu.korTitle}
-        </TopNavMenuLink>
-      ))}
+      {menuList.map((menu, index) => {
+        return (
+          <TopNavMenuLink
+            key={index}
+            active={(activeMenuLink === menu.engTitle).toString()}
+            onClick={() => setActiveMenuLink(menu.engTitle)}
+            to={menu.engTitle}
+          >
+            {menu.korTitle}
+          </TopNavMenuLink>
+        );
+      })}
     </TopNavMenuLayout>
   );
 }
@@ -54,10 +56,11 @@ const TopNavMenuLayout = styled.div`
   width: 100%;
   justify-content: center;
   align-content: center;
+  background-color: ${({ theme }) => theme.colors.neutrals_08};
   padding: 8px 36px;
   gap: 24px;
   box-sizing: border-box;
-  top: 75px;
+  top: 74px;
   position: absolute;
   transform: ${({ isMenuOpen }) =>
     isMenuOpen ? "translateY(0)" : "translateY(-100%)"};
@@ -74,12 +77,14 @@ const TopNavMenuLink = styled(Link)`
   font-size: 18px;
   line-height: 24px;
   font-weight: 700;
-  color: ${({ isActive, theme }) =>
-    isActive ? theme.colors.blue_normal_100 : theme.colors.blue_dark_400};
+  color: ${({ active, theme }) =>
+    active === "true"
+      ? theme.colors.blue_normal_100
+      : theme.colors.blue_dark_400};
   background-color: transparent;
   text-decoration: none;
-  box-shadow: ${({ isActive, theme }) =>
-    isActive ? `0 1px 0 ${theme.colors.blue_normal_100}` : "none"};
+  box-shadow: ${({ active, theme }) =>
+    active === "true" ? `0 1px 0 ${theme.colors.blue_normal_100}` : "none"};
 
   &:hover {
     color: ${({ theme }) => theme.colors.purple_normal_100};

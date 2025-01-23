@@ -45,4 +45,7 @@ export const theme = {
     neutrals_08: "#FFFFFF",
   },
   fonts: {},
+  styles: {
+    radius: "8px",
+  },
 };

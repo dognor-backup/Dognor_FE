@@ -70,6 +70,29 @@ const variants = {
       cursor: "not-allowed",
     }),
   },
+  danger: {
+    default: (theme) => ({
+      backgroundColor: theme.colors.point_orange_normal_100,
+      border: `1px solid ${theme.colors.point_orange_normal_100}`,
+      color: theme.colors.neutrals_08,
+    }),
+    outline: (theme) => ({
+      backgroundColor: theme.colors.neutrals_08,
+      border: `1px solid ${theme.colors.neutrals_03}`,
+      color: theme.colors.neutrals_03,
+    }),
+    hover: (theme) => ({
+      backgroundColor: theme.colors.neutrals_03,
+      border: `1px solid ${theme.colors.neutrals_03}`,
+      color: theme.colors.neutrals_08,
+    }),
+    disabled: (theme) => ({
+      backgroundColor: theme.colors.neutrals_05,
+      border: `1px solid ${theme.colors.neutrals_04}`,
+      color: theme.colors.neutrals_08,
+      cursor: "not-allowed",
+    }),
+  },
 };
 
 const sizes = {
