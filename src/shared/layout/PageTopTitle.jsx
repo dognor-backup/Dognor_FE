@@ -4,8 +4,8 @@ const PageTop = ({ children, noNav }) => {
   return <TopWrapper noNav={noNav}>{children}</TopWrapper>;
 };
 
-const PageWrapper = ({ children, medium }) => {
-  return <AlignCenter medium>{children}</AlignCenter>;
+const PageWrapper = ({ children, size }) => {
+  return <AlignCenter size={size}>{children}</AlignCenter>;
 };
 
 export { PageTop, PageWrapper };
@@ -36,9 +36,9 @@ const TopWrapper = styled.div(
 `
 );
 const AlignCenter = styled.div(
-  ({ medium }) => `
+  ({ size }) => `
   margin: 0 auto;
-  max-width: ${medium ? "836px" : "1008px"}
+  max-width: ${size === "medium" ? "836px" : "1008px"}
 
 `
 );

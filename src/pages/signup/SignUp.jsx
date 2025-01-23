@@ -238,7 +238,7 @@ const SignUp = () => {
 
   return (
     <form onSubmit={handleSubmitSignupForm} id="signupForm">
-      <PageWrapper>
+      <PageWrapper size="medium">
         <PageTop noNav={false}>
           <h2>회원가입</h2>
           <h3>반려견의 헌혈문화 함께 만들어 볼까요?</h3>
@@ -410,7 +410,7 @@ const SignUp = () => {
           />
         </CheckBoxWrapper>
         {!isRequiredChecked && <Error>{errors.agreement}</Error>}
-        {memberType === "HOSPITAL" && !hospitalData?.agreementHospital && isRequiredChecked && (
+        {memberType === "HOSPITAL" && !hospitalData?.agreementHospital && !errors.isnull && (
           <Error>{errors.agreement}</Error>
         )}
         {isRequiredChecked && errors.isnull && <Error>{errors.isnull}</Error>}
