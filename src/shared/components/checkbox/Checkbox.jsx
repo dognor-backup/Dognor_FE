@@ -25,6 +25,7 @@ const LabelChk = styled.label(({ theme, checked, size }) => ({
   display: "inline-block",
   alignItems: "center",
   cursor: "pointer",
+  display: "flex",
   color: theme.colors.neutrals_01,
   "&::before": {
     content: '""',
@@ -39,8 +40,5 @@ const LabelChk = styled.label(({ theme, checked, size }) => ({
     backgroundSize: "15px",
     backgroundRepeat: "no-repeat",
     backgroundPosition: "center",
-    position: "relative",
-    top: "8px",
-    zIndex: "-1",
   },
 }));
