@@ -1,8 +1,12 @@
 import styled from "@emotion/styled";
 import DefaultProfileImg from "../../../assets/icons/default/profile_button.svg?react";
 import { Button } from "@/shared/components/buttons/Button";
+import { maskEmail, maskPhoneNumber } from "@/shared/utils/dataMasking";
 
 export default function UserInfoCard({ name, phone, email }) {
+  const maskedPhone = maskPhoneNumber(phone);
+  const maskedEmail = maskEmail(email);
+
   return (
     <CardLayout>
       <InfoText>보호자 정보</InfoText>
@@ -18,11 +22,11 @@ export default function UserInfoCard({ name, phone, email }) {
           </ProfileInfoContainer>
           <ProfileInfoContainer>
             <ProfileInfoTitleText>휴대폰</ProfileInfoTitleText>
-            <ProfileInfoContentText>{phone}</ProfileInfoContentText>
+            <ProfileInfoContentText>{maskedPhone}</ProfileInfoContentText>
           </ProfileInfoContainer>
           <ProfileInfoContainer>
             <ProfileInfoTitleText>Email</ProfileInfoTitleText>
-            <ProfileInfoContentText>{email}</ProfileInfoContentText>
+            <ProfileInfoContentText>{maskedEmail}</ProfileInfoContentText>
           </ProfileInfoContainer>
           <ActionButtonContainer>
             <Button variant="normal" size="small" state="outline">
