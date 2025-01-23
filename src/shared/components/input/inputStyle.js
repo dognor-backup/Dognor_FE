@@ -32,8 +32,7 @@ export const Button = styled.button(({ theme, status }) => ({
   padding: "10px",
   marginLeft: "8px",
   whiteSpace: "nowrap",
-  backgroundColor:
-    status === "disabled" ? theme.colors.neutrals_05 : theme.colors.neutrals_04,
+  backgroundColor: status === "disabled" ? theme.colors.neutrals_05 : theme.colors.neutrals_04,
   outline: "none",
   border: 0,
   color: theme.colors.neutrals_08,
@@ -52,10 +51,7 @@ export const Label = styled.label(({ theme }) => ({
 }));
 
 export const Info = styled.p(({ theme, status }) => ({
-  color:
-    status === "error"
-      ? theme.colors.point_orange_normal_100
-      : theme.colors.neutrals_03,
+  color: status === "error" ? theme.colors.point_orange_normal_100 : theme.colors.neutrals_03,
   fontWeight: 400,
   fontSize: "14px",
   marginTop: "10px",

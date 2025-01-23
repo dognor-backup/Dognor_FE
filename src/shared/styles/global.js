@@ -148,6 +148,7 @@ export const GlobalStyles = css`
   input[type="number"]::-webkit-inner-spin-button {
     -webkit-appearance: none;
   }
+
   ::-webkit-scrollbar {
     width: 8px;
   }
@@ -158,12 +159,6 @@ export const GlobalStyles = css`
   }
   ::webkit-scrollbar-track {
     background-color: #fff;
-  }
-  body {
-    font-family: "SpoqaHanSansNeo", Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
   }
 
   #root {

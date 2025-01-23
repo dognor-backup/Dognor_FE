@@ -454,7 +454,7 @@ const InfoBlue = styled.div(
 );
 const CheckboxContainer = styled.div`
   position: relative;
-  height: 104px;
+  height: 72px;
   ::after {
     content: "";
     display: block;
@@ -465,7 +465,7 @@ const CheckboxContainer = styled.div`
     right: 0;
     margin: 0 auto;
     position: absolute;
-    bottom: -12px;
+    bottom: -10px;
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
