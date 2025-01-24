@@ -34,6 +34,7 @@ const LabelChk = styled.label(({ theme, checked, weight }) => ({
   display: "flex",
   alignItems: "center",
   cursor: "pointer",
+  fontSize: weight === "regular" ? "14px" : "16px",
   color: theme.colors.neutrals_01,
   lineHeight: "1.5",
   "&::before": {

@@ -1,0 +1,66 @@
+import { SelectBox } from "./Selectbox";
+import { DatePicker } from "./DatePicker";
+import styled from "@emotion/styled";
+import Checkbox from "@/shared/components/checkbox/Checkbox";
+import { Button } from "@/shared/components/buttons/Button";
+import { PageTop } from "@/shared/components/layout/PageTopTitle";
+import ReactQuillEditor from "@/shared/components/Editor";
+
+export function PostNew() {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const form = new FormData();
+    console.log(form);
+  };
+  return (
+    <form onSubmit={handleSubmit}>
+      <PageTop>
+        <h2>게시글 작성하기</h2>
+        <span>다양한 많은 이야기를 작성해주세요</span>
+      </PageTop>
+
+      <ReactQuillEditor>
+        <SelectBoxes>
+          <SelectBox label="등록할 게시판" />
+          <DatePicker label="혈액이 필요한 날짜" color="red" />
+        </SelectBoxes>
+      </ReactQuillEditor>
+      <FlexCenter>
+        <Checkbox
+          name="agree"
+          label={
+            <>
+              현재의 게시글 설정 정보를 확인하였으며, 해당 설정이 추후 운영자에 의해 변경될 수 있음에 동의합니다.
+              <br />
+              게시중단 통지를 받는 것과 재게시 요청은 운영자만 가능함에 동의합니다.
+            </>
+          }
+          weight="regular"
+        />
+        <BtnCover>
+          <Button variant="primary" size="medium" state="default">
+            게시글 등록하기
+          </Button>
+        </BtnCover>
+      </FlexCenter>
+    </form>
+  );
+}
+const SelectBoxes = styled.div`
+  display: flex;
+  margin-bottom: 12px;
+  align-items: flex-end;
+  gap: 10px;
+  margin-top: 64px;
+`;
+
+const FlexCenter = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const BtnCover = styled.div`
+  margin-top: 48px;
+  margin-bottom: 100px;
+`;

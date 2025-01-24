@@ -11,7 +11,8 @@ import Login from "@/pages/login/Login";
 import FindAccount from "@/pages/findaccount/FindAccount";
 import SignUp from "@/pages/signup/SignUp";
 import App from "@/App";
-import { PostForm } from "@/pages/community/PostForm";
+
+import { PostNew } from "@/pages/community/PostNew";
 
 const router = createBrowserRouter([
   {
@@ -53,7 +54,7 @@ const router = createBrowserRouter([
             children: [{ path: "postdetail/:id", Component: Home }],
           },
           { path: "postedit/:id", Component: Home },
-          { path: "postnew", Component: PostForm },
+          { path: "postnew", Component: PostNew },
         ],
       },
       { path: "dashboard", Component: Home },

@@ -1,6 +1,7 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import styled from "@emotion/styled";
 
-export function SelectBox({ label, color }) {
+export function SelectBox({ label }) {
   return (
     <SelectContainer>
       <BoxLabel>{label}</BoxLabel>
@@ -19,7 +20,6 @@ export function SelectBox({ label, color }) {
     </SelectContainer>
   );
 }
-import styled from "@emotion/styled";
 
 const BoxLabel = styled.span(
   ({ theme }) => `

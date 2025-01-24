@@ -52,12 +52,7 @@ export default function TopNavHeader({ activeMenuLink, setIsMenuOpen }) {
             <TextBtn>회원가입</TextBtn>
           )}
 
-          <Button
-            variant="primary"
-            size="medium"
-            state="default"
-            onClick={handleLogin}
-          >
+          <Button variant="primary" size="medium" state="default" onClick={handleLogin}>
             로그인
           </Button>
         </AuthButtonsContainer>
@@ -74,7 +69,7 @@ const TopNavHeaderLayout = styled.div`
   box-sizing: border-box;
   background: ${({ theme }) => theme.colors.neutrals_08};
   position: relative;
-  z-index: 1;
+  z-index: 5;
 `;
 
 const AuthButtonsContainer = styled.div`

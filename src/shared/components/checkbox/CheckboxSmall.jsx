@@ -19,7 +19,7 @@ const CheckboxSmall = ({ name, label }) => {
     </div>
   );
 };
-export default Checkbox;
+export default CheckboxSmall;
 
 const InputChk = styled.input`
   position: absolute;
@@ -34,6 +34,7 @@ const LabelChk = styled.label(({ theme, checked }) => ({
   display: "flex",
   alignItems: "center",
   cursor: "pointer",
+  fontSize: "14px",
   color: theme.colors.neutrals_01,
   lineHeight: "1.5",
   "&::before": {

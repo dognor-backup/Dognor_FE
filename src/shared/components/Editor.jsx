@@ -6,8 +6,10 @@ Quill.register("modules/ImageResize", ImageResize);
 import styled from "@emotion/styled";
 import axios from "axios";
 
-function ReactQuillEditor() {
-  const [title, setTitle] = useState("");
+import { PageTop, PageWrapper } from "@/shared/components/layout/PageTopTitle";
+import { InputForm } from "@/shared/components/input/InputForm";
+
+function ReactQuillEditor({ children }) {
   const [content, setContent] = useState("");
   const quillRef = useRef(null);
   const modules = useMemo(
@@ -32,17 +34,6 @@ function ReactQuillEditor() {
     }),
     []
   );
-
-  //   const handleTitleChange = (e) => {
-  //     setTitle(e.currentTarget.value);
-  //     console.log(title);
-  //   };
-
-  //   const handleSubmit = (e) => {
-  //     e.preventDefault();
-  //     console.log("제목", title);
-  //     console.log("전송", content);
-  //   };
   const onChagecontent = (e) => {
     console.log(e);
     setContent(e);
@@ -78,19 +69,30 @@ function ReactQuillEditor() {
     };
   }
   return (
-    <EditorContainer>
-      {/* <input type="text" name="title" onChange={handleTitleChange}></input> */}
-      <ReactQuill
-        ref={quillRef}
-        style={{ width: "100%", height: "600px" }}
-        modules={modules}
-        onChange={onChagecontent}
-      />
-    </EditorContainer>
+    <PageWrapper>
+      <InputContainer>
+        {children}
+        <InputForm id="id" name="InputName" placeholder="제목을 작성해주세요" label="게시글 제목" status="normal" />
+      </InputContainer>
+      <EditorContainer>
+        <ReactQuill
+          ref={quillRef}
+          style={{ width: "100%", height: "600px", boxSizing: "borderbox" }}
+          modules={modules}
+          onChange={onChagecontent}
+        />
+      </EditorContainer>
+    </PageWrapper>
   );
 }
 export default ReactQuillEditor;
 const EditorContainer = styled.div`
-  margin-bottom: 296px;
+  margin-bottom: 48px;
   margin-top: 48px;
+`;
+const InputContainer = styled.div`
+  width: calc(100% - 172px);
+  margin: 0 auto;
+
+  /* margin-top: 48px; */
 `;
