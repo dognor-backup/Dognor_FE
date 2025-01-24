@@ -25,7 +25,6 @@ export function PostForm() {
           name="InputName"
           placeholder="제목을 작성해주세요"
           label="게시글 제목"
-          infoMessage="Enter your email address"
           status="normal"
           getInputValue={getInputValue}
         />
