@@ -2,27 +2,34 @@ import Checkbox from "@/shared/components/checkbox/Checkbox";
 import ReactQuillEditor from "@/shared/components/Editor";
 import { PageTop, PageWrapper } from "@/shared/components/layout/PageTopTitle";
 import styled from "@emotion/styled";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
+import { SelectBox } from "./Selectbox";
+import { InputForm } from "@/shared/components/input/InputForm";
 
 export function PostForm() {
+  const getInputValue = (e) => {
+    console.log(e);
+  };
   return (
     <PageWrapper>
       <PageTop>
         <h2>게시글 작성하기</h2>
         <span>다양한 많은 이야기를 작성해주세요</span>
       </PageTop>
-      <div>
-        <Select>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Theme" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="light">Light</SelectItem>
-            <SelectItem value="dark">Dark</SelectItem>
-            <SelectItem value="system">System</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
+      <InputContainer>
+        <SelectBoxes>
+          <SelectBox label="등록할 게시판" color="#F64D4D" />
+        </SelectBoxes>
+        <InputForm
+          id="id"
+          name="InputName"
+          placeholder="제목을 작성해주세요"
+          label="게시글 제목"
+          infoMessage="Enter your email address"
+          status="normal"
+          getInputValue={getInputValue}
+        />
+      </InputContainer>
       <ReactQuillEditor />
       <div>
         <Checkbox
@@ -40,3 +47,13 @@ export function PostForm() {
     </PageWrapper>
   );
 }
+
+const InputContainer = styled.div`
+  width: calc(100% - 172px);
+  margin: 0 auto;
+  margin-top: 48px;
+`;
+const SelectBoxes = styled.div`
+  display: flex;
+  margin-bottom: 12px;
+`;
