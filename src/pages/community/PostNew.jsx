@@ -5,13 +5,29 @@ import Checkbox from "@/shared/components/checkbox/Checkbox";
 import { Button } from "@/shared/components/buttons/Button";
 import { PageTop } from "@/shared/components/layout/PageTopTitle";
 import ReactQuillEditor from "@/shared/components/Editor";
+import { useState } from "react";
 
 export function PostNew() {
+  const [CommunicationInput, setCommunicationInput] = useState({
+    title: "",
+    content: "",
+    categoryCd: null,
+    usageDate: "",
+  });
   const handleSubmit = (e) => {
     e.preventDefault();
     const form = new FormData();
     console.log(form);
   };
+  const getEditorText = (data) => {
+    //타이틀과 컨텐츠 텍스트
+    console.log(data);
+  };
+
+  const getValueFromSelect = (categoryCd) => {
+    setCommunicationInput((prev) => ({ ...prev, categoryCd: Number(categoryCd) }));
+  };
+  console.log(CommunicationInput);
   return (
     <form onSubmit={handleSubmit}>
       <PageTop>
@@ -19,9 +35,9 @@ export function PostNew() {
         <span>다양한 많은 이야기를 작성해주세요</span>
       </PageTop>
 
-      <ReactQuillEditor>
+      <ReactQuillEditor getEditorText={getEditorText}>
         <SelectBoxes>
-          <SelectBox label="등록할 게시판" />
+          <SelectBox label="등록할 게시판" getValueFromSelect={getValueFromSelect} />
           <DatePicker label="혈액이 필요한 날짜" color="red" />
         </SelectBoxes>
       </ReactQuillEditor>

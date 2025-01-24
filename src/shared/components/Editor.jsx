@@ -8,8 +8,10 @@ import axios from "axios";
 
 import { PageTop, PageWrapper } from "@/shared/components/layout/PageTopTitle";
 import { InputForm } from "@/shared/components/input/InputForm";
+import useGetValueFromTextInput from "../hooks/useGetValueFromTextInput";
 
-function ReactQuillEditor({ children }) {
+function ReactQuillEditor({ children, getEditorText }) {
+  const { inputValues, getInputValue } = useGetValueFromTextInput();
   const [content, setContent] = useState("");
   const quillRef = useRef(null);
   const modules = useMemo(
@@ -35,8 +37,8 @@ function ReactQuillEditor({ children }) {
     []
   );
   const onChagecontent = (e) => {
-    console.log(e);
     setContent(e);
+    getEditorText({ content, ...inputValues });
   };
 
   function ImageHandler() {
@@ -72,7 +74,14 @@ function ReactQuillEditor({ children }) {
     <PageWrapper>
       <InputContainer>
         {children}
-        <InputForm id="id" name="InputName" placeholder="제목을 작성해주세요" label="게시글 제목" status="normal" />
+        <InputForm
+          id="title"
+          name="title"
+          placeholder="제목을 작성해주세요"
+          label="게시글 제목"
+          status="normal"
+          getInputValue={getInputValue}
+        />
       </InputContainer>
       <EditorContainer>
         <ReactQuill
