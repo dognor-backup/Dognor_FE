@@ -5,6 +5,7 @@ import styled from "@emotion/styled";
 
 import { SelectBox } from "./Selectbox";
 import { InputForm } from "@/shared/components/input/InputForm";
+import { DatePicker } from "./DatePicker";
 
 export function PostForm() {
   const getInputValue = (e) => {
@@ -19,6 +20,7 @@ export function PostForm() {
       <InputContainer>
         <SelectBoxes>
           <SelectBox label="등록할 게시판" color="#F64D4D" />
+          <DatePicker />
         </SelectBoxes>
         <InputForm
           id="id"
@@ -55,4 +57,6 @@ const InputContainer = styled.div`
 const SelectBoxes = styled.div`
   display: flex;
   margin-bottom: 12px;
+  align-items: flex-end;
+  gap: 10px;
 `;

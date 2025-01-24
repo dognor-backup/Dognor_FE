@@ -9,11 +9,11 @@ export function SelectBox({ label, color }) {
           <SelectValue placeholder="게시판을 선택해주세요" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="light">자유게시판</SelectItem>
-          <SelectItem value="dark">병원 헌혈 후기</SelectItem>
-          <SelectItem value="system">질문있어요</SelectItem>
-          <SelectItem value="system">고마워요</SelectItem>
-          <SelectItem value="system">혈액이 필요해요</SelectItem>
+          <SelectItem value="1">자유게시판</SelectItem>
+          <SelectItem value="2">병원 헌혈 후기</SelectItem>
+          <SelectItem value="3">질문있어요</SelectItem>
+          <SelectItem value="4">고마워요</SelectItem>
+          <SelectItem value="5">혈액이 필요해요</SelectItem>
         </SelectContent>
       </Select>
     </SelectContainer>
