@@ -1,3 +1,9 @@
+import { Outlet } from "react-router-dom";
+
 export default function Community() {
-  return <div>community</div>;
+  return (
+    <div>
+      <Outlet />
+    </div>
+  );
 }
