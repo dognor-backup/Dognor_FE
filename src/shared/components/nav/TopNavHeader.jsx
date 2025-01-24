@@ -9,6 +9,7 @@ import { clearUserFromDB } from "@/domains/auth/utils/indexedDB";
 export default function TopNavHeader({ activeMenuLink, setIsMenuOpen }) {
   const { user, resetUser } = useUserStore();
 
+  // console.log(user.userData.userRole);
   const isLogin = !!user.userData?.userId;
   const navigate = useNavigate();
 
@@ -42,7 +43,7 @@ export default function TopNavHeader({ activeMenuLink, setIsMenuOpen }) {
             <TextBtn onClick={handleLogout}>로그아웃</TextBtn>
           )}
           <Button
-            onClick={() => navigate("/mypage")}
+            onClick={() => navigate("/mypage/")}
             variant="normal"
             size="medium"
             state="outline"

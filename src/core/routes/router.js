@@ -11,6 +11,8 @@ import Login from "@/pages/login/Login";
 import FindAccount from "@/pages/findaccount/FindAccount";
 import SignUp from "@/pages/signup/SignUp";
 import App from "@/App";
+import AccountSettings from "@/pages/accountsettings/AccountSettings";
+import IndividualUser from "@/pages/mypage/IndividualUser";
 
 const router = createBrowserRouter([
   {
@@ -38,7 +40,10 @@ const router = createBrowserRouter([
       {
         path: "mypage",
         Component: MyPage,
-        children: [{ path: "accountsettings", Component: Home }],
+      },
+      {
+        path: "accountsettings",
+        Component: AccountSettings,
       },
 
       {

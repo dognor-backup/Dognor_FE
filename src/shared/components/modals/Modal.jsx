@@ -22,7 +22,7 @@ const Modal = ({ children, BtnText, title, size, formName, onSubmit, modalName, 
               {children}
             </ModalBody>
             <ModalFooter>
-              <Button style={{ width: "100%" }} onClick={()=>closeModal(onClose)} type="submit" form={formName}>
+              <Button style={{ width: "100%" }} type="submit" form={formName}>
                 {BtnText}
               </Button>
             </ModalFooter>

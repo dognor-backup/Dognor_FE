@@ -6,19 +6,38 @@ import useModalStore from "@/shared/hooks/useModalStore";
 import Modal from "@/shared/components/modals/Modal";
 import { InputForm } from "@/shared/components/input/InputForm";
 import useGetValueFromTextInput from "@/shared/hooks/useGetValueFromTextInput";
+import { validateId, validatePassword } from "@/shared/utils/validation";
+import { useState } from "react";
+import { useCheckUser } from "../hooks/useCheckUser";
 
 export default function UserInfoCard({ name, phone, email }) {
   const maskedPhone = maskPhoneNumber(phone);
   const maskedEmail = maskEmail(email);
+  const [validationError, setValidationError] = useState("");
+  const checkUserMutation = useCheckUser(setValidationError);
 
   const { isModalOpen, openModal } = useModalStore();
   const { inputValues, getInputValue, resetInputValues } =
     useGetValueFromTextInput();
 
+  const validateInputs = (id, password) => {
+    setValidationError("");
+    const isIdValid = validateId(id);
+    const isPasswordValid = validatePassword(password);
+
+    const isValid = isIdValid && isPasswordValid;
+    setValidationError(isValid ? "" : "error");
+
+    return isValid;
+  };
+
   const handleMemberVerification = (e) => {
     e.preventDefault();
+
     const { idInput, pwInput } = inputValues;
-    resetInputValues();
+    if (validateInputs(idInput, pwInput)) {
+      checkUserMutation.mutate({ userId: idInput, pw: pwInput });
+    }
   };
 
   return (
@@ -59,7 +78,7 @@ export default function UserInfoCard({ name, phone, email }) {
               modalName="memberVerification"
               onSubmit={handleMemberVerification}
               formName="memberVerification"
-              onClose={resetInputValues}
+              // onClose={resetInputValues}
             >
               <ModalTextContainer>
                 <InputForm
@@ -67,6 +86,10 @@ export default function UserInfoCard({ name, phone, email }) {
                   name="idInput"
                   placeholder="아이디를 입력해주세요"
                   label="아이디"
+                  infoMessage={
+                    validationError === "error" ? "다시 확인해주세요" : ""
+                  }
+                  status={validationError}
                   getInputValue={getInputValue}
                   value={inputValues["idInput"] || ""}
                 />
@@ -78,6 +101,10 @@ export default function UserInfoCard({ name, phone, email }) {
                   type="password"
                   placeholder="비밀번호를 입력해주세요"
                   label="비밀번호"
+                  infoMessage={
+                    validationError === "error" ? "다시 확인해주세요" : ""
+                  }
+                  status={validationError}
                   getInputValue={getInputValue}
                   value={inputValues["pwInput"] || ""}
                 />
