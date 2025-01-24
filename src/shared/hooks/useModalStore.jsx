@@ -6,6 +6,9 @@ const useModalStore = create((set) => ({
   modalName: null,
   //action
   openModal: (name) => set({ isModalOpen: true, modalName: name }),
-  closeModal: () => set({ isModalOpen: false, modalName: null }),
+  closeModal: (onClose) => {
+    if (onClose) onClose(); 
+    set({ isModalOpen: false, modalName: null });
+  },
 }));
 export default useModalStore;

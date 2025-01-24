@@ -4,20 +4,21 @@ import { Button } from "@/shared/components/buttons/Button";
 import { maskEmail, maskPhoneNumber } from "@/shared/utils/dataMasking";
 import useModalStore from "@/shared/hooks/useModalStore";
 import Modal from "@/shared/components/modals/Modal";
-import { Input } from "@/components/ui/input";
-import { useRef } from "react";
+import { InputForm } from "@/shared/components/input/InputForm";
+import useGetValueFromTextInput from "@/shared/hooks/useGetValueFromTextInput";
 
 export default function UserInfoCard({ name, phone, email }) {
   const maskedPhone = maskPhoneNumber(phone);
   const maskedEmail = maskEmail(email);
 
   const { isModalOpen, openModal } = useModalStore();
-  const idInputRef = useRef(null);
-  const pwInputRef = useRef(null);
+  const { inputValues, getInputValue, resetInputValues } =
+    useGetValueFromTextInput();
 
   const handleMemberVerification = (e) => {
     e.preventDefault();
-    console.log("hi");
+    const { idInput, pwInput } = inputValues;
+    resetInputValues();
   };
 
   return (
@@ -55,26 +56,32 @@ export default function UserInfoCard({ name, phone, email }) {
               BtnText="확인"
               size="small"
               isModalOpen={isModalOpen}
-              formName="memberVerification"
               modalName="memberVerification"
+              onSubmit={handleMemberVerification}
+              formName="memberVerification"
+              onClose={resetInputValues}
             >
-              <form
-                onSubmit={(e) => {
-                  console.log("폼 제출 이벤트 발생");
-                  e.preventDefault();
-                  handleMemberVerification(e);
-                }}
-                name="memberVerification"
-              >
-                <ModalTextContainer>
-                  <ModalText>아이디</ModalText>
-                  <Input ref={idInputRef} type="text" />
-                </ModalTextContainer>
-                <ModalTextContainer>
-                  <ModalText>비밀번호</ModalText>
-                  <Input ref={pwInputRef} type="password" />
-                </ModalTextContainer>
-              </form>
+              <ModalTextContainer>
+                <InputForm
+                  id="id"
+                  name="idInput"
+                  placeholder="아이디를 입력해주세요"
+                  label="아이디"
+                  getInputValue={getInputValue}
+                  value={inputValues["idInput"] || ""}
+                />
+              </ModalTextContainer>
+              <ModalTextContainer>
+                <InputForm
+                  id="id"
+                  name="pwInput"
+                  type="password"
+                  placeholder="비밀번호를 입력해주세요"
+                  label="비밀번호"
+                  getInputValue={getInputValue}
+                  value={inputValues["pwInput"] || ""}
+                />
+              </ModalTextContainer>
             </Modal>
             <Button variant="normal" size="small" state="default">
               비밀번호 수정
@@ -171,13 +178,5 @@ const ActionButtonContainer = styled.div`
 const ModalTextContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 6px;
   margin-bottom: 24px;
-`;
-
-const ModalText = styled.p`
-  font-weight: 700;
-  font-size: 16px;
-  line-height: 22px;
-  color: ${({ theme }) => theme.colors.neutrals_01};
 `;

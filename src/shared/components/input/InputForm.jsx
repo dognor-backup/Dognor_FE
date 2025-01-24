@@ -22,6 +22,7 @@ export const InputForm = ({
   infoMessage,
   status,
   getInputValue,
+  value,
 }) => {
   const handleInputValue = (e) => {
     const { name, value } = e.target;
@@ -38,6 +39,7 @@ export const InputForm = ({
           name={name}
           placeholder={placeholder}
           onChange={handleInputValue}
+          value={value}
         />
       </Flex>
       <Info status={status}>{infoMessage}</Info>
