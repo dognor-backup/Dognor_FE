@@ -6,10 +6,15 @@ import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import styled from "@emotion/styled";
+import { useEffect } from "react";
 
-export function DatePicker({ label, color }) {
-  const [date, setDate] = React.useState(new Date());
+export function DatePicker({ label, color, getSelectedDate }) {
+  const [date, setDate] = React.useState(null);
 
+  useEffect(() => {
+    if (!date) return;
+    getSelectedDate(date);
+  }, [date]);
   return (
     <CalendarContainer>
       <CalendarLabel color={color}>{label}</CalendarLabel>
@@ -20,7 +25,7 @@ export function DatePicker({ label, color }) {
             className={cn("w-full justify-start text-left font-normal", !date && "text-muted-foreground")}
           >
             <CalendarIcon />
-            {date ? format(date, "PPP") : <span>Pick a date</span>}
+            {date ? format(date, "PPP") : <span>날짜를 선택해주세요</span>}
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="start">

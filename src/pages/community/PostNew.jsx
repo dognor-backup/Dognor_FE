@@ -19,9 +19,16 @@ export function PostNew() {
     const form = new FormData();
     console.log(form);
   };
+
   const getEditorText = (data) => {
     //타이틀과 컨텐츠 텍스트
     console.log(data);
+  };
+
+  const getSelectedDate = (date) => {
+    const dateForm = date.toISOString();
+    const trimDate = dateForm.split("T")[0];
+    console.log(trimDate);
   };
 
   const getValueFromSelect = (categoryCd) => {
@@ -38,7 +45,7 @@ export function PostNew() {
       <ReactQuillEditor getEditorText={getEditorText}>
         <SelectBoxes>
           <SelectBox label="등록할 게시판" getValueFromSelect={getValueFromSelect} />
-          <DatePicker label="혈액이 필요한 날짜" color="red" />
+          <DatePicker label="혈액이 필요한 날짜" color="red" getSelectedDate={getSelectedDate} />
         </SelectBoxes>
       </ReactQuillEditor>
       <FlexCenter>
@@ -54,7 +61,7 @@ export function PostNew() {
           weight="regular"
         />
         <BtnCover>
-          <Button variant="primary" size="medium" state="default">
+          <Button variant="primary" size="medium" state="default" style={{ width: "320px" }}>
             게시글 등록하기
           </Button>
         </BtnCover>
