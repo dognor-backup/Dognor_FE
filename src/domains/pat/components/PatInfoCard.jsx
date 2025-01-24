@@ -20,7 +20,7 @@ export default function PatInfoCard() {
             <WhitePlus />
           </IconBtn>
         </ButtonContainer>
-        <AddDogBtn onClick={openModal}>
+        <AddDogBtn onClick={()=>openModal("addDogInfo")}>
           <BlackPlus />
           강아지 정보를 추가해주세요:)
         </AddDogBtn>
@@ -29,6 +29,7 @@ export default function PatInfoCard() {
           BtnText="추가하기"
           size=""
           isModalOpen={isModalOpen}
+          modalName="addDogInfo"
         >
           <EditPatInfoModalContent />
         </Modal>

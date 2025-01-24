@@ -43,7 +43,7 @@ export default function UserInfoCard({ name, phone, email }) {
           </ProfileInfoContainer>
           <ActionButtonContainer>
             <Button
-              onClick={openModal}
+              onClick={() => openModal("memberVerification")}
               variant="normal"
               size="small"
               state="outline"
@@ -56,6 +56,7 @@ export default function UserInfoCard({ name, phone, email }) {
               size="small"
               isModalOpen={isModalOpen}
               formName="memberVerification"
+              modalName="memberVerification"
             >
               <form
                 onSubmit={(e) => {
