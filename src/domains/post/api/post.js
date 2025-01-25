@@ -1,8 +1,8 @@
 import AxiosInstance from "@/shared/utils/axiosInstance";
 
-export const post = async (file) => {
+export const post = async (data) => {
   try {
-    const response = await AxiosInstance.post("/file", file);
+    const response = await AxiosInstance.post("/community/post", data);
 
     if (response.data.code === 200) {
       return { success: true, data: response.data };

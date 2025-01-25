@@ -4,11 +4,7 @@ import axios from "axios";
 export const useConvetImg = (quillObj, range) => {
   return useMutation({
     mutationFn: async (formData) => {
-      const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/file`, formData, {
-        headers: {
-          Authorization: "Bearer ".concat(localStorage.getItem("accessToken")),
-        },
-      });
+      const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/file`, formData);
       return response.data;
     },
     onSuccess: (data) => {

@@ -98,6 +98,4 @@ const EditorContainer = styled.div`
 const InputContainer = styled.div`
   width: calc(100% - 172px);
   margin: 0 auto;
-
-  /* margin-top: 48px; */
 `;

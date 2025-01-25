@@ -6,6 +6,7 @@ import { Button } from "@/shared/components/buttons/Button";
 import { PageTop } from "@/shared/components/layout/PageTopTitle";
 import ReactQuillEditor from "@/shared/components/Editor";
 import { useState } from "react";
+import { usePostContent } from "@/domains/post/hooks/usePostContent";
 
 export function PostNew() {
   const [CommunicationInput, setCommunicationInput] = useState({
@@ -15,16 +16,17 @@ export function PostNew() {
     usageDate: "",
   });
   const [agreePolicy, setAgreePolicy] = useState(false);
-
+  const uploadPostMutation = usePostContent();
   const handleSubmit = (e) => {
     e.preventDefault();
-    const form = new FormData();
-    console.log(form);
+    const isNotEmpty = Object.values(CommunicationInput).every((value) => {
+      return value !== null && value !== "";
+    });
+    if (!isNotEmpty || !agreePolicy) return;
+    uploadPostMutation.mutate(CommunicationInput);
   };
 
-  const getEditorText = ({ title, content }) => {
-    setCommunicationInput((prev) => ({ ...prev, title, content }));
-  };
+  const getEditorText = ({ title, content }) => setCommunicationInput((prev) => ({ ...prev, title, content }));
 
   const getSelectedDate = (date) => {
     const dateForm = date.toISOString();
@@ -32,13 +34,11 @@ export function PostNew() {
     setCommunicationInput((prev) => ({ ...prev, usageDate }));
   };
 
-  const getValueFromSelect = (categoryCd) => {
+  const getValueFromSelect = (categoryCd) =>
     setCommunicationInput((prev) => ({ ...prev, categoryCd: Number(categoryCd) }));
-  };
 
-  const getCheckValues = () => {
-    setAgreePolicy((prev) => !prev);
-  };
+  const getCheckValues = () => setAgreePolicy((prev) => !prev);
+
   return (
     <form onSubmit={handleSubmit}>
       <PageTop>
@@ -49,10 +49,12 @@ export function PostNew() {
       <ReactQuillEditor getEditorText={getEditorText}>
         <SelectBoxes>
           <SelectBox label="등록할 게시판" getValueFromSelect={getValueFromSelect} />
-          <DatePicker label="혈액이 필요한 날짜" color="red" getSelectedDate={getSelectedDate} />
+          {CommunicationInput.categoryCd === 5 && (
+            <DatePicker label="혈액이 필요한 날짜" color="red" getSelectedDate={getSelectedDate} />
+          )}
         </SelectBoxes>
       </ReactQuillEditor>
-      <FlexCenter>
+      <FlexCenter style={{ paddingTop: "48px" }}>
         <Checkbox
           name="agree"
           label={
@@ -75,6 +77,7 @@ export function PostNew() {
     </form>
   );
 }
+
 const SelectBoxes = styled.div`
   display: flex;
   margin-bottom: 12px;
