@@ -4,16 +4,18 @@ import "react-quill/dist/quill.snow.css";
 import ImageResize from "quill-image-resize";
 Quill.register("modules/ImageResize", ImageResize);
 import styled from "@emotion/styled";
-import axios from "axios";
 
 import { PageTop, PageWrapper } from "@/shared/components/layout/PageTopTitle";
 import { InputForm } from "@/shared/components/input/InputForm";
 import useGetValueFromTextInput from "../hooks/useGetValueFromTextInput";
+import { usePost } from "@/domains/post/hooks/usePost";
 
 function ReactQuillEditor({ children, getEditorText }) {
   const { inputValues, getInputValue } = useGetValueFromTextInput();
   const [content, setContent] = useState("");
+  const [getImgURL, setImgUrl] = useState({ msg: "", code: null, data: "", totalPage: null });
   const quillRef = useRef(null);
+  const { mutate } = usePost(setImgUrl);
   const modules = useMemo(
     () => ({
       toolbar: {
@@ -50,20 +52,22 @@ function ReactQuillEditor({ children, getEditorText }) {
       const file = input.files ? input.files[0] : null;
       if (!file) return;
       if (file) {
-        console.log(quillRef);
-        console.log("Selected file:", file);
+        // console.log(quillRef);
+        console.log(file);
         const formData = new FormData();
-        formData.append("profile", file);
-        console.log(formData);
+        formData.append("file", file);
+        console.log("FormData에서 'image' 키의 값:", formData.get("data"));
+
         /*에디터 정보를 가져온다.*/
         let quillObj = quillRef.current?.getEditor();
         const range = quillObj?.getSelection();
+
         try {
-          /*서버에다가 정보를 보내준 다음 서버에서 보낸 url을 imgUrl로 받는다.*/
-          const res = await axios.post("api주소", formData);
-          const imgUrl = res.data;
+          mutate(formData);
+          console.log(getImgURL);
+          // const imgUrl = res.data;
           /*에디터의 커서 위치에 이미지 요소를 넣어준다.*/
-          quillObj?.insertEmbed(range.index, "image", `${imgUrl}`);
+          // quillObj?.insertEmbed(range.index, "image", `${imgUrl}`);
         } catch (error) {
           return error;
         }
@@ -71,27 +75,29 @@ function ReactQuillEditor({ children, getEditorText }) {
     };
   }
   return (
-    <PageWrapper>
-      <InputContainer>
-        {children}
-        <InputForm
-          id="title"
-          name="title"
-          placeholder="제목을 작성해주세요"
-          label="게시글 제목"
-          status="normal"
-          getInputValue={getInputValue}
-        />
-      </InputContainer>
-      <EditorContainer>
-        <ReactQuill
-          ref={quillRef}
-          style={{ width: "100%", height: "600px", boxSizing: "borderbox" }}
-          modules={modules}
-          onChange={onChagecontent}
-        />
-      </EditorContainer>
-    </PageWrapper>
+    <form>
+      <PageWrapper>
+        <InputContainer>
+          {children}
+          <InputForm
+            id="title"
+            name="title"
+            placeholder="제목을 작성해주세요"
+            label="게시글 제목"
+            status="normal"
+            getInputValue={getInputValue}
+          />
+        </InputContainer>
+        <EditorContainer>
+          <ReactQuill
+            ref={quillRef}
+            style={{ width: "100%", height: "600px", boxSizing: "borderbox" }}
+            modules={modules}
+            onChange={onChagecontent}
+          />
+        </EditorContainer>
+      </PageWrapper>
+    </form>
   );
 }
 export default ReactQuillEditor;

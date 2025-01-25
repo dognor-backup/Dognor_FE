@@ -14,6 +14,8 @@ export function PostNew() {
     categoryCd: null,
     usageDate: "",
   });
+  const [agreePolicy, setAgreePolicy] = useState(false);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const form = new FormData();
@@ -34,6 +36,11 @@ export function PostNew() {
   const getValueFromSelect = (categoryCd) => {
     setCommunicationInput((prev) => ({ ...prev, categoryCd: Number(categoryCd) }));
   };
+
+  const getCheckValues = () => {
+    setAgreePolicy((prev) => !prev);
+  };
+  console.log(agreePolicy);
   console.log(CommunicationInput);
   return (
     <form onSubmit={handleSubmit}>
@@ -59,6 +66,8 @@ export function PostNew() {
             </>
           }
           weight="regular"
+          onChange={getCheckValues}
+          checked={agreePolicy}
         />
         <BtnCover>
           <Button variant="primary" size="medium" state="default" style={{ width: "320px" }}>

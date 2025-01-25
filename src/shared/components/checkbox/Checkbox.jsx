@@ -1,19 +1,10 @@
 import styled from "@emotion/styled";
-import { useState } from "react";
 
-const Checkbox = ({ name, label, weight }) => {
-  const [isChecked, setChecked] = useState(false);
-
+const Checkbox = ({ name, label, className, checked, weight, ...props }) => {
   return (
     <div>
-      <InputChk
-        type="checkbox"
-        name={name}
-        id={name}
-        onChange={() => setChecked((prev) => !prev)}
-        checked={isChecked}
-      />
-      <LabelChk htmlFor={name} checked={isChecked} weight={weight}>
+      <InputChk type="checkbox" name={name} id={name} checked={checked} {...props} />
+      <LabelChk htmlFor={name} checked={checked} weight={weight} className={className}>
         {label}
       </LabelChk>
     </div>
@@ -31,12 +22,12 @@ const InputChk = styled.input`
 `;
 const LabelChk = styled.label(({ theme, checked, weight }) => ({
   fontWeight: weight === "regular" ? 400 : 700,
-  display: "flex",
+  display: "inline-block",
   alignItems: "center",
   cursor: "pointer",
-  fontSize: weight === "regular" ? "14px" : "16px",
-  color: theme.colors.neutrals_01,
   lineHeight: "1.5",
+  display: "flex",
+  color: theme.colors.neutrals_01,
   "&::before": {
     content: '""',
     display: "inline-block",
