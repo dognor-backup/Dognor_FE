@@ -4,9 +4,11 @@ import Logo from "../../../assets/images/logo.svg?react";
 import { Button } from "../buttons/Button";
 import MenuIcon from "../../../assets/icons/black/hamburger_menu.svg?react";
 import useUserStore from "@/domains/auth/store/useUserStore";
+import { clearUserFromDB } from "@/domains/auth/utils/indexedDB";
 
 export default function TopNavHeader({ activeMenuLink, setIsMenuOpen }) {
   const { user, resetUser } = useUserStore();
+
   const isLogin = !!user.userData?.userId;
   const navigate = useNavigate();
 
@@ -18,9 +20,10 @@ export default function TopNavHeader({ activeMenuLink, setIsMenuOpen }) {
     navigate("/login");
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     resetUser();
     localStorage.removeItem("accessToken");
+    await clearUserFromDB();
     navigate("/home");
   };
   return (

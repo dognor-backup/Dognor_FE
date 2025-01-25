@@ -22,15 +22,14 @@ export function PostNew() {
     console.log(form);
   };
 
-  const getEditorText = (data) => {
-    //타이틀과 컨텐츠 텍스트
-    console.log(data);
+  const getEditorText = ({ title, content }) => {
+    setCommunicationInput((prev) => ({ ...prev, title, content }));
   };
 
   const getSelectedDate = (date) => {
     const dateForm = date.toISOString();
-    const trimDate = dateForm.split("T")[0];
-    console.log(trimDate);
+    const usageDate = dateForm.split("T")[0];
+    setCommunicationInput((prev) => ({ ...prev, usageDate }));
   };
 
   const getValueFromSelect = (categoryCd) => {
@@ -40,8 +39,6 @@ export function PostNew() {
   const getCheckValues = () => {
     setAgreePolicy((prev) => !prev);
   };
-  console.log(agreePolicy);
-  console.log(CommunicationInput);
   return (
     <form onSubmit={handleSubmit}>
       <PageTop>

@@ -8,14 +8,15 @@ import styled from "@emotion/styled";
 import { PageTop, PageWrapper } from "@/shared/components/layout/PageTopTitle";
 import { InputForm } from "@/shared/components/input/InputForm";
 import useGetValueFromTextInput from "../hooks/useGetValueFromTextInput";
-import { usePost } from "@/domains/post/hooks/usePost";
+import { useConvetImg } from "@/domains/post/hooks/useConvertImg";
 
 function ReactQuillEditor({ children, getEditorText }) {
   const { inputValues, getInputValue } = useGetValueFromTextInput();
   const [content, setContent] = useState("");
-  const [getImgURL, setImgUrl] = useState({ msg: "", code: null, data: "", totalPage: null });
   const quillRef = useRef(null);
-  const { mutate } = usePost(setImgUrl);
+  let quillObj = quillRef.current?.getEditor();
+  const range = quillObj?.getSelection();
+  const { mutate } = useConvetImg(quillObj, range);
   const modules = useMemo(
     () => ({
       toolbar: {
@@ -52,22 +53,11 @@ function ReactQuillEditor({ children, getEditorText }) {
       const file = input.files ? input.files[0] : null;
       if (!file) return;
       if (file) {
-        // console.log(quillRef);
-        console.log(file);
         const formData = new FormData();
         formData.append("file", file);
-        console.log("FormData에서 'image' 키의 값:", formData.get("data"));
-
-        /*에디터 정보를 가져온다.*/
-        let quillObj = quillRef.current?.getEditor();
-        const range = quillObj?.getSelection();
-
         try {
           mutate(formData);
-          console.log(getImgURL);
-          // const imgUrl = res.data;
-          /*에디터의 커서 위치에 이미지 요소를 넣어준다.*/
-          // quillObj?.insertEmbed(range.index, "image", `${imgUrl}`);
+          quillObj?.insertEmbed(range.index, "image", `${getImgURL}`);
         } catch (error) {
           return error;
         }

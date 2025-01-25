@@ -13,6 +13,7 @@ export { PageTop, PageWrapper };
 const TopWrapper = styled.div(
   ({ noNav }) => `
   margin-top: ${noNav ? "0px" : "130px"};
+
   text-align: center;
   padding-top: 100px;
 
@@ -33,6 +34,7 @@ const TopWrapper = styled.div(
     font-weight: 400;
     line-height: 1.5;
   }
+
 `
 );
 const AlignCenter = styled.div(
