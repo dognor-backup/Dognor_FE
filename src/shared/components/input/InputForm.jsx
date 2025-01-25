@@ -1,4 +1,4 @@
-import { Flex, Input, Label, Info } from "./inputStyle";
+import { Flex, Input, Label, Info, Layout } from "./inputStyle";
 
 // const { inputValues, getInputValue } = useGetValueFromTextInput();
 
@@ -30,7 +30,7 @@ export const InputForm = ({
   };
 
   return (
-    <>
+    <Layout>
       <Label htmlFor={id}>{label}</Label>
       <Flex>
         <Input
@@ -43,6 +43,6 @@ export const InputForm = ({
         />
       </Flex>
       <Info status={status}>{infoMessage}</Info>
-    </>
+    </Layout>
   );
 };

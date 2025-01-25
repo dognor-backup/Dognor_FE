@@ -1,10 +1,14 @@
 import { theme } from "@/shared/styles/theme";
 import styled from "@emotion/styled";
 
+export const Layout = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+`;
+
 export const Flex = styled.div`
   display: flex;
-  margin-top: 10px;
-  margin-bottom: 10px;
   gap: 8px;
 `;
 export const Input = styled.input(({ theme }) => ({

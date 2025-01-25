@@ -170,4 +170,9 @@ export const GlobalStyles = css`
     width: 100%;
     height: 100vh;
   }
+
+  html body[data-scroll-locked] {
+    overflow: visible !important;
+    margin-right: 0 !important;
+  }
 `;

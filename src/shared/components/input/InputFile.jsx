@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { Flex, Input, Label, Info } from "./inputStyle"; 
+import { Flex, Input, Label, Info, Layout } from "./inputStyle";
 import { Button } from "../buttons/Button";
 
 export const InputFile = ({
@@ -8,6 +8,7 @@ export const InputFile = ({
   onFileChange,
   infoMessage = "파일을 업로드해주세요.",
   status = "normal",
+  placeholder,
 }) => {
   const fileInputRef = useRef(null);
 
@@ -21,37 +22,31 @@ export const InputFile = ({
   };
 
   return (
-    <>
-      {/* Label */}
+    <Layout>
       <Label htmlFor="file-upload">{labelText}</Label>
-
-      {/* Flex: Input과 Button을 정렬 */}
       <Flex>
         <Input
           type="text"
           id="file-upload-text"
           name="file-upload-text"
-          placeholder={labelText}
+          placeholder={placeholder}
           readOnly
-          onClick={handleButtonClick} // Input 클릭 시 파일 선택 창 열기
+          onClick={handleButtonClick}
+          style={{ cursor: "pointer" }}
         />
         <Button type="button" variant="normal" onClick={handleButtonClick}>
           {buttonText}
         </Button>
       </Flex>
-
-      {/* Info: 설명 메시지 */}
       <Info status={status}>{infoMessage}</Info>
-
-      {/* 숨겨진 파일 Input */}
       <input
         type="file"
         id="file-upload"
         name="file-upload"
-        style={{ display: "none" }} // 숨김 처리
+        style={{ display: "none" }}
         ref={fileInputRef}
         onChange={handleFileChange}
       />
-    </>
+    </Layout>
   );
 };

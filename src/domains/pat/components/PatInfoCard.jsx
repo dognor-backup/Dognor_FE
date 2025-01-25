@@ -5,16 +5,19 @@ import BlackPlus from "../../../assets/icons/black/plus.svg?react";
 import useModalStore from "@/shared/hooks/useModalStore";
 import Modal from "@/shared/components/modals/Modal";
 import AddProfileBtnImg from "../../../assets/icons/default/image.svg?react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/shared/components/buttons/Button";
 import useGetValueFromTextInput from "@/shared/hooks/useGetValueFromTextInput";
 import { InputForm } from "@/shared/components/input/InputForm";
-import { InputBtn } from "@/shared/components/input/InputBtn";
 import { InputFile } from "@/shared/components/input/InputFile";
+import { DatePicker } from "@/shared/components/DatePicker";
+import { SelectBox } from "@/shared/components/SelectBox";
 
 export default function PatInfoCard() {
   const { isModalOpen, openModal } = useModalStore();
   const { inputValues, getInputValue } = useGetValueFromTextInput();
+
+  const dogSizeList = ["소형견", "중형견", "대형견"];
+  const bloodTypeList = ["DEA 1.1-", "DEA 1.1+", "DEA 1.2-", "DEA 1.2+","DEA 2-", "DEA 2+", "DEA 3-", "DEA 3+","DEA 4-", "DEA 4+","DEA 5-", "DEA 5+", "DEA 6-", "DEA 6+", "DEA 7-", "DEA 7+", "DEA 8-", "DEA 8+","DEA 9-", "DEA 9+", "DEA 10-", "DEA 10+", "DEA 11-", "DEA 11+", "DEA 12-", "DEA 12+", "DEA 13-", "DEA 13+", "기타/모름"]
+
 
   const handleFileChange = (file) => {
     console.log("선택된 파일:", file);
@@ -48,8 +51,10 @@ export default function PatInfoCard() {
             </AddDogPhotoButton>
             <InputContainer>
               <InputFile
-                labelText="사진을 등록해주세요"
+                labelText="반려견 프로필 [필수]"
+                placeholder="사진을 등록해주세요"
                 buttonText="파일 첨부하기"
+                infoMessage="파일은 1MB 이내로 해주세요"
                 onFileChange={handleFileChange}
               />
             </InputContainer>
@@ -62,7 +67,29 @@ export default function PatInfoCard() {
                 getInputValue={getInputValue}
               />
             </InputContainer>
-  
+            <InputFlexContainer>
+              <HalfWidthInput>
+                <DatePicker label="생일" />
+              </HalfWidthInput>
+              <HalfWidthInput>
+                <InputForm
+                  id="weight"
+                  name="weight"
+                  placeholder="숫자만 작성해주세요"
+                  label="몸무게(Kg)"
+                  status="normal"
+                  getInputValue={getInputValue}
+                />
+              </HalfWidthInput>
+            </InputFlexContainer>
+            <InputFlexContainer>
+              <HalfWidthInput>
+                <SelectBox label="구분" optionList={dogSizeList} />
+              </HalfWidthInput>
+              <HalfWidthInput>
+                <SelectBox label="혈액형" optionList={bloodTypeList} />
+              </HalfWidthInput>
+            </InputFlexContainer>
           </ModalContentLayout>
         </Modal>
       </ContentBox>
@@ -142,31 +169,20 @@ const AddDogPhotoButton = styled.button`
   background: transparent;
 `;
 
-const InputWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-`;
-
-const InputText = styled.p`
-  font-weight: 700;
-  font-size: 16px;
-  line-height: 22px;
-  color: ${({ theme }) => theme.colors.neutrals_01};
-`;
-
-const InputDescriptionText = styled.p`
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 24px;
-  color: ${({ theme }) => theme.colors.neutrals_03};
-`;
-
 const InputContainer = styled.div`
   display: flex;
   flex-direction: column;
 `;
 
-const ButtonWrapper = styled.div`
-  width: 152px;
+const InputFlexContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+`;
+
+const HalfWidthInput = styled.div`
+  flex: 1;
+  min-width: 0;
 `;
