@@ -4,10 +4,21 @@ import WhitePlus from "../../../assets/icons/white/plus_w.svg?react";
 import BlackPlus from "../../../assets/icons/black/plus.svg?react";
 import useModalStore from "@/shared/hooks/useModalStore";
 import Modal from "@/shared/components/modals/Modal";
-import EditPatInfoModalContent from "./EditPatInfoModalContent";
+import AddProfileBtnImg from "../../../assets/icons/default/image.svg?react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/shared/components/buttons/Button";
+import useGetValueFromTextInput from "@/shared/hooks/useGetValueFromTextInput";
+import { InputForm } from "@/shared/components/input/InputForm";
+import { InputBtn } from "@/shared/components/input/InputBtn";
+import { InputFile } from "@/shared/components/input/InputFile";
 
 export default function PatInfoCard() {
   const { isModalOpen, openModal } = useModalStore();
+  const { inputValues, getInputValue } = useGetValueFromTextInput();
+
+  const handleFileChange = (file) => {
+    console.log("선택된 파일:", file);
+  };
   return (
     <CardLayout>
       <TextContainer>
@@ -20,18 +31,39 @@ export default function PatInfoCard() {
             <WhitePlus />
           </IconBtn>
         </ButtonContainer>
-        <AddDogBtn onClick={()=>openModal("addDogInfo")}>
+        <AddDogBtn onClick={() => openModal("addDogInfo")}>
           <BlackPlus />
           강아지 정보를 추가해주세요:)
         </AddDogBtn>
         <Modal
-          title={<>회원 확인을 위해 비밀번호를 입력해주세요.</>}
+          title="반려견 정보입력"
           BtnText="추가하기"
           size=""
           isModalOpen={isModalOpen}
           modalName="addDogInfo"
         >
-          <EditPatInfoModalContent />
+          <ModalContentLayout>
+            <AddDogPhotoButton type="file">
+              <AddProfileBtnImg />
+            </AddDogPhotoButton>
+            <InputContainer>
+              <InputFile
+                labelText="사진을 등록해주세요"
+                buttonText="파일 첨부하기"
+                onFileChange={handleFileChange}
+              />
+            </InputContainer>
+            <InputContainer>
+              <InputForm
+                id="dogName"
+                name="dogName"
+                placeholder="반려견 이름을 입력해주세요"
+                label="반려견 이름 [필수]"
+                getInputValue={getInputValue}
+              />
+            </InputContainer>
+            <Input type="calender" />
+          </ModalContentLayout>
         </Modal>
       </ContentBox>
     </CardLayout>
@@ -95,4 +127,46 @@ const AddDogBtn = styled.button`
   gap: 16px;
   box-shadow: 4px 4px 16px 0px rgba(0, 0, 0, 0.25);
   background-color: ${({ theme }) => theme.colors.neutrals_08};
+`;
+
+const ModalContentLayout = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+`;
+
+const AddDogPhotoButton = styled.button`
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  background: transparent;
+`;
+
+const InputWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+`;
+
+const InputText = styled.p`
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 22px;
+  color: ${({ theme }) => theme.colors.neutrals_01};
+`;
+
+const InputDescriptionText = styled.p`
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 24px;
+  color: ${({ theme }) => theme.colors.neutrals_03};
+`;
+
+const InputContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const ButtonWrapper = styled.div`
+  width: 152px;
 `;

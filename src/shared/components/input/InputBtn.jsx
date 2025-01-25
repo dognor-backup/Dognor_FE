@@ -22,6 +22,7 @@ export const InputBtn = ({
   infoMessage,
   status,
   getInputValue,
+  type,
 }) => {
   const handleInputValue = (e) => {
     const { name, value } = e.target;
@@ -32,7 +33,7 @@ export const InputBtn = ({
       <Label htmlFor={id}>{label}</Label>
       <Flex>
         <Input
-          type="text"
+          type={type || "text"}
           name={name}
           id={id}
           placeholder={placeholder}
