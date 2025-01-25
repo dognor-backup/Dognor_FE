@@ -1,4 +1,5 @@
-import { Flex, Input, Button, Label, Info } from "./inputStyle";
+import { Button } from "../buttons/Button";
+import { Flex, Input, Label, Info } from "./inputStyle";
 
 // const { inputValues, getInputValue } = useGetValueFromTextInput();
 
@@ -9,7 +10,7 @@ import { Flex, Input, Button, Label, Info } from "./inputStyle";
         placeholder="placeHolder"
         label="Email"
         infoMessage="Enter your email address"
-        status="normal"
+        variant="normal"
         getInputValue={getInputValue}
       /> */
 
@@ -20,7 +21,7 @@ export const InputBtn = ({
   label,
   BtnText,
   infoMessage,
-  status,
+  variant,
   getInputValue,
   type,
 }) => {
@@ -39,7 +40,7 @@ export const InputBtn = ({
           placeholder={placeholder}
           onChange={handleInputValue}
         />
-        <Button status={status}>{BtnText}</Button>
+        <Button variant={variant || "noraml"}>{BtnText}</Button>
       </Flex>
       <Info status={status}>{infoMessage}</Info>
     </>

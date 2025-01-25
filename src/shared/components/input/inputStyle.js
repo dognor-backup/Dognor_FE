@@ -5,6 +5,7 @@ export const Flex = styled.div`
   display: flex;
   margin-top: 10px;
   margin-bottom: 10px;
+  gap: 8px;
 `;
 export const Input = styled.input(({ theme }) => ({
   width: "100%",

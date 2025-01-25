@@ -62,7 +62,7 @@ export default function PatInfoCard() {
                 getInputValue={getInputValue}
               />
             </InputContainer>
-            <Input type="calender" />
+  
           </ModalContentLayout>
         </Modal>
       </ContentBox>
