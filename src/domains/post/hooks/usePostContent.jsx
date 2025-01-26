@@ -7,7 +7,6 @@ export const usePostContent = () => {
   return useMutation({
     mutationFn: post,
     onSuccess: async ({ success, data }) => {
-      //게시글 작성 성공
       if (success) {
         console.log(data);
         navigate("/community", { replace: true });

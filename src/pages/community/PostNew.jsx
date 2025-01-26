@@ -7,8 +7,11 @@ import { PageTop } from "@/shared/components/layout/PageTopTitle";
 import ReactQuillEditor from "@/shared/components/Editor";
 import { useState } from "react";
 import { usePostContent } from "@/domains/post/hooks/usePostContent";
+import useAlertStore from "@/shared/hooks/useAlertStore";
+import Alert from "@/shared/components/alert/Alert";
 
 export function PostNew() {
+  const { isAlertOpen, openAlert } = useAlertStore();
   const [CommunicationInput, setCommunicationInput] = useState({
     title: "",
     content: "",
@@ -22,7 +25,8 @@ export function PostNew() {
     const isNotEmpty = Object.values(CommunicationInput).every((value) => {
       return value !== null && value !== "";
     });
-    if (!isNotEmpty || !agreePolicy) return;
+    if (!isNotEmpty || !agreePolicy) return openAlert();
+
     uploadPostMutation.mutate(CommunicationInput);
   };
 
@@ -45,7 +49,6 @@ export function PostNew() {
         <h2>게시글 작성하기</h2>
         <span>다양한 많은 이야기를 작성해주세요</span>
       </PageTop>
-
       <ReactQuillEditor getEditorText={getEditorText}>
         <SelectBoxes>
           <SelectBox label="등록할 게시판" getValueFromSelect={getValueFromSelect} />
@@ -74,6 +77,7 @@ export function PostNew() {
           </Button>
         </BtnCover>
       </FlexCenter>
+      <Alert isAlertOpen={isAlertOpen}> {<>내용을 모두 입력해 주세요</>} </Alert>;
     </form>
   );
 }

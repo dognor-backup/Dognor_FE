@@ -8,8 +8,7 @@ const AxiosInstance = axios.create({
   },
 });
 
-
-const getAccessTokenFromDB = async () => {
+export const getAccessTokenFromDB = async () => {
   const db = await openDatabase();
   const transaction = db.transaction("AuthStore", "readonly");
   const store = transaction.objectStore("AuthStore");
@@ -20,9 +19,9 @@ const getAccessTokenFromDB = async () => {
     request.onsuccess = (event) => {
       const user = event.target.result;
       if (user && user.accessToken) {
-        resolve(user.accessToken); 
+        resolve(user.accessToken);
       } else {
-        resolve(null); 
+        resolve(null);
       }
     };
 
@@ -35,7 +34,7 @@ const getAccessTokenFromDB = async () => {
 AxiosInstance.interceptors.request.use(
   async (config) => {
     try {
-      const token = await getAccessTokenFromDB(); 
+      const token = await getAccessTokenFromDB();
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       }

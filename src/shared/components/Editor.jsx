@@ -57,7 +57,6 @@ function ReactQuillEditor({ children, getEditorText }) {
         formData.append("file", file);
         try {
           mutate(formData);
-          quillObj?.insertEmbed(range.index, "image", `${getImgURL}`);
         } catch (error) {
           return error;
         }
