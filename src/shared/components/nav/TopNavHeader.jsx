@@ -1,19 +1,34 @@
 import styled from "@emotion/styled";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Logo from "../../../assets/images/logo.svg?react";
 import { Button } from "../buttons/Button";
-import { useState } from "react";
 import MenuIcon from "../../../assets/icons/black/hamburger_menu.svg?react";
+import useUserStore from "@/domains/auth/store/useUserStore";
+import { clearUserFromDB } from "@/domains/auth/utils/indexedDB";
 
 export default function TopNavHeader({ activeMenuLink, setIsMenuOpen }) {
-  const [isLogin, setIsLogin] = useState(false);
+  const { user, resetUser } = useUserStore();
+  
+  const isLogin = !!user.userData?.userId;
+  const navigate = useNavigate();
 
   const handleToggleMenu = () => {
     setIsMenuOpen((prev) => !prev);
   };
+
+  const handleLogin = () => {
+    navigate("/login");
+  };
+
+  const handleLogout = async () => {
+    resetUser();
+    localStorage.removeItem("accessToken");
+    await clearUserFromDB()
+    navigate("/home");
+  };
   return (
     <TopNavHeaderLayout>
-      <Link to="home">
+      <Link to="/home">
         <Logo />
       </Link>
 
@@ -24,7 +39,7 @@ export default function TopNavHeader({ activeMenuLink, setIsMenuOpen }) {
               <MenuIcon />
             </ToggleBtn>
           ) : (
-            <TextBtn onClick={() => setIsLogin(false)}>로그아웃</TextBtn>
+            <TextBtn onClick={handleLogout}>로그아웃</TextBtn>
           )}
           <Button variant="normal" size="medium" state="outline">
             마이페이지
@@ -39,11 +54,12 @@ export default function TopNavHeader({ activeMenuLink, setIsMenuOpen }) {
           ) : (
             <TextBtn>회원가입</TextBtn>
           )}
+
           <Button
             variant="primary"
             size="medium"
             state="default"
-            onClick={() => setIsLogin(true)}
+            onClick={handleLogin}
           >
             로그인
           </Button>

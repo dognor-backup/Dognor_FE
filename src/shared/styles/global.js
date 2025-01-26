@@ -8,6 +8,13 @@ export const GlobalStyles = css`
     font-weight: 500;
     font-style: normal;
   }
+  @font-face {
+    font-family: "BMJUA";
+    src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/BMJUA.woff")
+      format("woff");
+    font-weight: 400;
+    font-style: normal;
+  }
   html,
   body,
   div,
@@ -141,6 +148,17 @@ export const GlobalStyles = css`
   input[type="number"]::-webkit-inner-spin-button {
     -webkit-appearance: none;
   }
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: #dde0e8;
+    border: 2px solid #fff;
+    border-radius: 6px;
+  }
+  ::webkit-scrollbar-track {
+    background-color: #fff;
+  }
   body {
     font-family: "SpoqaHanSansNeo", Arial, sans-serif;
     margin: 0;
@@ -150,5 +168,6 @@ export const GlobalStyles = css`
 
   #root {
     width: 100%;
+    height: 100vh;
   }
 `;
