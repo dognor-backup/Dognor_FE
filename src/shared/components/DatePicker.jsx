@@ -10,9 +10,15 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import styled from "@emotion/styled";
+import { useEffect } from "react";
 
-export function DatePicker({ label, color }) {
+export function DatePicker({ label, color, getSelectedDate }) {
   const [date, setDate] = React.useState(null);
+
+  useEffect(() => {
+    if (!date) return;
+    getSelectedDate(date);
+  }, [date]);
 
   return (
     <CalendarContainer>

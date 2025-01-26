@@ -8,6 +8,33 @@ const AxiosInstance = axios.create({
   },
 });
 
+export const AxiosFormDataInstance = axios.create({
+  baseURL: import.meta.env.VITE_API_BASE_URL,
+});
+
+AxiosInstance.interceptors.request.use(
+  async (config) => {
+    try {
+      const token = await getAccessTokenFromDB();
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+    } catch (error) {
+      console.error("Authorization 헤더 설정 실패:", error);
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
+AxiosFormDataInstance.interceptors.request.use(
+  async (config) => {
+    const token = await getAccessTokenFromDB();
+    if (token) config.headers.Authorization = `Bearer ${token}`;
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
 const getAccessTokenFromDB = async () => {
   const db = await openDatabase();
@@ -20,9 +47,9 @@ const getAccessTokenFromDB = async () => {
     request.onsuccess = (event) => {
       const user = event.target.result;
       if (user && user.accessToken) {
-        resolve(user.accessToken); 
+        resolve(user.accessToken);
       } else {
-        resolve(null); 
+        resolve(null);
       }
     };
 
@@ -31,20 +58,5 @@ const getAccessTokenFromDB = async () => {
     };
   });
 };
-
-AxiosInstance.interceptors.request.use(
-  async (config) => {
-    try {
-      const token = await getAccessTokenFromDB(); 
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-      }
-    } catch (error) {
-      console.error("Authorization 헤더 설정 실패:", error);
-    }
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
 
 export default AxiosInstance;

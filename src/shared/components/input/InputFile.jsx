@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Flex, Input, Label, Info, Layout } from "./inputStyle";
 import { Button } from "../buttons/Button";
 
@@ -8,17 +8,21 @@ export const InputFile = ({
   onFileChange,
   infoMessage = "파일을 업로드해주세요.",
   status = "normal",
-  placeholder,
+  placeholder = "파일을 선택해주세요",
 }) => {
   const fileInputRef = useRef(null);
+  const [fileName, setFileName] = useState(""); 
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
-    if (onFileChange) onFileChange(file);
+    if (file) {
+      setFileName(file.name); 
+      if (onFileChange) onFileChange(file); 
+    }
   };
 
   const handleButtonClick = () => {
-    fileInputRef.current.click();
+    fileInputRef.current.click(); 
   };
 
   return (
@@ -31,6 +35,7 @@ export const InputFile = ({
           name="file-upload-text"
           placeholder={placeholder}
           readOnly
+          value={fileName} 
           onClick={handleButtonClick}
           style={{ cursor: "pointer" }}
         />
