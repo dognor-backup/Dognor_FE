@@ -12,7 +12,7 @@ export const AlertWrapper = styled.div(
   top: 0;
   bottom: 0;
   z-index: 3;
-  transition: opacity 0.8s ease-in;
+  transition: opacity 0.25s ease-in;
   visibility: ${isAlertOpen ? "visible" : "hidden"};
 
     &::before {

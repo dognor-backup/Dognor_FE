@@ -2,7 +2,7 @@ import { create } from "zustand";
 
 const useAlertStore = create((set) => ({
   //state
-  isAlertOpen: true,
+  isAlertOpen: false,
   //action
   openAlert: () => set({ isAlertOpen: true }),
   closeAlert: () => set({ isAlertOpen: false }),

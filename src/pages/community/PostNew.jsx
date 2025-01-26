@@ -21,12 +21,10 @@ export function PostNew() {
   const [agreePolicy, setAgreePolicy] = useState(false);
   const uploadPostMutation = usePostContent();
   const handleSubmit = (e) => {
+    const { title, content, categoryCd } = CommunicationInput;
     e.preventDefault();
-    const isNotEmpty = Object.values(CommunicationInput).every((value) => {
-      return value !== null && value !== "";
-    });
+    const isNotEmpty = title && content && categoryCd;
     if (!isNotEmpty || !agreePolicy) return openAlert();
-
     uploadPostMutation.mutate(CommunicationInput);
   };
 
@@ -38,8 +36,7 @@ export function PostNew() {
     setCommunicationInput((prev) => ({ ...prev, usageDate }));
   };
 
-  const getValueFromSelect = (categoryCd) =>
-    setCommunicationInput((prev) => ({ ...prev, categoryCd: Number(categoryCd) }));
+  const getValueFromSelect = (categoryCd) => setCommunicationInput((prev) => ({ ...prev, categoryCd: categoryCd }));
 
   const getCheckValues = () => setAgreePolicy((prev) => !prev);
 
