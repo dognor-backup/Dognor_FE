@@ -1,20 +1,20 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import styled from "@emotion/styled";
 
-export function SelectBox({ label, getValueFromSelect }) {
+export function SelectBox({ label, getValueFromSelect, optionList }) {
   return (
     <SelectContainer>
       <BoxLabel>{label}</BoxLabel>
-      <Select onValueChange={(prev) => getValueFromSelect(prev)}>
+      <Select onValueChange={getValueFromSelect}>
         <SelectTrigger className="w-full">
           <SelectValue placeholder="게시판을 선택해주세요" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="1">자유게시판</SelectItem>
-          <SelectItem value="2">병원 헌혈 후기</SelectItem>
-          <SelectItem value="3">질문있어요</SelectItem>
-          <SelectItem value="4">고마워요</SelectItem>
-          <SelectItem value="5">혈액이 필요해요</SelectItem>
+          {optionList.map((item, index) => (
+            <SelectItem key={index} value={(index + 1).toString()}>
+              {item}
+            </SelectItem>
+          ))}
         </SelectContent>
       </Select>
     </SelectContainer>

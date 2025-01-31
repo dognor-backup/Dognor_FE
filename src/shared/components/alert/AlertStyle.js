@@ -40,7 +40,7 @@ export const AlertContnet = styled.div(
   box-shadow: ${theme.shadow};
   border: 1px solid ${theme.neutrals_05};
    opacity: ${isAlertOpen ? 1 : 0};
-  transition: opacity 0.5s ease-in;
+  transition: opacity 0.25s ease-in;
   visibility: ${isAlertOpen ? "visible" : "hidden"};
 
 `

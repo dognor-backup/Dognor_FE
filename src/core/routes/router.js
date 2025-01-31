@@ -13,6 +13,9 @@ import SignUp from "@/pages/signup/SignUp";
 import App from "@/App";
 
 import { PostNew } from "@/pages/community/PostNew";
+import { CommunityList } from "@/pages/community/CommunityList";
+import { CommunityDetail } from "@/pages/community/CommunityDetail";
+import { CommunityLink } from "@/pages/community/components/ComminityLink";
 
 const router = createBrowserRouter([
   {
@@ -42,21 +45,39 @@ const router = createBrowserRouter([
         Component: MyPage,
         children: [{ path: "accountsettings", Component: Home }],
       },
-
       {
         path: "community",
         Component: Community,
         children: [
-          { path: "noticedetail/:id", Component: Home },
           {
-            path: "communitylist/:categoryid",
-            Component: Home,
-            children: [{ path: "postdetail/:id", Component: Home }],
+            index: true,
+            Component: CommunityLink,
           },
-          { path: "postedit/:id", Component: Home },
-          { path: "postnew", Component: PostNew },
+          {
+            path: "noticedetail/:id",
+            Component: Home,
+          },
+          {
+            path: "postnew",
+            Component: PostNew,
+          },
+          {
+            path: "list",
+            Component: CommunityList,
+            children: [
+              {
+                path: "postdetail/:id",
+                Component: CommunityDetail,
+              },
+              {
+                path: "postedit/:id",
+                Component: Home,
+              },
+            ],
+          },
         ],
       },
+
       { path: "dashboard", Component: Home },
     ],
   },

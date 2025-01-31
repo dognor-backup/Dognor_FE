@@ -1,14 +1,14 @@
+import { useEffect, useState } from "react";
+import ReactQuillEditor from "@/shared/components/Editor";
+import { usePostContent } from "@/domains/post/hooks/usePostContent";
+import useAlertStore from "@/shared/hooks/useAlertStore";
+import Alert from "@/shared/components/alert/Alert";
 import { SelectBox } from "./Selectbox";
 import { DatePicker } from "./DatePicker";
 import styled from "@emotion/styled";
 import Checkbox from "@/shared/components/checkbox/Checkbox";
 import { Button } from "@/shared/components/buttons/Button";
 import { PageTop } from "@/shared/components/layout/PageTopTitle";
-import ReactQuillEditor from "@/shared/components/Editor";
-import { useState } from "react";
-import { usePostContent } from "@/domains/post/hooks/usePostContent";
-import useAlertStore from "@/shared/hooks/useAlertStore";
-import Alert from "@/shared/components/alert/Alert";
 
 export function PostNew() {
   const { isAlertOpen, openAlert } = useAlertStore();
@@ -18,13 +18,22 @@ export function PostNew() {
     categoryCd: null,
     usageDate: "",
   });
+  let selectedText = "";
+  const categoryList = ["자유게시판", "병원 헌혈 후기", "질문있어요", "고마워요", "혈액이 필요해요"];
+
   const [agreePolicy, setAgreePolicy] = useState(false);
   const uploadPostMutation = usePostContent();
   const handleSubmit = (e) => {
-    const { title, content, categoryCd } = CommunicationInput;
+    let isNotEmpty;
+    const { title, content, categoryCd, usageDate } = CommunicationInput;
     e.preventDefault();
-    const isNotEmpty = title && content && categoryCd;
+    if (categoryCd != 5) {
+      isNotEmpty = title && content && categoryCd;
+    } else {
+      isNotEmpty = title && content && categoryCd && usageDate;
+    }
     if (!isNotEmpty || !agreePolicy) return openAlert();
+    console.log(CommunicationInput);
     uploadPostMutation.mutate(CommunicationInput);
   };
 
@@ -36,7 +45,15 @@ export function PostNew() {
     setCommunicationInput((prev) => ({ ...prev, usageDate }));
   };
 
-  const getValueFromSelect = (categoryCd) => setCommunicationInput((prev) => ({ ...prev, categoryCd: categoryCd }));
+  const getValueFromSelect = (categoryCd) => {
+    setCommunicationInput((prev) => ({ ...prev, categoryCd: Number(categoryCd) }));
+    selectedText = categoryList[Number(categoryCd) - 1];
+    console.log(selectedText);
+  };
+
+  useEffect(() => {
+    console.log(CommunicationInput);
+  }, [CommunicationInput]);
 
   const getCheckValues = () => setAgreePolicy((prev) => !prev);
 
@@ -48,7 +65,7 @@ export function PostNew() {
       </PageTop>
       <ReactQuillEditor getEditorText={getEditorText}>
         <SelectBoxes>
-          <SelectBox label="등록할 게시판" getValueFromSelect={getValueFromSelect} />
+          <SelectBox optionList={categoryList} label="등록할 게시판" getValueFromSelect={getValueFromSelect} />
           {CommunicationInput.categoryCd === 5 && (
             <DatePicker label="혈액이 필요한 날짜" color="red" getSelectedDate={getSelectedDate} />
           )}

@@ -8,7 +8,6 @@ export const usePostContent = () => {
     mutationFn: post,
     onSuccess: async ({ success, data }) => {
       if (success) {
-        console.log(data);
         navigate("/community", { replace: true });
       }
     },
