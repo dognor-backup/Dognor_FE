@@ -13,7 +13,6 @@ export { PageTop, PageWrapper };
 const TopWrapper = styled.div(
   ({ noNav }) => `
   margin-top: ${noNav ? "0px" : "130px"};
-
   text-align: center;
   padding-top: 100px;
 
@@ -40,7 +39,10 @@ const TopWrapper = styled.div(
 const AlignCenter = styled.div(
   ({ size }) => `
   margin: 0 auto;
-  max-width: ${size === "medium" ? "836px" : "1008px"}
-
+  max-width: ${size === "medium" ? "836px" : "1008px"};
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `
 );

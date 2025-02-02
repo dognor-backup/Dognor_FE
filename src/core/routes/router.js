@@ -49,35 +49,14 @@ const router = createBrowserRouter([
         path: "community",
         Component: Community,
         children: [
-          {
-            index: true,
-            Component: CommunityLink,
-          },
-          {
-            path: "noticedetail/:id",
-            Component: Home,
-          },
-          {
-            path: "postnew",
-            Component: PostNew,
-          },
-          {
-            path: "list",
-            Component: CommunityList,
-            children: [
-              {
-                path: "postdetail/:id",
-                Component: CommunityDetail,
-              },
-              {
-                path: "postedit/:id",
-                Component: Home,
-              },
-            ],
-          },
+          { index: true, Component: CommunityLink },
+          { path: "noticedetail/:id", Component: Home },
+          { path: "postnew", Component: PostNew },
+          { path: ":menu", Component: CommunityList },
+          { path: "postdetail/:id", Component: CommunityDetail },
+          { path: "postedit/:id", Component: Home },
         ],
       },
-
       { path: "dashboard", Component: Home },
     ],
   },

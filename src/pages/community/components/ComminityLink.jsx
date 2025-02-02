@@ -78,7 +78,9 @@ const GridItem = styled.div(
   padding: 30px;
   box-sizing: border-box;
   border: 4px solid ${borderColor};
-  box-shadow: ${theme.shadow}
+  box-shadow: ${theme.shadow};
+  cursor: pointer;
+
   `
 );
 const FlexItems = styled.div`
