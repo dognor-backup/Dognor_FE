@@ -9,6 +9,7 @@ export const usePostContent = () => {
     onSuccess: async ({ success, data }) => {
       if (success) {
         navigate("/community", { replace: true });
+        console.log(data);
       }
     },
     onError: (error) => {

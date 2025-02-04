@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import { useState } from "react";
 
-const CheckboxSmall = ({ name, label }) => {
+const CheckboxSmall = ({ name, label, checked }) => {
   const [isChecked, setChecked] = useState(false);
 
   return (

@@ -3,12 +3,27 @@ import SubMenuBar from "@/shared/components/submenubar/SubMenuBar";
 import styled from "@emotion/styled";
 import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { CommunityTable } from "./components/CommunityTable";
+import { useGetPostList } from "@/domains/post/hooks/useGetPostList";
 
 export function CommunityList() {
   const [currentTitle, setCurrentTitle] = useState(0);
   const location = useLocation();
   const pathLink = location.pathname.split("/");
   let currentPath = pathLink[pathLink.length - 1];
+
+  //클릭한 카테고리가 변경될때마다 재요청
+  const [getCategoryList, setCategoryList] = useState({
+    searchParam: {
+      page: 1,
+      size: 10,
+      sortByHitCnt: true,
+      sortByLatest: true,
+      myPostsOnly: true,
+      categoryCd: 0,
+    },
+  });
+  const getPostMutation = useGetPostList();
 
   const subMenuList = [
     { path: "all", label: "전체" },
@@ -40,11 +55,16 @@ export function CommunityList() {
     getCurrentPathTitle();
   }, [currentPath, getCurrentPathTitle]);
 
+  useEffect(() => {
+    console.log("요청");
+    getPostMutation.mutate(getCategoryList);
+  }, [location]);
+
   return (
     <>
       <PageWrapper>
-        <TitleText currentPath={currentPath}>{communityTitles[currentTitle].title}</TitleText>
-        {communityTitles[currentTitle].subtitle.split("\n").map((text, idx) => (
+        <TitleText currentPath={currentPath}>{communityTitles[currentTitle]?.title}</TitleText>
+        {communityTitles[currentTitle]?.subtitle?.split("\n").map((text, idx) => (
           <SubText key={idx} currentPath={currentPath}>
             {text}
             <br />
@@ -53,6 +73,7 @@ export function CommunityList() {
 
         <MarginTop currentPath={currentPath}>
           <SubMenuBar subMenuList={subMenuList} />
+          <CommunityTable currentPath={currentPath} />
         </MarginTop>
       </PageWrapper>
     </>
@@ -65,16 +86,18 @@ const SubText = styled.span(
   display: inline-block;
 `
 );
+
 const TitleText = styled.h2(
   ({ theme, currentPath }) => `
-font-size: 32px;
-text-align: center;
-font-weight: 700;
-line-height: 42px;
-padding-bottom: 16px;
-color: ${currentPath === "needbloods" ? theme.colors.point_orange : theme.colors.neutrals_00}
+  font-size: 32px;
+  text-align: center;
+  font-weight: 700;
+  line-height: 42px;
+  padding-bottom: 16px;
+  color: ${currentPath === "needbloods" ? theme.colors.point_orange : theme.colors.neutrals_00}
 `
 );
+
 const MarginTop = styled.div(
   ({ currentPath }) => `
   margin-top:${currentPath === "all" ? "0px" : "48px"}
