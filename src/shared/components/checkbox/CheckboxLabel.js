@@ -1,12 +1,16 @@
 import styled from "@emotion/styled";
 export const OnlyCheckBox = styled.label(({ theme, checked }) => ({
   fontWeight: 400,
-  display: "flex",
-  alignItems: "center",
   cursor: "pointer",
   fontSize: "14px",
   color: theme.colors.neutrals_01,
   lineHeight: "1.5",
+  left: "50%",
+  top: "50%",
+  transform: "translate(-50%, -50%)",
+  position: "absolute",
+  display: "flex",
+
   "&::before": {
     content: '""',
     display: "inline-block",

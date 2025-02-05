@@ -141,11 +141,12 @@ const TableHeadText = styled.th(
 );
 const TableBodyText = styled.td(
   ({ align, bold }) => `
-  text-align: ${align};
+  text-align: ${align ? align : "center"};
   padding: 8px 0;
   font-size: 14px;
   font-weight: ${bold ? bold : "400"};
-  line-height: 24px
+  line-height: 24px;
+  position: relative;
 `
 );
 const BdBtm = styled.tr(
