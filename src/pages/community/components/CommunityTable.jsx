@@ -1,27 +1,22 @@
 import styled from "@emotion/styled";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 export function CommunityTable({ currentPath, postsData }) {
   const [checkedItems, setCheckedItems] = useState({});
-  const postId = uuidv4();
-
-  const formatListDate = () => {
-    const changedPosts = postsData.map((post) => ({
-      ...post,
-      firstSaveDt: post.firstSaveDt.split("T"),
-    }));
-    return changedPosts;
-  };
-
-  const changedPosts = formatListDate();
+  const [changedPosts, setChangedPosts] = useState([]);
 
   useEffect(() => {
-    formatListDate();
-  }, []);
+    const formattedPosts = postsData.map((post) => ({
+      ...post,
+      postId: post.postId || uuidv4(),
+      firstSaveDt: post.firstSaveDt.split("T"),
+    }));
+    setChangedPosts(formattedPosts);
+  }, [postsData]);
 
   const toggleCheckbox = (postId) => {
-    console.log(checkedItems);
+    console.log(postId);
     setCheckedItems((prev) => ({ ...prev, [postId]: !prev[postId] }));
   };
 
@@ -64,7 +59,7 @@ export function CommunityTable({ currentPath, postsData }) {
             </tr>
           </TableHeader>
           <tbody>
-            {changedPosts?.map((item, index) => {
+            {changedPosts?.map((item) => {
               const {
                 categoryCd,
                 categoryName,
@@ -75,12 +70,20 @@ export function CommunityTable({ currentPath, postsData }) {
                 postSeq,
                 title,
                 usageDate,
+                postId,
               } = item;
 
               return (
-                <BdBtm key={`${postId}-${index}`} onClick={() => toggleCheckbox(postId)}>
+                <BdBtm key={postId} onClick={() => toggleCheckbox(postId)}>
                   <TableBodyText>
-                    <input type="checkbox" checked={!!checkedItems[postId]} onChange={() => toggleCheckbox(postId)} />
+                    <input
+                      type="checkbox"
+                      checked={!!checkedItems[postId]}
+                      onChange={(e) => {
+                        toggleCheckbox(postId);
+                        e.stopPropagation();
+                      }}
+                    />
                   </TableBodyText>
                   <TableBodyText bold="700">
                     <span>{postSeq}</span>
