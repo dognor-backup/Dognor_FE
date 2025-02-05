@@ -4,6 +4,7 @@ import styled from "@emotion/styled";
 import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import TrashIcon from "/src/assets/icons/secondary/trash.svg?react";
+import { OnlyCheckBox } from "@/shared/components/checkbox/CheckboxLabel";
 
 export function CommunityTable({ currentPath, postsData }) {
   const [checkedItems, setCheckedItems] = useState({});
@@ -85,14 +86,17 @@ export function CommunityTable({ currentPath, postsData }) {
               return (
                 <BdBtm key={postId} onClick={() => toggleCheckbox(postId)}>
                   <TableBodyText>
-                    <input
-                      type="checkbox"
-                      checked={!!checkedItems[postId]}
-                      onChange={(e) => {
-                        toggleCheckbox(postId);
-                        e.stopPropagation();
-                      }}
-                    />
+                    <OnlyCheckBox htmlFor={postId} checked={!!checkedItems[postId]}>
+                      <input
+                        name={postId}
+                        type="checkbox"
+                        checked={!!checkedItems[postId]}
+                        onChange={(e) => {
+                          toggleCheckbox(postId);
+                          e.stopPropagation();
+                        }}
+                      />
+                    </OnlyCheckBox>
                   </TableBodyText>
                   <TableBodyText bold="700">
                     <span>{postSeq}</span>
