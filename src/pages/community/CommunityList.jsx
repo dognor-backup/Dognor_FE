@@ -82,19 +82,20 @@ export function CommunityList() {
   }, [location, getCurrentPathTitle]);
 
   useEffect(() => {
-    setCategoryList((prev) => ({
-      ...prev,
-      searchParam: {
-        ...prev.searchParam,
-        categoryCd: communityTitles[currentTitle].categoryCd,
-      },
-    }));
+    setCategoryList((prev) => {
+      const updatedCategoryList = {
+        ...prev,
+        searchParam: {
+          ...prev.searchParam,
+          categoryCd: communityTitles[currentTitle].categoryCd,
+        },
+      };
+      if (prev !== updatedCategoryList) {
+        getPostMutation.mutate(updatedCategoryList);
+      }
+      return updatedCategoryList;
+    });
   }, [location, currentTitle]);
-
-  useEffect(() => {
-    console.log("eee", getCategoryList);
-    getPostMutation.mutate(getCategoryList);
-  }, [getCategoryList]);
 
   return (
     <>
@@ -136,6 +137,8 @@ const TitleText = styled.h2(
 
 const MarginTop = styled.div(
   ({ currentPath }) => `
-  margin-top:${currentPath === "all" ? "0px" : "48px"}
+  margin-top:${currentPath === "all" ? "0px" : "48px"};
+  width: 100%;
+  text-align: center
 `
 );
