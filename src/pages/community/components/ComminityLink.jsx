@@ -1,13 +1,26 @@
 import styled from "@emotion/styled";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 
 export function CommunityLink() {
   const navigate = useNavigate();
+  const { setCurrentCategory } = useOutletContext();
+  const handleGetCategoryCd = (e) => {
+    setCurrentCategory(e.currentTarget.dataset.category * 1);
+  };
+
   return (
     <>
       <CommunityTitle>커뮤니티 게시판</CommunityTitle>
       <GridContainer>
-        <GridItem bgColor="#fff" borderColor="#4A3AFF" onClick={() => navigate("/community/review")}>
+        <GridItem
+          bgColor="#fff"
+          data-category="3"
+          borderColor="#4A3AFF"
+          onClick={(e) => {
+            navigate("/community/review");
+            handleGetCategoryCd(e);
+          }}
+        >
           <BoxIcon background="/src/assets/icons/subicon/local_hospital.svg"></BoxIcon>
           <BoxTitle color="#4A3AFF">병원 헌혈 후기</BoxTitle>
           <BoxText color="#4A3AFF">
@@ -16,7 +29,7 @@ export function CommunityLink() {
             대한 이야기 공간
           </BoxText>
         </GridItem>
-        <GridItem bgColor="#170F49" borderColor="#fff" onClick={() => navigate("/community/thanks")}>
+        <GridItem bgColor="#170F49" borderColor="#fff" data-category="5" onClick={() => navigate("/community/thanks")}>
           <BoxIcon background="/src/assets/icons/subicon/diversity_4.svg"></BoxIcon>
           <BoxTitle color="#fff">고마워요</BoxTitle>
           <BoxText color="#fff">
@@ -25,7 +38,12 @@ export function CommunityLink() {
             따뜻한 이야기를 알려주세요
           </BoxText>
         </GridItem>
-        <GridItem bgColor="#FEEDED" borderColor="#F64D4D" onClick={() => navigate("/community/needbloods")}>
+        <GridItem
+          bgColor="#FEEDED"
+          borderColor="#F64D4D"
+          data-category="6"
+          onClick={() => navigate("/community/needbloods")}
+        >
           <BoxIcon background="/src/assets/icons/subicon/bloodtype_red.svg"></BoxIcon>
           <BoxTitle color="#F64D4D">혈액이 필요해요</BoxTitle>
           <BoxText color="#F64D4D">
@@ -36,7 +54,12 @@ export function CommunityLink() {
         </GridItem>
       </GridContainer>
       <FlexItems>
-        <GridItem bgColor="#A0A3BD" borderColor="#fff" onClick={() => navigate("/community/question")}>
+        <GridItem
+          bgColor="#A0A3BD"
+          borderColor="#fff"
+          data-category="4"
+          onClick={() => navigate("/community/question")}
+        >
           <BoxIcon background="/src/assets/icons/subicon/feedback.svg"></BoxIcon>
           <BoxTitle color="#fff">질문있어요!</BoxTitle>
           <BoxText color="#fff">
@@ -45,7 +68,7 @@ export function CommunityLink() {
             그리고 여러 정보들을 공유해요
           </BoxText>
         </GridItem>
-        <GridItem bgColor="#EDEBFF" borderColor="#fff" onClick={() => navigate("/community/all")}>
+        <GridItem bgColor="#EDEBFF" borderColor="#fff" data-category="2" onClick={() => navigate("/community/all")}>
           <BoxIcon background="/src/assets/icons/subicon/diversity_3.svg"></BoxIcon>
           <BoxTitle color="#170F49">자유게시판</BoxTitle>
           <BoxText color="#170F49">자유로운 주제로 소통하는 공간입니다.</BoxText>

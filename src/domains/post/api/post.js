@@ -19,7 +19,6 @@ export const postSearch = async (data) => {
   try {
     const response = await AxiosInstance.post("/community/posts/search", data);
     if (response.data.code === 200) {
-      console.log(data);
       return { success: true, data: response.data };
     }
     if (response.data.code === 400) {

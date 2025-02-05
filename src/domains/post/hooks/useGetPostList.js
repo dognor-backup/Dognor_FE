@@ -3,15 +3,14 @@ import { postSearch } from "../api/post";
 import usePostStore from "../store/usePostStore";
 
 export const useGetPostList = () => {
-  const { postsData, setPostData } = usePostStore();
+  const { setPostData } = usePostStore();
   return useMutation({
     mutationFn: postSearch,
     onSuccess: async ({ success, data }) => {
-      console.log(data);
       if (success) {
         const { data: nestedData } = data;
+        console.log("ddd", nestedData);
         setPostData(nestedData);
-        console.log(postsData);
       }
     },
   });

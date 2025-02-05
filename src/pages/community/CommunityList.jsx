@@ -1,16 +1,23 @@
 import { PageWrapper } from "@/shared/components/layout/PageTopTitle";
 import SubMenuBar from "@/shared/components/submenubar/SubMenuBar";
 import styled from "@emotion/styled";
-import { useLocation } from "react-router-dom";
+import { useLocation, useOutletContext } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { CommunityTable } from "./components/CommunityTable";
 import { useGetPostList } from "@/domains/post/hooks/useGetPostList";
+import usePostStore from "@/domains/post/store/usePostStore";
 
 export function CommunityList() {
-  const [currentTitle, setCurrentTitle] = useState(0);
+  //선택되서 들어온 카테고리
+  const { currentCategory, setCurrentCategory } = useOutletContext();
+  console.log("//", currentCategory);
+  const { postsData } = usePostStore();
+  //탭을 눌러 변경하는 카테고리
+  const [currentTitle, setCurrentTitle] = useState(currentCategory);
   const location = useLocation();
   const pathLink = location.pathname.split("/");
   let currentPath = pathLink[pathLink.length - 1];
+  const getPostMutation = useGetPostList();
 
   //클릭한 카테고리가 변경될때마다 재요청
   const [getCategoryList, setCategoryList] = useState({
@@ -19,46 +26,75 @@ export function CommunityList() {
       size: 10,
       sortByHitCnt: true,
       sortByLatest: true,
-      myPostsOnly: true,
+      myPostsOnly: false,
       categoryCd: 0,
     },
   });
-  const getPostMutation = useGetPostList();
-
-  const subMenuList = [
-    { path: "all", label: "전체" },
-    { path: "free", label: "자유게시판" },
-    { path: "review", label: "병원 헌혈 후기" },
-    { path: "question", label: "질문있어요" },
-    { path: "thanks", label: "고마워요" },
-    { path: "needbloods", label: "혈액이 필요해요", color: "red" },
-  ];
 
   const communityTitles = [
-    { path: "all", title: "모든 이야기 보기", subtitle: "" },
-    { path: "free", title: "자유게시판", subtitle: "자유로운 주제로 소통할 수 있어요" },
-    { path: "review", title: "병원 헌혈 후기", subtitle: "헌혈견 체험과 병원 경험에 대한 이야기 공간입니다" },
-    { path: "question", title: "질문있어요!", subtitle: "다양한 궁금함을 풀어봐요. 그리고 여러 정보들을 공유해요" },
-    { path: "thanks", title: "고마워요", subtitle: "감사함을 전하고 따뜻한 이야기를 알려주세요" },
+    { path: "all", title: "모든 이야기 보기", label: "전체", subtitle: "", categoryCd: 0 },
+    {
+      path: "free",
+      title: "자유게시판",
+      label: "자유게시판",
+      subtitle: "자유로운 주제로 소통할 수 있어요",
+      categoryCd: 2,
+    },
+    {
+      path: "review",
+      title: "병원 헌혈 후기",
+      label: "병원 헌혈 후기",
+      subtitle: "헌혈견 체험과 병원 경험에 대한 이야기 공간입니다",
+      categoryCd: 3,
+    },
+    {
+      path: "question",
+      title: "질문있어요!",
+      label: "질문있어요",
+      subtitle: "다양한 궁금함을 풀어봐요. 그리고 여러 정보들을 공유해요",
+      categoryCd: 4,
+    },
+    {
+      path: "thanks",
+      title: "고마워요",
+      label: "고마워요",
+      subtitle: "감사함을 전하고 따뜻한 이야기를 알려주세요",
+      categoryCd: 5,
+    },
     {
       path: "needbloods",
       title: "혈액이 필요해요",
+      label: "혈액이 필요해요",
       subtitle: "도움의 힘이 필요해요! D-Day가 가까워지고 있어요!\n 보호자님의 도움이 필요합니다!",
+      categoryCd: 6,
     },
   ];
 
   const getCurrentPathTitle = () => {
-    setCurrentTitle(communityTitles.findIndex((communityTitle) => communityTitle.path.includes(currentPath)));
+    let selected = communityTitles.findIndex((communityTitle) => communityTitle.path.includes(currentPath));
+    setCurrentTitle(selected);
+    setCurrentCategory(communityTitles[selected].categoryCd);
   };
 
   useEffect(() => {
+    //경로마다 해당하는 제목과 글 보여주기
     getCurrentPathTitle();
-  }, [currentPath, getCurrentPathTitle]);
+  }, [location, getCurrentPathTitle]);
 
   useEffect(() => {
-    console.log("요청");
+    setCategoryList((prev) => ({
+      ...prev,
+      searchParam: {
+        ...prev.searchParam,
+        categoryCd: communityTitles[currentTitle].categoryCd,
+      },
+    }));
+  }, [location, currentTitle]);
+
+  useEffect(() => {
+    console.log("eee", getCategoryList);
     getPostMutation.mutate(getCategoryList);
-  }, [location]);
+  }, [getCategoryList]);
 
   return (
     <>
@@ -72,8 +108,8 @@ export function CommunityList() {
         ))}
 
         <MarginTop currentPath={currentPath}>
-          <SubMenuBar subMenuList={subMenuList} />
-          <CommunityTable currentPath={currentPath} />
+          <SubMenuBar subMenuList={communityTitles} />
+          <CommunityTable currentPath={currentPath} postsData={postsData} />
         </MarginTop>
       </PageWrapper>
     </>

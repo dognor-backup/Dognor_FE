@@ -1,37 +1,56 @@
-export function CommunityTable({ tableItems, currentPath }) {
+import styled from "@emotion/styled";
+
+export function CommunityTable({ currentPath, postsData }) {
+  console.log(postsData);
   return (
     <>
-      <table>
-        <thead>
-          <th>No</th>
-          <th>제목/내용</th>
-          <th>구분</th>
-          <th>게시판/병원</th>
-          <th>작성일</th>
-          <th>조회</th>
-        </thead>
-        <tbody>
-          {tableItems?.map((item) => {
-            const { categoryCd, categoryName, content, firstDaveDt, firstSaveUser, hitCnt, postSeq, title, usageDate } =
-              item;
-            return (
-              <>
-                <td>
-                  <input type="checkbox" />
-                  <span>{postSeq}</span>
-                </td>
-                <td>{title}</td>
-                <td>{categoryCd}</td>
-                {currentPath == "needbloods" ? <td>{usageDate}</td> : ""}
-                <td>{firstSaveUser}</td>
-                <td>{firstDaveDt}</td>
-                <td>{hitCnt}</td>
-                <td>...</td>
-              </>
-            );
-          })}
-        </tbody>
-      </table>
+      {postsData.length == 0 ? (
+        <div>데이터 없음</div>
+      ) : (
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">No.</th>
+              <th scope="col">제목</th>
+              {currentPath === "all" ? <th scope="col">커뮤니티</th> : null}
+              {currentPath === "needbloods" ? <th scope="col">사용 날짜</th> : null}
+              <th scope="col">작성자</th>
+              <th scope="col">작성일</th>
+              <th scope="col">조회</th>
+            </tr>
+          </thead>
+          <tbody>
+            {postsData?.map((item) => {
+              const {
+                categoryCd,
+                categoryName,
+                content,
+                firstDaveDt,
+                firstSaveUser,
+                hitCnt,
+                postSeq,
+                title,
+                usageDate,
+              } = item;
+              return (
+                <tr key={postSeq}>
+                  <td>
+                    <input type="checkbox" />
+                    <span>{postSeq}</span>
+                  </td>
+                  <td>{title}</td>
+                  {currentPath == "all" ? <td>{categoryCd}</td> : null}
+                  {currentPath == "needbloods" ? <td>{usageDate}</td> : null}
+                  <td>{firstSaveUser}</td>
+                  <td>{firstDaveDt}</td>
+                  <td>{hitCnt}</td>
+                  <td>...</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      )}
     </>
   );
 }
