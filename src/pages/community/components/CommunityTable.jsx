@@ -1,10 +1,14 @@
+import { IconBtn } from "@/shared/components/buttons/IconBtn";
+import CheckboxSmall from "@/shared/components/checkbox/CheckboxSmall";
 import styled from "@emotion/styled";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
+import TrashIcon from "/src/assets/icons/secondary/trash.svg?react";
 
 export function CommunityTable({ currentPath, postsData }) {
   const [checkedItems, setCheckedItems] = useState({});
   const [changedPosts, setChangedPosts] = useState([]);
+  const [checkAll, setCheckAll] = useState(false);
 
   useEffect(() => {
     const formattedPosts = postsData.map((post) => ({
@@ -16,12 +20,17 @@ export function CommunityTable({ currentPath, postsData }) {
   }, [postsData]);
 
   const toggleCheckbox = (postId) => {
-    console.log(postId);
     setCheckedItems((prev) => ({ ...prev, [postId]: !prev[postId] }));
   };
 
   return (
     <>
+      <Flex>
+        <CheckboxSmall name={"checkAll"} label={"전체선택"} />
+        <IconBtn variant="secondary" size="medium" state="outline">
+          <TrashIcon />
+        </IconBtn>
+      </Flex>
       {/* 관리자 혹은 내가 쓴 글을 필터링 하면 체크박스와 ...이 있는 테이블  */}
       {changedPosts.length == 0 ? (
         <div>데이터 없음</div>
@@ -29,7 +38,7 @@ export function CommunityTable({ currentPath, postsData }) {
         <TableContainer>
           <TableHeader>
             <tr>
-              <TableHeadText padding="20px" scope="col"></TableHeadText>
+              <TableHeadText padding="20px" scope="col" />
               <TableHeadText padding="20px" scope="col">
                 No.
               </TableHeadText>
@@ -55,7 +64,7 @@ export function CommunityTable({ currentPath, postsData }) {
               <TableHeadText padding="23px" scope="col">
                 조회
               </TableHeadText>
-              <TableHeadText padding="20px" scope="col"></TableHeadText>
+              <TableHeadText padding="20px" scope="col" />
             </tr>
           </TableHeader>
           <tbody>
@@ -142,4 +151,10 @@ const BdBtm = styled.tr(
 );
 const TextMg = styled.span`
   margin: 0 16px;
+`;
+const Flex = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
 `;
