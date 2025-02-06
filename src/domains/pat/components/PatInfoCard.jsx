@@ -28,6 +28,14 @@ export default function PatInfoCard() {
                 <PatNameText>{pat.name}</PatNameText>
                 <PatInfoContainer>
                   <PatInfoText>나이: {calculateAge(pat.birthday)}</PatInfoText>
+                  <PatInfoText>분류: {pat.breedName}</PatInfoText>
+                  <PatInfoText>몸무게: {pat.weight} Kg</PatInfoText>
+                  <PatInfoText>혈액형: {pat.bloodTypeName}</PatInfoText>
+                  {pat.isDonor === 1 ? (
+                    <PatInfoHighlightedText>헌혈 가능</PatInfoHighlightedText>
+                  ) : (
+                    <PatInfoBoldText>헌혈 불가능</PatInfoBoldText>
+                  )}
                 </PatInfoContainer>
               </PatInfoWrapper>
             </PatInfoCardWrapper>
@@ -80,11 +88,26 @@ const PatNameText = styled.p`
 
 const PatInfoContainer = styled.div`
   display: flex;
+  flex-direction: column;
 `;
 
 const PatInfoText = styled.p`
   font-weight: 400;
   font-size: 14px;
   line-height: 24px;
+  color: ${({ theme }) => theme.colors.neutrals_00};
+`;
+
+const PatInfoHighlightedText = styled.p`
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 20px;
+  color: ${({ theme }) => theme.colors.primary_blue};
+`;
+
+const PatInfoBoldText = styled.p`
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 20px;
   color: ${({ theme }) => theme.colors.neutrals_00};
 `;
