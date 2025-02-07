@@ -1,5 +1,4 @@
 import useUserStore from "@/domains/auth/store/useUserStore";
-
 import { Button } from "@/shared/components/buttons/Button";
 import styled from "@emotion/styled";
 import { useEffect, useState } from "react";
@@ -20,6 +19,7 @@ export function CommentWriteForm({ getValueFromCommentArea, updateCommentMutatio
   useEffect(() => {
     if (updateCommentMutation.isSuccess) {
       setText("");
+      setTextLength(0);
     }
   }, [updateCommentMutation.isSuccess]);
 

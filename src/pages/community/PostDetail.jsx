@@ -4,15 +4,17 @@ import parse from "html-react-parser";
 import styled from "@emotion/styled";
 import { Button } from "@/shared/components/buttons/Button";
 import { CommentWriteForm } from "./components/CommentWriteForm";
-import { updateComment } from "@/domains/post/api/post";
-import { useMutation } from "@tanstack/react-query";
-import { useState } from "react";
+import { searchComments, updateComment } from "@/domains/post/api/post";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
+import { CommentsList } from "./components/CommentsList";
 
 export function PostDetail() {
   const [userComment, setUserComment] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
   const location = useLocation();
   const post = location.state?.item;
-
+  const [postComments, setPostComments] = useState();
   const { categoryCd, categoryName, content, firstSaveDt, firstSaveUser, hitCnt, postSeq, title, usageDate } =
     post || {};
 
@@ -30,6 +32,19 @@ export function PostDetail() {
       console.error(error);
     },
   });
+
+  const { data, isError, error, isLoading } = useQuery({
+    //쿼리 키를 현재 페이지가 포함되도록
+    queryKey: ["comment", currentPage],
+    // 현재 페이지가 바뀌면 리엑트 쿼리가 새 쿼리 키에 대한 데이터를 업데이트
+    queryFn: () => searchComments({ postSeq, page: currentPage, size: 8 }),
+  });
+
+  useEffect(() => {
+    if (data?.success) {
+      setPostComments(data.data);
+    }
+  }, [data]);
 
   const getValueFromCommentArea = (data) => setUserComment(data);
 
@@ -64,7 +79,9 @@ export function PostDetail() {
             getValueFromCommentArea={getValueFromCommentArea}
             updateCommentMutation={updateCommentMutation}
           />
+          <CommentsList comments={postComments} />
         </Form>
+
         <Button style={{ width: "320px" }}>목록으로 돌아가기</Button>
       </PageWrapper>
     </div>

@@ -45,3 +45,9 @@ export const updateComment = async (data) => {
     return { success: true, data: response.data };
   }
 };
+
+export const searchComments = async (data) => {
+  const { postSeq, page, size } = data;
+  const response = await AxiosInstance.get(`/community/comments/${postSeq}/${page}/${size}`);
+  return { success: true, data: response.data };
+};
