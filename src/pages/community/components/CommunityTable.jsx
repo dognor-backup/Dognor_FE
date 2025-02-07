@@ -27,8 +27,8 @@ export function CommunityTable({ currentPath, postsData }) {
     setCheckedItems((prev) => ({ ...prev, [postSeq]: !prev[postSeq] }));
   };
 
-  const handleMoveToPostDetail = (postSeq) => {
-    navigate(`/community/postdetail/${postSeq}`);
+  const handleMoveToPostDetail = (item) => {
+    navigate(`/postdetail/${item.postSeq}`, { state: { item } });
   };
 
   return (
@@ -95,7 +95,7 @@ export function CommunityTable({ currentPath, postsData }) {
               } = item;
 
               return (
-                <BdBtm key={postSeq} onClick={() => handleMoveToPostDetail(postSeq)}>
+                <BdBtm key={postSeq} onClick={() => handleMoveToPostDetail(item)}>
                   <TableBodyText>
                     <OnlyCheckBox htmlFor={postSeq} checked={!!checkedItems[postSeq]}>
                       <input

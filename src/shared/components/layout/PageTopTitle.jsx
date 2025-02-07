@@ -15,6 +15,7 @@ const TopWrapper = styled.div(
   margin-top: ${noNav ? "0px" : "130px"};
   text-align: center;
   padding-top: 100px;
+  width: 100%;
 
   h2 {
     font-size: 32px;
