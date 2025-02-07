@@ -28,3 +28,14 @@ export const postSearch = async (data) => {
     console.log(error);
   }
 };
+
+export const deletePost = async (postId) => {
+  try {
+    const response = await AxiosInstance.post(`/community/posts/${postId}`);
+    if (response.data.code === 200) {
+      return { success: true, data: response.data };
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};

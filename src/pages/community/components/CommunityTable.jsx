@@ -2,32 +2,44 @@ import { IconBtn } from "@/shared/components/buttons/IconBtn";
 import CheckboxSmall from "@/shared/components/checkbox/CheckboxSmall";
 import styled from "@emotion/styled";
 import { useEffect, useState } from "react";
-import { v4 as uuidv4 } from "uuid";
 import TrashIcon from "/src/assets/icons/secondary/trash.svg?react";
 import { OnlyCheckBox } from "@/shared/components/checkbox/CheckboxLabel";
+import { useDeleteMutation } from "@/domains/post/hooks/useDeletePost";
+import { useNavigate } from "react-router-dom";
 
 export function CommunityTable({ currentPath, postsData }) {
   const [checkedItems, setCheckedItems] = useState({});
   const [changedPosts, setChangedPosts] = useState([]);
-  const [checkAll, setCheckAll] = useState(false);
+  const [checked, setChecked] = useState(false);
+  const [deletePosts, setDeletePosts] = useState([]);
+  const deleteMutation = useDeleteMutation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const formattedPosts = postsData.map((post) => ({
       ...post,
-      postId: post.postId || uuidv4(),
       firstSaveDt: post.firstSaveDt.split("T"),
     }));
     setChangedPosts(formattedPosts);
   }, [postsData]);
 
-  const toggleCheckbox = (postId) => {
-    setCheckedItems((prev) => ({ ...prev, [postId]: !prev[postId] }));
+  const toggleCheckbox = (postSeq) => {
+    setCheckedItems((prev) => ({ ...prev, [postSeq]: !prev[postSeq] }));
+  };
+
+  const handleMoveToPostDetail = (postSeq) => {
+    navigate(`/community/postdetail/${postSeq}`);
   };
 
   return (
     <>
       <Flex>
-        <CheckboxSmall name={"checkAll"} label={"전체선택"} />
+        <CheckboxSmall
+          name="checkAll"
+          label="전체선택"
+          checked={checked}
+          onChange={() => setChecked((prev) => !prev)}
+        />
         <IconBtn variant="secondary" size="medium" state="outline">
           <TrashIcon />
         </IconBtn>
@@ -80,19 +92,18 @@ export function CommunityTable({ currentPath, postsData }) {
                 postSeq,
                 title,
                 usageDate,
-                postId,
               } = item;
 
               return (
-                <BdBtm key={postId} onClick={() => toggleCheckbox(postId)}>
+                <BdBtm key={postSeq} onClick={() => handleMoveToPostDetail(postSeq)}>
                   <TableBodyText>
-                    <OnlyCheckBox htmlFor={postId} checked={!!checkedItems[postId]}>
+                    <OnlyCheckBox htmlFor={postSeq} checked={!!checkedItems[postSeq]}>
                       <input
-                        name={postId}
+                        name={postSeq}
                         type="checkbox"
-                        checked={!!checkedItems[postId]}
+                        checked={!!checkedItems[postSeq]}
                         onChange={(e) => {
-                          toggleCheckbox(postId);
+                          toggleCheckbox(postSeq);
                           e.stopPropagation();
                         }}
                       />

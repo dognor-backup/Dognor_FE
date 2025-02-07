@@ -6,6 +6,7 @@ import { Outlet } from "react-router-dom";
 
 export default function Community() {
   const [currentCategory, setCurrentCategory] = useState(0);
+
   return (
     <CommunityWrapper>
       <PageWrapper>

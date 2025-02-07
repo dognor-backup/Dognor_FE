@@ -8,6 +8,7 @@ import { useGetPostList } from "@/domains/post/hooks/useGetPostList";
 import usePostStore from "@/domains/post/store/usePostStore";
 
 export function CommunityList() {
+  // const [selectedPost, setSelectedPost] = useState(null);
   //선택되서 들어온 카테고리
   const { currentCategory, setCurrentCategory } = useOutletContext();
   console.log("//", currentCategory);
