@@ -39,3 +39,9 @@ export const deletePost = async (postId) => {
     console.log(error);
   }
 };
+export const updateComment = async (data) => {
+  const response = await AxiosInstance.post(`/community/comment`, data);
+  if (response.data.code === 200) {
+    return { success: true, data: response.data };
+  }
+};

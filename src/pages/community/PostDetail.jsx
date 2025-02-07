@@ -4,13 +4,34 @@ import parse from "html-react-parser";
 import styled from "@emotion/styled";
 import { Button } from "@/shared/components/buttons/Button";
 import { CommentWriteForm } from "./components/CommentWriteForm";
+import { updateComment } from "@/domains/post/api/post";
+import { useMutation } from "@tanstack/react-query";
+import { useState } from "react";
 
 export function PostDetail() {
+  const [userComment, setUserComment] = useState("");
   const location = useLocation();
   const post = location.state?.item;
-  console.log(post);
+
   const { categoryCd, categoryName, content, firstSaveDt, firstSaveUser, hitCnt, postSeq, title, usageDate } =
     post || {};
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (userComment.length > 1) updateCommentMutation.mutate({ postSeq, comment: userComment });
+  };
+
+  const updateCommentMutation = useMutation({
+    mutationFn: updateComment,
+    onSuccess: (data) => {
+      console.log(data);
+    },
+    onError: (error) => {
+      console.error(error);
+    },
+  });
+
+  const getValueFromCommentArea = (data) => setUserComment(data);
 
   return (
     <div>
@@ -38,7 +59,12 @@ export function PostDetail() {
           <ContentContainer>{parse(content)}</ContentContainer>
           <div></div>
         </PageTop>
-        <CommentWriteForm />
+        <Form onSubmit={handleSubmit}>
+          <CommentWriteForm
+            getValueFromCommentArea={getValueFromCommentArea}
+            updateCommentMutation={updateCommentMutation}
+          />
+        </Form>
         <Button style={{ width: "320px" }}>목록으로 돌아가기</Button>
       </PageWrapper>
     </div>
@@ -84,3 +110,6 @@ const ContentContainer = styled.div(
   margin-bottom: 48px;
 `
 );
+const Form = styled.form`
+  width: 100%;
+`;

@@ -1,44 +1,46 @@
 import useUserStore from "@/domains/auth/store/useUserStore";
+
 import { Button } from "@/shared/components/buttons/Button";
 import styled from "@emotion/styled";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 const maxLength = 400;
 
-export function CommentWriteForm() {
+export function CommentWriteForm({ getValueFromCommentArea, updateCommentMutation }) {
   const { user } = useUserStore();
   const { userId } = user.userData || "undefined";
-  const [checkTextLength, setTextLength] = useState("");
+  const [checkTextLength, setTextLength] = useState(0);
+  const [text, setText] = useState("");
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("제출");
-  };
   const handleChange = (e) => {
-    setTextLength(e.target.value);
+    setTextLength(text.length);
+    setText(e.target.value);
+    getValueFromCommentArea(text);
   };
+
+  useEffect(() => {
+    if (updateCommentMutation.isSuccess) {
+      setText("");
+    }
+  }, [updateCommentMutation.isSuccess]);
+
   return (
-    <Form onSubmit={handleSubmit}>
-      <CommentWrapper>
-        <InputContainer>
-          <UserName>{userId}</UserName>
-          <CkLength>
-            {checkTextLength.length}/{maxLength}
-          </CkLength>
-          <CommentInput placeholder="댓글을 작성해주세요" onChange={handleChange} maxLength={maxLength} />
-        </InputContainer>
-        <Flex>
-          <Button variant="normal" size="medium" state="default" style={{ height: "100%" }}>
-            등록
-          </Button>
-        </Flex>
-      </CommentWrapper>
-    </Form>
+    <CommentWrapper>
+      <InputContainer>
+        <UserName>{userId}</UserName>
+        <CkLength>
+          {checkTextLength}/{maxLength}
+        </CkLength>
+        <CommentInput placeholder="댓글을 작성해주세요" onChange={handleChange} maxLength={maxLength} value={text} />
+      </InputContainer>
+      <Flex>
+        <Button variant="normal" size="medium" state="default" style={{ height: "100%" }}>
+          등록
+        </Button>
+      </Flex>
+    </CommentWrapper>
   );
 }
 
-const Form = styled.form`
-  width: 100%;
-`;
 const CommentWrapper = styled.article`
   display: flex;
   gap: 8px;
@@ -78,7 +80,6 @@ const CommentInput = styled.textarea`
 const Flex = styled.div`
   display: flex;
 `;
-
 const CkLength = styled.span(
   ({ theme }) => `
 font-size: 14px;
