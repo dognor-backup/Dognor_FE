@@ -1,36 +1,39 @@
 import { PageWrapper } from "@/shared/components/layout/PageTopTitle";
 import SubMenuBar from "@/shared/components/submenubar/SubMenuBar";
 import styled from "@emotion/styled";
-import { useLocation, useOutletContext } from "react-router-dom";
+import { useLocation, useNavigate, useOutletContext } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { CommunityTable } from "./components/CommunityTable";
+import { CommunityTable } from "./CommunityTable";
 import { useGetPostList } from "@/domains/post/hooks/useGetPostList";
-import usePostStore from "@/domains/post/store/usePostStore";
+import { Button } from "@/shared/components/buttons/Button";
+import { useMutation } from "@tanstack/react-query";
+import { viewCount } from "@/domains/post/api/post";
 
 export function CommunityList() {
   // const [selectedPost, setSelectedPost] = useState(null);
   //선택되서 들어온 카테고리
   const { currentCategory, setCurrentCategory } = useOutletContext();
-  console.log("//", currentCategory);
-  const { postsData } = usePostStore();
+
   //탭을 눌러 변경하는 카테고리
   const [currentTitle, setCurrentTitle] = useState(currentCategory);
   const location = useLocation();
   const pathLink = location.pathname.split("/");
   let currentPath = pathLink[pathLink.length - 1];
-  const getPostMutation = useGetPostList();
+  const navigate = useNavigate();
 
   //클릭한 카테고리가 변경될때마다 재요청
   const [getCategoryList, setCategoryList] = useState({
     searchParam: {
       page: 1,
-      size: 10,
-      sortByHitCnt: true,
-      sortByLatest: true,
+      size: 15,
+      sortByHitCnt: false,
+      sortByLatest: false,
       myPostsOnly: false,
-      categoryCd: 0,
+      categoryCd: 1,
     },
   });
+  const { data: categoryList, isLoading, isError } = useGetPostList(getCategoryList);
+  console.log("공지", categoryList);
 
   const communityTitles = [
     { path: "all", title: "모든 이야기 보기", label: "전체", subtitle: "", categoryCd: 0 },
@@ -83,21 +86,20 @@ export function CommunityList() {
   }, [location, getCurrentPathTitle]);
 
   useEffect(() => {
-    setCategoryList((prev) => {
-      const updatedCategoryList = {
-        ...prev,
-        searchParam: {
-          ...prev.searchParam,
-          categoryCd: communityTitles[currentTitle].categoryCd,
-        },
-      };
-      if (prev !== updatedCategoryList) {
-        getPostMutation.mutate(updatedCategoryList);
-      }
-      return updatedCategoryList;
-    });
+    setCategoryList((prev) => ({
+      ...prev,
+      searchParam: {
+        ...prev.searchParam,
+        categoryCd: communityTitles[currentTitle].categoryCd,
+      },
+    }));
   }, [location, currentTitle]);
 
+  const currentViewMutation = useMutation({
+    mutationFn: viewCount,
+  });
+
+  //
   return (
     <>
       <PageWrapper>
@@ -111,7 +113,51 @@ export function CommunityList() {
 
         <MarginTop currentPath={currentPath}>
           <SubMenuBar subMenuList={communityTitles} />
-          <CommunityTable currentPath={currentPath} postsData={postsData} />
+          <BtnsContainer>
+            <Button variant="secondary" size="small" onClick={() => navigate("/postnew")}>
+              글쓰기
+            </Button>
+            <Button
+              variant="normal"
+              size="small"
+              state="outline"
+              onClick={() =>
+                setCategoryList((prev) => ({
+                  ...prev,
+                  searchParam: { ...prev.searchParam, sortByHitCnt: false, sortByLatest: true },
+                }))
+              }
+            >
+              최신순
+            </Button>
+            <Button
+              variant="normal"
+              size="small"
+              state="outline"
+              onClick={() =>
+                setCategoryList((prev) => ({
+                  ...prev,
+                  searchParam: { ...prev.searchParam, sortByHitCnt: true, sortByLatest: false },
+                }))
+              }
+            >
+              조회순
+            </Button>
+            <Button variant="normal" size="small" state="outline">
+              내 작성글
+            </Button>
+          </BtnsContainer>
+          <CommunityTable
+            currentPath={currentPath}
+            postsData={categoryList?.data?.data}
+            currentViewMutation={currentViewMutation}
+            onClick={() =>
+              setCategoryList((prev) => ({
+                ...prev,
+                searchParam: { ...prev.searchParam, myPostsOnly: true, sortByLatest: true },
+              }))
+            }
+          />
         </MarginTop>
       </PageWrapper>
     </>
@@ -143,3 +189,10 @@ const MarginTop = styled.div(
   text-align: center
 `
 );
+const BtnsContainer = styled.div`
+  text-align: left;
+  display: flex;
+  gap: 4px;
+  margin-top: 48px;
+  margin-bottom: 8px;
+`;

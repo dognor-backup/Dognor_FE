@@ -51,3 +51,9 @@ export const searchComments = async (data) => {
   const response = await AxiosInstance.get(`/community/comments/${postSeq}/${page}/${size}`);
   return { success: true, data: response.data };
 };
+
+export const viewCount = async (postSeq) => {
+  const response = await AxiosInstance.patch(`/community/post/hit-cnt/${postSeq}`);
+  console.log("조회수 증가:", response.data);
+  return { success: true, data: response.data };
+};

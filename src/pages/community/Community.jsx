@@ -1,4 +1,4 @@
-import { Notice } from "./Notice";
+import { Notice } from "./components/NoticeTable";
 import { PageWrapper } from "@/shared/components/layout/PageTopTitle";
 import styled from "@emotion/styled";
 import { useState } from "react";

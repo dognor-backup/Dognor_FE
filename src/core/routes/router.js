@@ -13,7 +13,7 @@ import SignUp from "@/pages/signup/SignUp";
 import App from "@/App";
 
 import { PostNew } from "@/pages/community/PostNew";
-import { CommunityList } from "@/pages/community/CommunityList";
+import { CommunityList } from "@/pages/community/components/CommunityList";
 import { CommunityLink } from "@/pages/community/components/ComminityLink";
 import { PostDetail } from "@/pages/community/PostDetail";
 
