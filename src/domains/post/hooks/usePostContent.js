@@ -1,19 +1,22 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { post } from "../api/post";
 import { useNavigate } from "react-router-dom";
+import usePostStore from "../store/usePostStore";
 
-export const usePostContent = () => {
+export const usePostContent = (selectedCategory) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { setPostData } = usePostStore();
+
   return useMutation({
     mutationFn: post,
     onSuccess: async ({ success, data }) => {
       if (success) {
-        queryClient.invalidateQueries("posts");
-        const updatedPosts = await fetchPostsFromServer();
+        await queryClient.invalidateQueries({ queryKey: ["post"] });
+        const updatedPosts = queryClient.getQueryData(["post"]);
+        console.log(updatedPosts);
         setPostData(updatedPosts);
-        navigate("/community", { replace: true });
+        navigate(`/community/${selectedCategory}`, { replace: true });
       }
     },
     onError: (error) => {

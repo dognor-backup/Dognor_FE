@@ -15,7 +15,6 @@ import useUserStore from "@/domains/auth/store/useUserStore";
 export function PostNew() {
   const { user } = useUserStore();
   const isAdmin = user?.userData?.userId === "admin";
-  console.log(isAdmin);
   const { isAlertOpen, openAlert } = useAlertStore();
   const [CommunicationInput, setCommunicationInput] = useState({
     title: "",
@@ -24,20 +23,20 @@ export function PostNew() {
     usageDate: "",
   });
 
-  let selectedText = "";
+  let [selectedCategory, setSelectedCategory] = useState("");
 
   const categoryList = isAdmin
-    ? [{ name: "공지사항", code: 1 }]
+    ? [{ name: "공지사항", code: 1, path: "" }]
     : [
-        { name: "자유게시판", code: 2 },
-        { name: "병원 헌혈 후기", code: 3 },
-        { name: "질문있어요", code: 4 },
-        { name: "고마워요", code: 5 },
-        { name: "혈액이 필요해요", code: 6 },
+        { name: "자유게시판", code: 2, path: "free" },
+        { name: "병원 헌혈 후기", code: 3, path: "review" },
+        { name: "질문있어요", code: 4, path: "question" },
+        { name: "고마워요", code: 5, path: "thanks" },
+        { name: "혈액이 필요해요", code: 6, path: "needbloods" },
       ];
 
   const [agreePolicy, setAgreePolicy] = useState(false);
-  const uploadPostMutation = usePostContent();
+  const uploadPostMutation = usePostContent(selectedCategory);
   const handleSubmit = (e) => {
     let isNotEmpty;
     const { title, content, categoryCd, usageDate } = CommunicationInput;
@@ -61,14 +60,9 @@ export function PostNew() {
   };
 
   const getValueFromSelect = (categoryCd) => {
-    console.log("카테고리인덱스", categoryCd);
     setCommunicationInput((prev) => ({ ...prev, categoryCd: Number(categoryCd) }));
-    selectedText = categoryCd.name;
+    setSelectedCategory(categoryList.find((el) => el.code == categoryCd).path);
   };
-
-  useEffect(() => {
-    console.log(CommunicationInput);
-  }, [CommunicationInput]);
 
   const getCheckValues = () => setAgreePolicy((prev) => !prev);
 

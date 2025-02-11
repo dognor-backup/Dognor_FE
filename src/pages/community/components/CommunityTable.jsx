@@ -31,6 +31,10 @@ export function CommunityTable({ currentPath, postsData, currentViewMutation, ha
   const handleSendCheckedPost = () => {
     handleRemovePost(checkedItems);
   };
+
+  if (!Array.isArray(postsData)) {
+    return <div>Loading...</div>;
+  }
   return (
     <>
       <Flex>

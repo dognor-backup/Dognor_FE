@@ -10,8 +10,8 @@ export const useDeleteMutation = () => {
     mutationFn: deleteSelectedPosts,
     onSuccess: async ({ success, data }) => {
       if (success) {
-        queryClient.invalidateQueries("posts");
-        const updatedPosts = await fetchPostsFromServer();
+        await queryClient.invalidateQueries("post");
+        const updatedPosts = queryClient.getQueryData(["post"]);
         setPostData(updatedPosts);
       }
     },
