@@ -8,6 +8,8 @@ import { useGetPostList } from "@/domains/post/hooks/useGetPostList";
 import { Button } from "@/shared/components/buttons/Button";
 import { useMutation } from "@tanstack/react-query";
 import { viewCount } from "@/domains/post/api/post";
+import { useDeleteMutation } from "@/domains/post/hooks/useDeletePost";
+import usePostStore from "@/domains/post/store/usePostStore";
 
 export function CommunityList() {
   // const [selectedPost, setSelectedPost] = useState(null);
@@ -21,7 +23,8 @@ export function CommunityList() {
   let currentPath = pathLink[pathLink.length - 1];
   const navigate = useNavigate();
 
-  //클릭한 카테고리가 변경될때마다 재요청
+  const deleteMutation = useDeleteMutation();
+
   const [getCategoryList, setCategoryList] = useState({
     searchParam: {
       page: 1,
@@ -32,8 +35,9 @@ export function CommunityList() {
       categoryCd: 1,
     },
   });
-  const { data: categoryList, isLoading, isError } = useGetPostList(getCategoryList);
-  console.log("공지", categoryList);
+
+  useGetPostList(getCategoryList);
+  const { postsData: categoryList } = usePostStore();
 
   const communityTitles = [
     { path: "all", title: "모든 이야기 보기", label: "전체", subtitle: "", categoryCd: 0 },
@@ -81,9 +85,8 @@ export function CommunityList() {
   };
 
   useEffect(() => {
-    //경로마다 해당하는 제목과 글 보여주기
     getCurrentPathTitle();
-  }, [location, getCurrentPathTitle]);
+  }, [getCurrentPathTitle]);
 
   useEffect(() => {
     setCategoryList((prev) => ({
@@ -99,7 +102,16 @@ export function CommunityList() {
     mutationFn: viewCount,
   });
 
-  //
+  //다중 삭제
+  const handleRemovePost = (checked) => {
+    const postSeq = [];
+    for (const [key, value] of Object.entries(checked)) {
+      if (value) {
+        postSeq.push({ postSeq: Number(key) });
+      }
+    }
+    deleteMutation.mutate(postSeq);
+  };
   return (
     <>
       <PageWrapper>
@@ -149,14 +161,15 @@ export function CommunityList() {
           </BtnsContainer>
           <CommunityTable
             currentPath={currentPath}
-            postsData={categoryList?.data?.data}
+            postsData={categoryList}
             currentViewMutation={currentViewMutation}
-            onClick={() =>
+            handleRemovePost={handleRemovePost}
+            onClick={() => {
               setCategoryList((prev) => ({
                 ...prev,
                 searchParam: { ...prev.searchParam, myPostsOnly: true, sortByLatest: true },
-              }))
-            }
+              }));
+            }}
           />
         </MarginTop>
       </PageWrapper>

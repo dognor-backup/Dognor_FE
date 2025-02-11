@@ -17,5 +17,5 @@ export default function Community() {
   );
 }
 const CommunityWrapper = styled.div`
-  height: 100vh;
+  padding-bottom: 100px;
 `;

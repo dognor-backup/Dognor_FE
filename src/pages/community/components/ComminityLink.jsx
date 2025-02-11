@@ -1,9 +1,12 @@
+import { Button } from "@/shared/components/buttons/Button";
 import styled from "@emotion/styled";
 import { useNavigate, useOutletContext } from "react-router-dom";
 
 export function CommunityLink() {
   const navigate = useNavigate();
+
   const { setCurrentCategory } = useOutletContext();
+
   const handleGetCategoryCd = (e) => {
     setCurrentCategory(e.currentTarget.dataset.category * 1);
   };
@@ -74,6 +77,14 @@ export function CommunityLink() {
           <BoxText color="#170F49">자유로운 주제로 소통하는 공간입니다.</BoxText>
         </GridItem>
       </FlexItems>
+      <BtnsContainer>
+        <Button style={{ width: "320px" }} variant="primary" size="medium" state="default">
+          글 작성하기
+        </Button>
+        <Button style={{ width: "320px" }} variant="primary" size="medium" state="outline">
+          전체 글 보기
+        </Button>
+      </BtnsContainer>
     </>
   );
 }
@@ -89,6 +100,7 @@ const GridContainer = styled.div`
   grid-template-rows: 1;
   grid-template-columns: repeat(3, 1fr);
   gap: 16px;
+  width: 100%;
 `;
 const GridItem = styled.div(
   ({ bgColor, borderColor, theme }) => `
@@ -110,6 +122,7 @@ const FlexItems = styled.div`
   display: flex;
   gap: 16px;
   margin-top: 16px;
+  width: 100%;
 `;
 const BoxIcon = styled.span(
   ({ background }) => `
@@ -137,3 +150,9 @@ color: ${color}
 
 `
 );
+const BtnsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 32px;
+`;

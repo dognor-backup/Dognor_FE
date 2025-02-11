@@ -31,7 +31,7 @@ export const postSearch = async (data) => {
 
 export const deletePost = async (postId) => {
   try {
-    const response = await AxiosInstance.post(`/community/posts/${postId}`);
+    const response = await AxiosInstance.delete(`/community/posts/${postId}`);
     if (response.data.code === 200) {
       return { success: true, data: response.data };
     }
@@ -39,6 +39,18 @@ export const deletePost = async (postId) => {
     console.log(error);
   }
 };
+export const deleteSelectedPosts = async (data) => {
+  try {
+    const response = await AxiosInstance.post(`/community/posts/delete`, data);
+    if (response.data.code === 200) {
+      console.log(response.data);
+      return { success: true, data: response.data };
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const updateComment = async (data) => {
   const response = await AxiosInstance.post(`/community/comment`, data);
   if (response.data.code === 200) {

@@ -1,20 +1,9 @@
 import { create } from "zustand";
 
 const usePostStore = create((set) => ({
-  postsData: [
-    {
-      postSeq: null,
-      title: "",
-      content: "",
-      categoryCd: null,
-      categoryName: "",
-      hitCnt: 1,
-      usageDate: "",
-      firstSaveDt: "",
-      firstSaveUser: "",
-    },
-  ],
+  postsData: [],
   totalPage: null,
-  setPostData: (post) => set({ postsData: post }),
+  setPostData: (data) => set({ postsData: data }),
 }));
+
 export default usePostStore;

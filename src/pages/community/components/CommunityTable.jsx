@@ -3,16 +3,14 @@ import CheckboxSmall from "@/shared/components/checkbox/CheckboxSmall";
 import { useEffect, useState } from "react";
 import TrashIcon from "/src/assets/icons/secondary/trash.svg?react";
 import { OnlyCheckBox } from "@/shared/components/checkbox/CheckboxLabel";
-import { useDeleteMutation } from "@/domains/post/hooks/useDeletePost";
 import { useNavigate } from "react-router-dom";
 import { TableContainer, TableHeader, TableHeadText, TableBodyText, BdBtm, TextMg, Flex } from "./TableStyle";
+import { useDeleteMutation } from "@/domains/post/hooks/useDeletePost";
 
-export function CommunityTable({ currentPath, postsData, currentViewMutation }) {
+export function CommunityTable({ currentPath, postsData, currentViewMutation, handleRemovePost }) {
   const [checkedItems, setCheckedItems] = useState({});
   const [changedPosts, setChangedPosts] = useState([]);
   const [checked, setChecked] = useState(false);
-  const [deletePosts, setDeletePosts] = useState([]);
-  const deleteMutation = useDeleteMutation();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -30,7 +28,9 @@ export function CommunityTable({ currentPath, postsData, currentViewMutation }) 
   const handleMoveToPostDetail = (item) => {
     navigate(`/postdetail/${item.postSeq}`, { state: { item } });
   };
-
+  const handleSendCheckedPost = () => {
+    handleRemovePost(checkedItems);
+  };
   return (
     <>
       <Flex>
@@ -40,7 +40,7 @@ export function CommunityTable({ currentPath, postsData, currentViewMutation }) 
           checked={checked}
           onChange={() => setChecked((prev) => !prev)}
         />
-        <IconBtn variant="secondary" size="medium" state="outline">
+        <IconBtn variant="secondary" size="medium" state="outline" onClick={handleSendCheckedPost}>
           <TrashIcon />
         </IconBtn>
       </Flex>

@@ -14,7 +14,7 @@ import useUserStore from "@/domains/auth/store/useUserStore";
 
 export function PostNew() {
   const { user } = useUserStore();
-  const isAdmin = user.userData.userId === "admin";
+  const isAdmin = user?.userData?.userId === "admin";
   console.log(isAdmin);
   const { isAlertOpen, openAlert } = useAlertStore();
   const [CommunicationInput, setCommunicationInput] = useState({
