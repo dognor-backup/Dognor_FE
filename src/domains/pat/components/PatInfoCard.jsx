@@ -4,6 +4,9 @@ import { useGetPatInfo } from "../hooks/useGetPatInfo";
 import AddPatInfoCard from "./AddPatInfoCard";
 import useUserStore from "@/domains/auth/store/useUserStore";
 import { calculateAge } from "@/shared/utils/calculateAge";
+import { IconBtn } from "@/shared/components/buttons/IconBtn";
+import PlusIcon from "../../../assets/icons/white/plus_w.svg?react";
+import BlackPlus from "../../../assets/icons/black/plus.svg?react";
 
 export default function PatInfoCard() {
   let page = 1;
@@ -12,15 +15,29 @@ export default function PatInfoCard() {
   const userSeq = user?.userData?.userSeq;
 
   const { data, isLoading, error } = useGetPatInfo(userSeq, page, size);
-  //   console.log("데이터임", data.data.data[0].imgUrl);
 
   if (isLoading) return <Spinner />;
   if (error) return <div>에러</div>;
 
+  console.log(data?.data.data);
+
   return (
-    <>
+    <PatInfoLayout>
+      <PatInfoHeaderTextContainer>
+        <PatInfoHeaderTitleText>반려견 정보</PatInfoHeaderTitleText>
+        <PatInfoHeaderSubText>
+          {data?.data?.data.length !== 0
+            ? `${data.data.data.length}마리의 반려견과 함께하고 있습니다`
+            : "아직 함께 하는 반려견이 없습니다"}
+        </PatInfoHeaderSubText>
+      </PatInfoHeaderTextContainer>
       {data ? (
         <PatInfoCardLayout>
+          <IconBtnContainer>
+            <IconBtn>
+              <PlusIcon />
+            </IconBtn>
+          </IconBtnContainer>
           {data.data.data.map((pat, index) => (
             <PatInfoCardWrapper key={index}>
               <PatProfileImg src={pat.imgUrl} />
@@ -42,19 +59,54 @@ export default function PatInfoCard() {
           ))}
         </PatInfoCardLayout>
       ) : (
-        <AddPatInfoCard />
+        <AddDogBtn onClick={() => openModal("addDogInfo")}>
+          <BlackPlus />
+          강아지 정보를 추가해주세요:)
+        </AddDogBtn>
       )}
-    </>
+    </PatInfoLayout>
   );
 }
+const PatInfoLayout = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 1008px;
+  height: 637px;
+  align-items: center;
+  gap: 38px;
+`;
+
+const PatInfoHeaderTextContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+`;
+
+const PatInfoHeaderTitleText = styled.p`
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 42px;
+  color: ${({ theme }) => theme.colors.neutrals_00};
+`;
+
+const PatInfoHeaderSubText = styled.p`
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 24px;
+  color: ${({ theme }) => theme.colors.neutrals_00};
+`;
 
 const PatInfoCardLayout = styled.div`
+  position: relative;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: repeat(2, 1fr);
   gap: 21px;
   justify-content: center;
   align-items: center;
+  margin-top: 56px;
 `;
 
 const PatInfoCardWrapper = styled.div`
@@ -110,4 +162,24 @@ const PatInfoBoldText = styled.p`
   font-size: 14px;
   line-height: 20px;
   color: ${({ theme }) => theme.colors.neutrals_00};
+`;
+
+const IconBtnContainer = styled.div`
+  position: absolute;
+  top: -56px;
+  right: -133.5px;
+`;
+
+const AddDogBtn = styled.button`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 360px;
+  height: 192px;
+  border-radius: 16px;
+  padding: 16px;
+  gap: 16px;
+  box-shadow: 4px 4px 16px 0px rgba(0, 0, 0, 0.25);
+  background-color: ${({ theme }) => theme.colors.neutrals_08};
 `;

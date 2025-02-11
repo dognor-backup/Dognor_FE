@@ -73,16 +73,7 @@ export default function AddPatInfoCard() {
 
   return (
     <CardLayout>
-      <TextContainer>
-        <HeaderText>반려견 정보</HeaderText>
-        <SubText>아직 함께 하는 반려견이 없습니다</SubText>
-      </TextContainer>
       <ContentBox>
-        <ButtonContainer>
-          <IconBtn>
-            <WhitePlus />
-          </IconBtn>
-        </ButtonContainer>
         <AddDogBtn onClick={() => openModal("addDogInfo")}>
           <BlackPlus />
           강아지 정보를 추가해주세요:)
@@ -196,27 +187,7 @@ const CardLayout = styled.div`
   gap: 32px;
 `;
 
-const TextContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-`;
 
-const HeaderText = styled.p`
-  font-weight: 700;
-  font-size: 32px;
-  line-height: 42p;
-  text-align: center;
-  color: ${({ theme }) => theme.colors.neutrals_00};
-`;
-
-const SubText = styled.p`
-  font-weight: 700;
-  font-size: 18px;
-  line-height: 24px;
-  text-align: center;
-  color: ${({ theme }) => theme.colors.neutrals_00};
-`;
 
 const ContentBox = styled.div`
   position: relative;
@@ -229,11 +200,6 @@ const ContentBox = styled.div`
   gap: 48px;
 `;
 
-const ButtonContainer = styled.div`
-  position: absolute;
-  top: 0;
-  right: 0;
-`;
 
 const AddDogBtn = styled.button`
   display: flex;
