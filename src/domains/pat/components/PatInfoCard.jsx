@@ -10,6 +10,7 @@ import PlusIcon from "../../../assets/icons/white/plus_w.svg?react";
 import BlackPlus from "../../../assets/icons/black/plus.svg?react";
 import useModalStore from "@/shared/hooks/useModalStore";
 import { DnPagination } from "@/shared/components/DnPagenation";
+import LineBoundary from "../../../assets/icons/line/Line1008-mypage.svg?react";
 
 export default function PatInfoCard() {
   const { isModalOpen, openModal } = useModalStore();
@@ -78,6 +79,9 @@ export default function PatInfoCard() {
             onPageChange={setPage}
           />
         </PagenationContainer>
+        <LineBoundaryContainer>
+          <LineBoundary />
+        </LineBoundaryContainer>
       </PatInfoContentLayout>
     </PatInfoLayout>
   );
@@ -210,4 +214,8 @@ const PatInfoContentLayout = styled.div`
 
 const PagenationContainer = styled.div`
   margin-top: 48px;
+`;
+
+const LineBoundaryContainer = styled.div`
+  margin-top: 80px;
 `;

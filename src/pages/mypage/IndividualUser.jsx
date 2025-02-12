@@ -27,3 +27,5 @@ const IndividualUserLayout = styled.div`
   padding: 0 36px;
   gap: 80px;
 `;
+
+
