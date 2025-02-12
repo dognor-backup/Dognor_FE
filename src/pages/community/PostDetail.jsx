@@ -1,10 +1,10 @@
 import { PageTop, PageWrapper } from "@/shared/components/layout/PageTopTitle";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import parse from "html-react-parser";
 import styled from "@emotion/styled";
 import { Button } from "@/shared/components/buttons/Button";
 import { CommentWriteForm } from "./components/CommentWriteForm";
-import { searchComments, updateComment, viewCount } from "@/domains/post/api/post";
+import { searchComments, updateComment } from "@/domains/post/api/post";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { CommentsList } from "./components/CommentsList";
@@ -15,9 +15,9 @@ export function PostDetail() {
   const location = useLocation();
   const post = location.state?.item;
   const [postComments, setPostComments] = useState();
+  const navigate = useNavigate();
   const { categoryCd, categoryName, content, firstSaveDt, firstSaveUser, hitCnt, postSeq, title, usageDate } =
     post || {};
-
   const handleSubmit = (e) => {
     e.preventDefault();
     if (userComment.length > 1) updateCommentMutation.mutate({ postSeq, comment: userComment });
@@ -25,8 +25,12 @@ export function PostDetail() {
 
   const updateCommentMutation = useMutation({
     mutationFn: updateComment,
-    onSuccess: (data) => {
-      console.log(data);
+    onSuccess: async ({ success, data }) => {
+      if (success) {
+        console.log(data);
+        // await queryClient.invalidateQueries({ queryKey: ["comment"] });
+        // const updatedComment = queryClient.getQueryData(["comment"]);
+      }
     },
     onError: (error) => {
       console.error(error);
@@ -80,7 +84,9 @@ export function PostDetail() {
           <CommentsList comments={postComments} />
         </Form>
 
-        <Button style={{ width: "320px" }}>목록으로 돌아가기</Button>
+        <Button style={{ width: "320px" }} onClick={() => navigate(-1)}>
+          목록으로 돌아가기
+        </Button>
       </PageWrapper>
     </div>
   );

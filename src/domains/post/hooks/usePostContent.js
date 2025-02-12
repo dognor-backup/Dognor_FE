@@ -14,7 +14,6 @@ export const usePostContent = (selectedCategory) => {
       if (success) {
         await queryClient.invalidateQueries({ queryKey: ["post"] });
         const updatedPosts = queryClient.getQueryData(["post"]);
-        console.log(updatedPosts);
         setPostData(updatedPosts);
         navigate(`/community/${selectedCategory}`, { replace: true });
       }

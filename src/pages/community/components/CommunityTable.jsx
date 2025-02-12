@@ -5,13 +5,16 @@ import TrashIcon from "/src/assets/icons/secondary/trash.svg?react";
 import { OnlyCheckBox } from "@/shared/components/checkbox/CheckboxLabel";
 import { useNavigate } from "react-router-dom";
 import { TableContainer, TableHeader, TableHeadText, TableBodyText, BdBtm, TextMg, Flex } from "./TableStyle";
-import { useDeleteMutation } from "@/domains/post/hooks/useDeletePost";
+import { useRemovePosts } from "../hooks/useRemovePosts";
+import { useViewCount } from "../hooks/useViewCount";
 
-export function CommunityTable({ currentPath, postsData, currentViewMutation, handleRemovePost }) {
+export function CommunityTable({ currentPath, postsData }) {
   const [checkedItems, setCheckedItems] = useState({});
   const [changedPosts, setChangedPosts] = useState([]);
   const [checked, setChecked] = useState(false);
   const navigate = useNavigate();
+  const { handleRemovePost } = useRemovePosts();
+  const viewCountMutation = useViewCount();
 
   useEffect(() => {
     const formattedPosts = postsData?.map((post) => ({
@@ -32,9 +35,6 @@ export function CommunityTable({ currentPath, postsData, currentViewMutation, ha
     handleRemovePost(checkedItems);
   };
 
-  if (!Array.isArray(postsData)) {
-    return <div>Loading...</div>;
-  }
   return (
     <>
       <Flex>
@@ -102,7 +102,7 @@ export function CommunityTable({ currentPath, postsData, currentViewMutation, ha
                   key={postSeq}
                   onClick={() => {
                     handleMoveToPostDetail(item);
-                    currentViewMutation.mutate(postSeq);
+                    viewCountMutation.mutate(postSeq);
                   }}
                 >
                   <TableBodyText>

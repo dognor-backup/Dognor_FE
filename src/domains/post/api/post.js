@@ -39,6 +39,7 @@ export const deletePost = async (postId) => {
     console.log(error);
   }
 };
+
 export const deleteSelectedPosts = async (data) => {
   try {
     const response = await AxiosInstance.post(`/community/posts/delete`, data);
@@ -66,6 +67,5 @@ export const searchComments = async (data) => {
 
 export const viewCount = async (postSeq) => {
   const response = await AxiosInstance.patch(`/community/post/hit-cnt/${postSeq}`);
-  console.log("조회수 증가:", response.data);
   return { success: true, data: response.data };
 };

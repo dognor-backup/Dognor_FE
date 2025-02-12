@@ -39,6 +39,7 @@ export const TextMg = styled.span`
 `;
 export const Flex = styled.div`
   display: flex;
+  width: 100%;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 4px;

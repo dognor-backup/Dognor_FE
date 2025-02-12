@@ -6,9 +6,6 @@ import { useEffect, useState } from "react";
 import { CommunityTable } from "./CommunityTable";
 import { useGetPostList } from "@/domains/post/hooks/useGetPostList";
 import { Button } from "@/shared/components/buttons/Button";
-import { useMutation } from "@tanstack/react-query";
-import { viewCount } from "@/domains/post/api/post";
-import { useDeleteMutation } from "@/domains/post/hooks/useDeletePost";
 import usePostStore from "@/domains/post/store/usePostStore";
 
 export function CommunityList() {
@@ -22,8 +19,6 @@ export function CommunityList() {
   const pathLink = location.pathname.split("/");
   let currentPath = pathLink[pathLink.length - 1];
   const navigate = useNavigate();
-
-  const deleteMutation = useDeleteMutation();
 
   const [getCategoryList, setCategoryList] = useState({
     searchParam: {
@@ -98,22 +93,8 @@ export function CommunityList() {
     }));
   }, [location, currentTitle]);
 
-  const currentViewMutation = useMutation({
-    mutationFn: viewCount,
-  });
-
-  //다중 삭제
-  const handleRemovePost = (checked) => {
-    const postSeq = [];
-    for (const [key, value] of Object.entries(checked)) {
-      if (value) {
-        postSeq.push({ postSeq: Number(key) });
-      }
-    }
-    deleteMutation.mutate(postSeq);
-  };
   return (
-    <>
+    <CommunityWrapper>
       <PageWrapper>
         <TitleText currentPath={currentPath}>{communityTitles[currentTitle]?.title}</TitleText>
         {communityTitles[currentTitle]?.subtitle?.split("\n").map((text, idx) => (
@@ -162,8 +143,6 @@ export function CommunityList() {
           <CommunityTable
             currentPath={currentPath}
             postsData={categoryList}
-            currentViewMutation={currentViewMutation}
-            handleRemovePost={handleRemovePost}
             onClick={() => {
               setCategoryList((prev) => ({
                 ...prev,
@@ -173,7 +152,7 @@ export function CommunityList() {
           />
         </MarginTop>
       </PageWrapper>
-    </>
+    </CommunityWrapper>
   );
 }
 const SubText = styled.span(
@@ -208,4 +187,8 @@ const BtnsContainer = styled.div`
   gap: 4px;
   margin-top: 48px;
   margin-bottom: 8px;
+`;
+const CommunityWrapper = styled.article`
+  padding-top: 100px;
+  width: 100%;
 `;
