@@ -2,8 +2,7 @@ import { viewCount } from "@/domains/post/api/post";
 import usePostStore from "@/domains/post/store/usePostStore";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-export function useViewCount(setViewCountData) {
-  const { updateHitCount } = usePostStore;
+export function useViewCount() {
   const queryClient = useQueryClient();
   const { setPostData } = usePostStore();
   return useMutation({

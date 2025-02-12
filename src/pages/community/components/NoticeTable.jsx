@@ -8,9 +8,11 @@ import { TableContainer, TableHeader, TableHeadText, TableBodyText, BdBtm, TextM
 import { useGetNoticeList } from "@/domains/post/hooks/useGetPostList";
 import { useRemovePosts } from "../hooks/useRemovePosts";
 import { useViewCount } from "../hooks/useViewCount";
-import styled from "@emotion/styled";
 import { PageTop } from "@/shared/components/layout/PageTopTitle";
 import useUserStore from "@/domains/auth/store/useUserStore";
+import styled from "@emotion/styled";
+import { Button } from "@/shared/components/buttons/Button";
+import usePostStore from "@/domains/post/store/usePostStore";
 
 export function Notice({ currentPath, pathName }) {
   const [checkedItems, setCheckedItems] = useState({});
@@ -22,6 +24,7 @@ export function Notice({ currentPath, pathName }) {
   const { user } = useUserStore();
   const userId = user?.userData?.userId || null;
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isUserPost, setUserPost] = useState();
 
   useEffect(() => {
     setIsAdmin(userId === "admin");
@@ -32,30 +35,32 @@ export function Notice({ currentPath, pathName }) {
       page: 1,
       size: 5,
       sortByHitCnt: false,
-      sortByLatest: true,
+      sortByLatest: false,
       myPostsOnly: false,
       categoryCd: 1,
     },
   });
-  const { data, isLoading, isError } = useGetNoticeList(getCategoryList);
-  const { data: nestedData } = data?.data ?? [];
+  useGetNoticeList(getCategoryList);
+  const { noticeData } = usePostStore();
+
+  useEffect(() => {
+    const formattedPosts = noticeData?.map((post) => ({
+      ...post,
+      firstSaveDt: post.firstSaveDt.split("T"),
+    }));
+    setChangedPosts(formattedPosts);
+    const filterUserPost = noticeData?.filter((post) => post.firstSaveUser == userId);
+    setUserPost(filterUserPost);
+  }, [getCategoryList]);
 
   const handleCheckAllBox = () => {
-    for (const data of nestedData) {
+    for (const data of isUserPost) {
       setCheckedItems((prev) => ({
         ...prev,
         [data.postSeq]: !prev[data.postSeq],
       }));
     }
   };
-
-  useEffect(() => {
-    const formattedPosts = nestedData?.map((post) => ({
-      ...post,
-      firstSaveDt: post.firstSaveDt.split("T"),
-    }));
-    setChangedPosts(formattedPosts);
-  }, [data]);
 
   const toggleCheckbox = (postSeq) => {
     setCheckedItems((prev) => ({ ...prev, [postSeq]: !prev[postSeq] }));
@@ -67,12 +72,49 @@ export function Notice({ currentPath, pathName }) {
   const handleSendCheckedPost = () => {
     handleRemovePost(checkedItems);
   };
+  const handleListUpPosts = (e) => {
+    const targetBtn = e.target.name;
+    console.log(targetBtn);
+    setCategoryList((prev) => ({
+      ...prev,
+      searchParam: { ...prev.searchParam, sortByHitCnt: false, sortByLatest: false },
+    }));
 
+    switch (targetBtn) {
+      case "최신순":
+        setCategoryList((prev) => ({
+          ...prev,
+          searchParam: { ...prev.searchParam, sortByLatest: true },
+        }));
+        console.log("최신", getCategoryList);
+        break;
+      case "조회순":
+        setCategoryList((prev) => ({
+          ...prev,
+          searchParam: { ...prev.searchParam, sortByHitCnt: true },
+        }));
+        break;
+
+      default:
+        break;
+    }
+  };
   return (
     <>
       <PageTop noNav={pathName === "community" ? false : true}>
         <h2>공지사항</h2>
       </PageTop>
+      <BtnsContainer>
+        <Button variant="secondary" size="small" onClick={() => navigate("/postnew")}>
+          글쓰기
+        </Button>
+        <Button variant="normal" size="small" state="outline" name="최신순" onClick={handleListUpPosts}>
+          최신순
+        </Button>
+        <Button variant="normal" size="small" state="outline" name="조회순" onClick={handleListUpPosts}>
+          조회순
+        </Button>
+      </BtnsContainer>
       <Flex>
         {isAdmin && (
           <>
@@ -96,7 +138,7 @@ export function Notice({ currentPath, pathName }) {
       <TableContainer>
         <TableHeader>
           <tr>
-            {isAdmin && <TableHeadText padding="20px" scope="col" />}
+            <TableHeadText padding="20px" scope="col" />
             <TableHeadText padding="20px" scope="col">
               No.
             </TableHeadText>
@@ -113,7 +155,7 @@ export function Notice({ currentPath, pathName }) {
             <TableHeadText padding="23px" scope="col">
               조회
             </TableHeadText>
-            {isAdmin && <TableHeadText padding="20px" scope="col" />}
+            <TableHeadText padding="20px" scope="col" />
           </tr>
         </TableHeader>
         {changedPosts?.length > 0 ? (
@@ -139,8 +181,8 @@ export function Notice({ currentPath, pathName }) {
                     viewCountMutation.mutate(postSeq);
                   }}
                 >
-                  {isAdmin && (
-                    <TableBodyText>
+                  <TableBodyText>
+                    {isAdmin && (
                       <OnlyCheckBox htmlFor={postSeq} checked={!!checkedItems[postSeq]}>
                         <input
                           name={postSeq}
@@ -150,8 +192,8 @@ export function Notice({ currentPath, pathName }) {
                           onChange={() => toggleCheckbox(postSeq)}
                         />
                       </OnlyCheckBox>
-                    </TableBodyText>
-                  )}
+                    )}
+                  </TableBodyText>
                   <TableBodyText bold="700">
                     <span>{idx + 1}</span>
                   </TableBodyText>
@@ -163,7 +205,7 @@ export function Notice({ currentPath, pathName }) {
                   <TableBodyText>{firstSaveUser}</TableBodyText>
                   <TableBodyText>{firstSaveDt[0]}</TableBodyText>
                   <TableBodyText>{hitCnt}</TableBodyText>
-                  {isAdmin && <TableBodyText onClick={(e) => e.stopPropagation()}>...</TableBodyText>}
+                  <TableBodyText onClick={(e) => e.stopPropagation()}>{isAdmin && <>...</>}</TableBodyText>
                 </BdBtm>
               );
             })}
@@ -181,3 +223,11 @@ export function Notice({ currentPath, pathName }) {
     </>
   );
 }
+const BtnsContainer = styled.div`
+  text-align: left;
+  display: flex;
+  gap: 4px;
+  margin-top: 48px;
+  margin-bottom: 8px;
+  width: 100%;
+`;

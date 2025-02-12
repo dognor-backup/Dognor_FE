@@ -93,6 +93,38 @@ export function CommunityList() {
     }));
   }, [location, currentTitle]);
 
+  const handleListUpPosts = (e) => {
+    const targetBtn = e.target.name;
+
+    setCategoryList((prev) => ({
+      ...prev,
+      searchParam: { ...prev.searchParam, sortByHitCnt: false, sortByLatest: false, myPostsOnly: false },
+    }));
+
+    switch (targetBtn) {
+      case "최신순":
+        setCategoryList((prev) => ({
+          ...prev,
+          searchParam: { ...prev.searchParam, sortByLatest: true },
+        }));
+        break;
+      case "조회순":
+        setCategoryList((prev) => ({
+          ...prev,
+          searchParam: { ...prev.searchParam, sortByHitCnt: true },
+        }));
+        break;
+      case "내작성글":
+        setCategoryList((prev) => ({
+          ...prev,
+          searchParam: { ...prev.searchParam, myPostsOnly: true },
+        }));
+        break;
+      default:
+        break;
+    }
+  };
+
   return (
     <CommunityWrapper>
       <PageWrapper>
@@ -110,46 +142,17 @@ export function CommunityList() {
             <Button variant="secondary" size="small" onClick={() => navigate("/postnew")}>
               글쓰기
             </Button>
-            <Button
-              variant="normal"
-              size="small"
-              state="outline"
-              onClick={() =>
-                setCategoryList((prev) => ({
-                  ...prev,
-                  searchParam: { ...prev.searchParam, sortByHitCnt: false, sortByLatest: true },
-                }))
-              }
-            >
+            <Button variant="normal" size="small" state="outline" name="최신순" onClick={handleListUpPosts}>
               최신순
             </Button>
-            <Button
-              variant="normal"
-              size="small"
-              state="outline"
-              onClick={() =>
-                setCategoryList((prev) => ({
-                  ...prev,
-                  searchParam: { ...prev.searchParam, sortByHitCnt: true, sortByLatest: false },
-                }))
-              }
-            >
+            <Button variant="normal" size="small" state="outline" name="조회순" onClick={handleListUpPosts}>
               조회순
             </Button>
-            <Button variant="normal" size="small" state="outline">
+            <Button variant="normal" size="small" state="outline" name="내작성글" onClick={handleListUpPosts}>
               내 작성글
             </Button>
           </BtnsContainer>
-          <CommunityTable
-            currentPath={currentPath}
-            postsData={categoryList}
-            onClick={() => {
-              setCategoryList((prev) => ({
-                ...prev,
-                searchParam: { ...prev.searchParam, myPostsOnly: true, sortByLatest: true },
-              }));
-            }}
-          />
+          <CommunityTable currentPath={currentPath} postsData={categoryList} />
         </MarginTop>
       </PageWrapper>
     </CommunityWrapper>

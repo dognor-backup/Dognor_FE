@@ -25,12 +25,21 @@ export function useGetPostList(getCategoryList) {
 
 //공지사항 불러오기
 export function useGetNoticeList(getCategoryList) {
+  const { setNoticeData } = usePostStore();
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["notice"],
+    queryKey: ["notice", getCategoryList],
     queryFn: async () => {
       const response = await postSearch(getCategoryList);
       return response;
     },
   });
+  useEffect(() => {
+    if (data?.data) {
+      const { msg, code, data: nestedData } = data.data;
+      console.log("sssss", nestedData);
+      setNoticeData(nestedData);
+    }
+  }, [data, setNoticeData]);
+
   return { data, isLoading, isError };
 }

@@ -20,7 +20,6 @@ export default function Community() {
     { name: "thanks", img: "banner_thanks.svg" },
   ];
   const selectedBanner = BannerImages.find((banner) => banner.name === pathName);
-  console.log(selectedBanner);
   return (
     <CommunityWrapper>
       {selectedBanner && <BannerImg pathName={pathName} link={selectedBanner.img} />}

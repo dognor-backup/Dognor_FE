@@ -18,6 +18,7 @@ export function CommunityTable({ currentPath, postsData }) {
   const viewCountMutation = useViewCount();
   const { user } = useUserStore();
   const userId = user?.userData?.userId || null;
+  const [isUserPost, setUserPost] = useState();
 
   useEffect(() => {
     const formattedPosts = postsData?.map((post) => ({
@@ -25,6 +26,9 @@ export function CommunityTable({ currentPath, postsData }) {
       firstSaveDt: post.firstSaveDt.split("T"),
     }));
     setChangedPosts(formattedPosts);
+
+    const filterUserPost = postsData.filter((post) => post.firstSaveUser == userId);
+    setUserPost(filterUserPost);
   }, [postsData]);
 
   const toggleCheckbox = (postSeq) => {
@@ -38,19 +42,33 @@ export function CommunityTable({ currentPath, postsData }) {
     handleRemovePost(checkedItems);
   };
 
+  const handleCheckAllBox = () => {
+    for (const data of isUserPost) {
+      setCheckedItems((prev) => ({
+        ...prev,
+        [data.postSeq]: !prev[data.postSeq],
+      }));
+    }
+  };
+
   return (
     <>
-      <Flex>
-        <CheckboxSmall
-          name="checkAll"
-          label="전체선택"
-          checked={checked}
-          onChange={() => setChecked((prev) => !prev)}
-        />
-        <IconBtn variant="secondary" size="medium" state="outline" onClick={handleSendCheckedPost}>
-          <TrashIcon />
-        </IconBtn>
-      </Flex>
+      {isUserPost?.length > 0 && (
+        <Flex>
+          <CheckboxSmall
+            name="checkAll"
+            label="전체선택"
+            checked={checked}
+            onChange={() => {
+              setChecked((prev) => !prev);
+              handleCheckAllBox();
+            }}
+          />
+          <IconBtn variant="secondary" size="medium" state="outline" onClick={handleSendCheckedPost}>
+            <TrashIcon />
+          </IconBtn>
+        </Flex>
+      )}
       {/* 관리자 혹은 내가 쓴 글을 필터링 하면 체크박스와 ...이 있는 테이블  */}
 
       <TableContainer>
@@ -132,7 +150,9 @@ export function CommunityTable({ currentPath, postsData }) {
                   <TableBodyText>{firstSaveUser}</TableBodyText>
                   <TableBodyText>{firstSaveDt[0]}</TableBodyText>
                   <TableBodyText>{hitCnt}</TableBodyText>
-                  <TableBodyText onClick={(e) => e.stopPropagation()}>...</TableBodyText>
+                  <TableBodyText onClick={(e) => e.stopPropagation()}>
+                    {userId === firstSaveUser ? <>...</> : <></>}
+                  </TableBodyText>
                 </BdBtm>
               );
             })}
