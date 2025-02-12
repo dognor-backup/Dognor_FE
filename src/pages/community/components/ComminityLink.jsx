@@ -78,10 +78,22 @@ export function CommunityLink() {
         </GridItem>
       </FlexItems>
       <BtnsContainer>
-        <Button style={{ width: "320px" }} variant="primary" size="medium" state="default">
+        <Button
+          style={{ width: "320px" }}
+          variant="primary"
+          size="medium"
+          state="default"
+          onClick={() => navigate("/postnew")}
+        >
           글 작성하기
         </Button>
-        <Button style={{ width: "320px" }} variant="primary" size="medium" state="outline">
+        <Button
+          style={{ width: "320px" }}
+          variant="primary"
+          size="medium"
+          state="outline"
+          onClick={() => navigate("/community/all")}
+        >
           전체 글 보기
         </Button>
       </BtnsContainer>

@@ -47,7 +47,7 @@ export function PostNew() {
       isNotEmpty = title && content && categoryCd && usageDate;
     }
     if (!isNotEmpty || !agreePolicy) return openAlert();
-    console.log(CommunicationInput);
+
     uploadPostMutation.mutate(CommunicationInput);
   };
 

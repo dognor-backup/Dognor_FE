@@ -25,7 +25,7 @@ export default function Community() {
     <CommunityWrapper>
       {selectedBanner && <BannerImg pathName={pathName} link={selectedBanner.img} />}
       <PageWrapper>
-        <Notice />
+        <Notice pathName={pathName} />
         <Outlet context={{ currentCategory, setCurrentCategory }} />
       </PageWrapper>
     </CommunityWrapper>

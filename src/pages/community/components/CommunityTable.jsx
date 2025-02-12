@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { TableContainer, TableHeader, TableHeadText, TableBodyText, BdBtm, TextMg, Flex } from "./TableStyle";
 import { useRemovePosts } from "../hooks/useRemovePosts";
 import { useViewCount } from "../hooks/useViewCount";
+import useUserStore from "@/domains/auth/store/useUserStore";
 
 export function CommunityTable({ currentPath, postsData }) {
   const [checkedItems, setCheckedItems] = useState({});
@@ -15,6 +16,8 @@ export function CommunityTable({ currentPath, postsData }) {
   const navigate = useNavigate();
   const { handleRemovePost } = useRemovePosts();
   const viewCountMutation = useViewCount();
+  const { user } = useUserStore();
+  const userId = user?.userData?.userId || null;
 
   useEffect(() => {
     const formattedPosts = postsData?.map((post) => ({
@@ -106,15 +109,17 @@ export function CommunityTable({ currentPath, postsData }) {
                   }}
                 >
                   <TableBodyText>
-                    <OnlyCheckBox htmlFor={postSeq} checked={!!checkedItems[postSeq]}>
-                      <input
-                        name={postSeq}
-                        type="checkbox"
-                        checked={!!checkedItems[postSeq]}
-                        onClick={(e) => e.stopPropagation()}
-                        onChange={() => toggleCheckbox(postSeq)}
-                      />
-                    </OnlyCheckBox>
+                    {userId === firstSaveUser ? (
+                      <OnlyCheckBox htmlFor={postSeq} checked={!!checkedItems[postSeq]}>
+                        <input
+                          name={postSeq}
+                          type="checkbox"
+                          checked={!!checkedItems[postSeq]}
+                          onClick={(e) => e.stopPropagation()}
+                          onChange={() => toggleCheckbox(postSeq)}
+                        />
+                      </OnlyCheckBox>
+                    ) : null}
                   </TableBodyText>
                   <TableBodyText bold="700">
                     <span>{idx + 1}</span>

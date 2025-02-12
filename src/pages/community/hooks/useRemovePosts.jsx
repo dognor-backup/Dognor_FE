@@ -9,9 +9,7 @@ export function useRemovePosts() {
         postSeq.push({ postSeq: Number(key) });
       }
     }
-    if (postSeq.length > 0) {
-      deleteMutation.mutate(postSeq);
-    }
+    deleteMutation.mutate(postSeq);
   };
   return { handleRemovePost };
 }

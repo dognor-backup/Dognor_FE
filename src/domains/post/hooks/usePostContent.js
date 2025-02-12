@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import usePostStore from "../store/usePostStore";
 
 export const usePostContent = (selectedCategory) => {
+  console.log("ㄴㄴㄴ", selectedCategory);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { setPostData } = usePostStore();
@@ -15,7 +16,7 @@ export const usePostContent = (selectedCategory) => {
         await queryClient.invalidateQueries({ queryKey: ["post"] });
         const updatedPosts = queryClient.getQueryData(["post"]);
         setPostData(updatedPosts);
-        navigate(`/community/${selectedCategory}`, { replace: true });
+        navigate(`/community${selectedCategory && `/${selectedCategory}`}`, { replace: true });
       }
     },
     onError: (error) => {

@@ -6,17 +6,26 @@ import { OnlyCheckBox } from "@/shared/components/checkbox/CheckboxLabel";
 import { useNavigate } from "react-router-dom";
 import { TableContainer, TableHeader, TableHeadText, TableBodyText, BdBtm, TextMg, Flex } from "./TableStyle";
 import { useGetNoticeList } from "@/domains/post/hooks/useGetPostList";
-import { PageTop } from "@/shared/components/layout/PageTopTitle";
 import { useRemovePosts } from "../hooks/useRemovePosts";
 import { useViewCount } from "../hooks/useViewCount";
+import styled from "@emotion/styled";
+import { PageTop } from "@/shared/components/layout/PageTopTitle";
+import useUserStore from "@/domains/auth/store/useUserStore";
 
-export function Notice({ currentPath }) {
+export function Notice({ currentPath, pathName }) {
   const [checkedItems, setCheckedItems] = useState({});
   const [changedPosts, setChangedPosts] = useState([]);
   const [checked, setChecked] = useState(false);
   const navigate = useNavigate();
   const viewCountMutation = useViewCount();
   const { handleRemovePost } = useRemovePosts();
+  const { user } = useUserStore();
+  const userId = user?.userData?.userId || null;
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    setIsAdmin(userId === "admin");
+  }, []);
 
   const [getCategoryList, setCategoryList] = useState({
     searchParam: {
@@ -30,6 +39,15 @@ export function Notice({ currentPath }) {
   });
   const { data, isLoading, isError } = useGetNoticeList(getCategoryList);
   const { data: nestedData } = data?.data ?? [];
+
+  const handleCheckAllBox = () => {
+    for (const data of nestedData) {
+      setCheckedItems((prev) => ({
+        ...prev,
+        [data.postSeq]: !prev[data.postSeq],
+      }));
+    }
+  };
 
   useEffect(() => {
     const formattedPosts = nestedData?.map((post) => ({
@@ -52,26 +70,33 @@ export function Notice({ currentPath }) {
 
   return (
     <>
-      <PageTop noNav={true}>
+      <PageTop noNav={pathName === "community" ? false : true}>
         <h2>공지사항</h2>
       </PageTop>
       <Flex>
-        <CheckboxSmall
-          name="checkAllNotice"
-          label="전체선택"
-          checked={checked}
-          onChange={() => setChecked((prev) => !prev)}
-        />
-        <IconBtn variant="secondary" size="medium" state="outline" onClick={handleSendCheckedPost}>
-          <TrashIcon />
-        </IconBtn>
+        {isAdmin && (
+          <>
+            <CheckboxSmall
+              name="checkAllNotice"
+              label="전체선택"
+              checked={checked}
+              onChange={() => {
+                setChecked((prev) => !prev);
+                handleCheckAllBox();
+              }}
+            />
+            <IconBtn variant="secondary" size="medium" state="outline" onClick={handleSendCheckedPost}>
+              <TrashIcon />
+            </IconBtn>
+          </>
+        )}
       </Flex>
       {/* 관리자 혹은 내가 쓴 글을 필터링 하면 체크박스와 ...이 있는 테이블  */}
 
       <TableContainer>
         <TableHeader>
           <tr>
-            <TableHeadText padding="20px" scope="col" />
+            {isAdmin && <TableHeadText padding="20px" scope="col" />}
             <TableHeadText padding="20px" scope="col">
               No.
             </TableHeadText>
@@ -88,7 +113,7 @@ export function Notice({ currentPath }) {
             <TableHeadText padding="23px" scope="col">
               조회
             </TableHeadText>
-            <TableHeadText padding="20px" scope="col" />
+            {isAdmin && <TableHeadText padding="20px" scope="col" />}
           </tr>
         </TableHeader>
         {changedPosts?.length > 0 ? (
@@ -114,17 +139,19 @@ export function Notice({ currentPath }) {
                     viewCountMutation.mutate(postSeq);
                   }}
                 >
-                  <TableBodyText>
-                    <OnlyCheckBox htmlFor={postSeq} checked={!!checkedItems[postSeq]}>
-                      <input
-                        name={postSeq}
-                        type="checkbox"
-                        checked={!!checkedItems[postSeq]}
-                        onClick={(e) => e.stopPropagation()}
-                        onChange={() => toggleCheckbox(postSeq)}
-                      />
-                    </OnlyCheckBox>
-                  </TableBodyText>
+                  {isAdmin && (
+                    <TableBodyText>
+                      <OnlyCheckBox htmlFor={postSeq} checked={!!checkedItems[postSeq]}>
+                        <input
+                          name={postSeq}
+                          type="checkbox"
+                          checked={!!checkedItems[postSeq]}
+                          onClick={(e) => e.stopPropagation()}
+                          onChange={() => toggleCheckbox(postSeq)}
+                        />
+                      </OnlyCheckBox>
+                    </TableBodyText>
+                  )}
                   <TableBodyText bold="700">
                     <span>{idx + 1}</span>
                   </TableBodyText>
@@ -136,7 +163,7 @@ export function Notice({ currentPath }) {
                   <TableBodyText>{firstSaveUser}</TableBodyText>
                   <TableBodyText>{firstSaveDt[0]}</TableBodyText>
                   <TableBodyText>{hitCnt}</TableBodyText>
-                  <TableBodyText onClick={(e) => e.stopPropagation()}>...</TableBodyText>
+                  {isAdmin && <TableBodyText onClick={(e) => e.stopPropagation()}>...</TableBodyText>}
                 </BdBtm>
               );
             })}
