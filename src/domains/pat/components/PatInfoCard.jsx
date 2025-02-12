@@ -1,3 +1,4 @@
+import { useState } from "react";
 import styled from "@emotion/styled";
 import Spinner from "@/shared/components/Spinner";
 import { useGetPatInfo } from "../hooks/useGetPatInfo";
@@ -8,20 +9,20 @@ import { IconBtn } from "@/shared/components/buttons/IconBtn";
 import PlusIcon from "../../../assets/icons/white/plus_w.svg?react";
 import BlackPlus from "../../../assets/icons/black/plus.svg?react";
 import useModalStore from "@/shared/hooks/useModalStore";
+import { DnPagination } from "@/shared/components/DnPagenation";
 
 export default function PatInfoCard() {
   const { isModalOpen, openModal } = useModalStore();
-  let page = 1;
+  const [page, setPage] = useState(1);
   const size = 4;
   const { user } = useUserStore();
   const userSeq = user?.userData?.userSeq;
 
   const { data, isLoading, error } = useGetPatInfo(userSeq, page, size);
+  const totalPages = Math.ceil(data?.totalCount / size) || 1;
 
   if (isLoading) return <Spinner />;
   if (error) return <div>에러</div>;
-
-  console.log(data?.data.data);
 
   return (
     <PatInfoLayout>
@@ -65,17 +66,23 @@ export default function PatInfoCard() {
             ))}
           </PatInfoCardLayout>
         ) : (
-          <>
-            <AddDogBtn onClick={() => openModal("addDogInfo")}>
-              <BlackPlus />
-              강아지 정보를 추가해주세요:)
-            </AddDogBtn>
-          </>
+          <AddDogBtn onClick={() => openModal("addDogInfo")}>
+            <BlackPlus />
+            강아지 정보를 추가해주세요:)
+          </AddDogBtn>
         )}
+        <PagenationContainer>
+          <DnPagination
+            currentPage={page}
+            totalPages={totalPages}
+            onPageChange={setPage}
+          />
+        </PagenationContainer>
       </PatInfoContentLayout>
     </PatInfoLayout>
   );
 }
+
 const PatInfoLayout = styled.div`
   display: flex;
   flex-direction: column;
@@ -199,4 +206,8 @@ const PatInfoContentLayout = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+`;
+
+const PagenationContainer = styled.div`
+  margin-top: 48px;
 `;
