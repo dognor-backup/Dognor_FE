@@ -3,6 +3,8 @@ import styled from "@emotion/styled";
 import { useEffect, useState } from "react";
 import Dots from "/src/assets/icons/gray/dots_vertical_g.svg?react";
 import useUserStore from "@/domains/auth/store/useUserStore";
+import { editComment } from "@/domains/post/api/post";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 const maxLength = 400;
 
 export function CommentsList({ comments = { data: [] } }) {
@@ -12,22 +14,20 @@ export function CommentsList({ comments = { data: [] } }) {
   const { user } = useUserStore();
   const { userId } = user.userData || "undefined";
   const [currentEdit, setCurrentEdit] = useState(null);
-
+  const queryClient = useQueryClient();
   const handleChange = (e) => {
     setTextLength(text.length);
     setText(e.target.value);
-    // getValueFromCommentArea(text);
   };
 
-  /* {
-  "commentSeq": 1,
-  "comment": "content"
-} */
-
-  // 현재 로그인한 사용자와 댓글 유저가 일치하면 해당 댓글에 ... 을 보여준다
-  // 점 버튼을 누르면 현재 클릭한 댓글창만 수정모드가 된다.
-
-  //   onClick={() => handleEditClick(commentSeq, comment)}
+  const editCommentMutation = useMutation({
+    mutationFn: editComment,
+    onSuccess: async ({ success, data }) => {
+      if (success) {
+        await queryClient.invalidateQueries(["comment"]);
+      }
+    },
+  });
 
   const handleEditClick = ({ commentSeq, comment }) => {
     setCurrentEdit(commentSeq);
@@ -35,9 +35,10 @@ export function CommentsList({ comments = { data: [] } }) {
     setIsEditing(true);
   };
 
-  const handleUpdateComment = () => {
+  const handleUpdateComment = (commentSeq) => {
     setIsEditing(false);
     setCurrentEdit(null);
+    editCommentMutation.mutate({ commentSeq, comment: text });
   };
   return (
     <>
@@ -45,7 +46,7 @@ export function CommentsList({ comments = { data: [] } }) {
         const { comment, commentSeq, firstSaveDt, firstSaveUser } = item;
         const currentEditingComment = currentEdit === commentSeq && userId === firstSaveUser && isEditing;
         return (
-          <CommentWrapper>
+          <CommentWrapper key={commentSeq}>
             <InputContainer>
               <UserName>{firstSaveUser}</UserName>
               {currentEditingComment ? (
@@ -81,7 +82,7 @@ export function CommentsList({ comments = { data: [] } }) {
                   size="medium"
                   state="outline"
                   style={{ height: "50%" }}
-                  onClick={() => handleUpdateComment()}
+                  onClick={(e) => handleUpdateComment(commentSeq)}
                 >
                   수정
                 </Button>

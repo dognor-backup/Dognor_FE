@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import usePostStore from "../store/usePostStore";
 
 export const usePostContent = (selectedCategory) => {
-  console.log("ㄴㄴㄴ", selectedCategory);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { setPostData } = usePostStore();

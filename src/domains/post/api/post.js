@@ -69,3 +69,11 @@ export const viewCount = async (postSeq) => {
   const response = await AxiosInstance.patch(`/community/post/hit-cnt/${postSeq}`);
   return { success: true, data: response.data };
 };
+
+export const editComment = async (data) => {
+  const response = await AxiosInstance.put(`/community/comment`, data);
+  if (response.data.code === 200) {
+    console.log("ss", data);
+    return { success: true, data: response.data };
+  }
+};
