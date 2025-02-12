@@ -72,112 +72,104 @@ export default function AddPatInfoCard() {
   };
 
   return (
-    <CardLayout>
-      <ContentBox>
-        <AddDogBtn onClick={() => openModal("addDogInfo")}>
-          <BlackPlus />
-          강아지 정보를 추가해주세요:)
-        </AddDogBtn>
-        <Modal
-          title="반려견 정보입력"
-          BtnText="추가하기"
-          size=""
-          isModalOpen={isModalOpen}
-          modalName="addDogInfo"
-          formName="addDogInfo"
-          onSubmit={handleSavePatInfo}
-        >
-          <ModalContentLayout>
-            <AddDogPhotoButton type="file">
-              <AddProfileBtnImg />
-            </AddDogPhotoButton>
-            <InputContainer>
-              <InputFile
-                labelText="반려견 프로필 [필수]"
-                placeholder="사진을 등록해주세요"
-                buttonText="파일 첨부하기"
-                infoMessage="파일은 1MB 이내로 해주세요"
-                onFileChange={handleFileChange}
-              />
-            </InputContainer>
-            <InputContainer>
-              <InputForm
-                id="name"
-                name="name"
-                placeholder="반려견 이름을 입력해주세요"
-                label="반려견 이름 [필수]"
-                getInputValue={getInputValue}
-              />
-            </InputContainer>
-            <InputFlexContainer>
-              <HalfWidthInput>
-                <DatePicker label="생일" getSelectedDate={getSelectedDate} />
-              </HalfWidthInput>
-              <HalfWidthInput>
-                <InputForm
-                  id="weight"
-                  name="weight"
-                  placeholder="숫자만 작성해주세요"
-                  label="몸무게(Kg)"
-                  status="normal"
-                  getInputValue={getInputValue}
-                />
-              </HalfWidthInput>
-            </InputFlexContainer>
-            <InputFlexContainer>
-              <HalfWidthInput>
-                <SelectBox
-                  label="구분"
-                  optionList={dogSizeList}
-                  getValueFromSelect={(value) =>
-                    getInputValue({ name: "breedCd", value })
-                  }
-                />
-              </HalfWidthInput>
-              <HalfWidthInput>
-                <SelectBox
-                  label="혈액형"
-                  optionList={bloodTypeList}
-                  getValueFromSelect={(value) =>
-                    getInputValue({ name: "bloodTypeCd", value })
-                  }
-                />
-              </HalfWidthInput>
-            </InputFlexContainer>
-            <DescriptionBox>
-              <li style={{ listStyle: "inside" }}>
-                소형견 성견 된 몸무게가 대략 10kg 미만(성견: 생후 2년 이상)
-              </li>
-              <li style={{ listStyle: "inside" }}>
-                중형견 성견 된 몸무게가 대략 10~25kg 미만 ...
-              </li>
-              <li style={{ listStyle: "inside" }}>
-                대형견 성견 된 몸무게가 대략 25kg이상
-              </li>
-            </DescriptionBox>
-            <RadioGroupContainer>
-              <RadioGroupText>헌혈 가능 여부</RadioGroupText>
-              <RadioGroup
-                className="flex gap-6"
-                defaultValue="option-one"
-                onValueChange={(value) => {
-                  getInputValue({ name: "isDonor", value });
-                }}
-              >
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="0" id="option-one" />
-                  <Label htmlFor="option-one">불가능</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="1" id="option-two" />
-                  <Label htmlFor="option-two">가능</Label>
-                </div>
-              </RadioGroup>
-            </RadioGroupContainer>
-          </ModalContentLayout>
-        </Modal>
-      </ContentBox>
-    </CardLayout>
+    <Modal
+      title="반려견 정보입력"
+      BtnText="추가하기"
+      size=""
+      isModalOpen={isModalOpen}
+      modalName="addDogInfo"
+      formName="addDogInfo"
+      onSubmit={handleSavePatInfo}
+    >
+      <ModalContentLayout>
+        <AddDogPhotoButton type="file">
+          <AddProfileBtnImg />
+        </AddDogPhotoButton>
+        <InputContainer>
+          <InputFile
+            labelText="반려견 프로필 [필수]"
+            placeholder="사진을 등록해주세요"
+            buttonText="파일 첨부하기"
+            infoMessage="파일은 1MB 이내로 해주세요"
+            onFileChange={handleFileChange}
+          />
+        </InputContainer>
+        <InputContainer>
+          <InputForm
+            id="name"
+            name="name"
+            placeholder="반려견 이름을 입력해주세요"
+            label="반려견 이름 [필수]"
+            getInputValue={getInputValue}
+          />
+        </InputContainer>
+        <InputFlexContainer>
+          <HalfWidthInput>
+            <DatePicker label="생일" getSelectedDate={getSelectedDate} />
+          </HalfWidthInput>
+          <HalfWidthInput>
+            <InputForm
+              id="weight"
+              name="weight"
+              placeholder="숫자만 작성해주세요"
+              label="몸무게(Kg)"
+              status="normal"
+              getInputValue={getInputValue}
+            />
+          </HalfWidthInput>
+        </InputFlexContainer>
+        <InputFlexContainer>
+          <HalfWidthInput>
+            <SelectBox
+              label="구분"
+              optionList={dogSizeList}
+              getValueFromSelect={(value) =>
+                getInputValue({ name: "breedCd", value })
+              }
+            />
+          </HalfWidthInput>
+          <HalfWidthInput>
+            <SelectBox
+              label="혈액형"
+              optionList={bloodTypeList}
+              getValueFromSelect={(value) =>
+                getInputValue({ name: "bloodTypeCd", value })
+              }
+            />
+          </HalfWidthInput>
+        </InputFlexContainer>
+        <DescriptionBox>
+          <li style={{ listStyle: "inside" }}>
+            소형견 성견 된 몸무게가 대략 10kg 미만(성견: 생후 2년 이상)
+          </li>
+          <li style={{ listStyle: "inside" }}>
+            중형견 성견 된 몸무게가 대략 10~25kg 미만 ...
+          </li>
+          <li style={{ listStyle: "inside" }}>
+            대형견 성견 된 몸무게가 대략 25kg이상
+          </li>
+        </DescriptionBox>
+        <RadioGroupContainer>
+          <RadioGroupText>헌혈 가능 여부</RadioGroupText>
+          <RadioGroup
+            className="flex gap-6"
+            defaultValue="option-one"
+            onValueChange={(value) => {
+              getInputValue({ name: "isDonor", value });
+            }}
+          >
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="0" id="option-one" />
+              <Label htmlFor="option-one">불가능</Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="1" id="option-two" />
+              <Label htmlFor="option-two">가능</Label>
+            </div>
+          </RadioGroup>
+        </RadioGroupContainer>
+      </ModalContentLayout>
+    </Modal>
   );
 }
 
@@ -186,8 +178,6 @@ const CardLayout = styled.div`
   flex-direction: column;
   gap: 32px;
 `;
-
-
 
 const ContentBox = styled.div`
   position: relative;
@@ -199,7 +189,6 @@ const ContentBox = styled.div`
   align-items: center;
   gap: 48px;
 `;
-
 
 const AddDogBtn = styled.button`
   display: flex;

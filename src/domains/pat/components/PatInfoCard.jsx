@@ -7,8 +7,10 @@ import { calculateAge } from "@/shared/utils/calculateAge";
 import { IconBtn } from "@/shared/components/buttons/IconBtn";
 import PlusIcon from "../../../assets/icons/white/plus_w.svg?react";
 import BlackPlus from "../../../assets/icons/black/plus.svg?react";
+import useModalStore from "@/shared/hooks/useModalStore";
 
 export default function PatInfoCard() {
+  const { isModalOpen, openModal } = useModalStore();
   let page = 1;
   const size = 4;
   const { user } = useUserStore();
@@ -26,12 +28,12 @@ export default function PatInfoCard() {
       <PatInfoHeaderTextContainer>
         <PatInfoHeaderTitleText>반려견 정보</PatInfoHeaderTitleText>
         <PatInfoHeaderSubText>
-          {data?.data?.data.length !== 0
+          {data?.data?.data.length >= 1
             ? `${data.data.data.length}마리의 반려견과 함께하고 있습니다`
             : "아직 함께 하는 반려견이 없습니다"}
         </PatInfoHeaderSubText>
       </PatInfoHeaderTextContainer>
-      {data ? (
+      {data?.data?.data.length >= 1 ? (
         <PatInfoCardLayout>
           <IconBtnContainer>
             <IconBtn>
@@ -59,10 +61,13 @@ export default function PatInfoCard() {
           ))}
         </PatInfoCardLayout>
       ) : (
-        <AddDogBtn onClick={() => openModal("addDogInfo")}>
-          <BlackPlus />
-          강아지 정보를 추가해주세요:)
-        </AddDogBtn>
+        <>
+          <AddDogBtn onClick={() => openModal("addDogInfo")}>
+            <BlackPlus />
+            강아지 정보를 추가해주세요:)
+          </AddDogBtn>
+          <AddPatInfoCard />
+        </>
       )}
     </PatInfoLayout>
   );
