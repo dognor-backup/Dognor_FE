@@ -1,16 +1,22 @@
 import styled from "@emotion/styled";
 import { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 
-export default function SubMenuBar({ subMenuList }) {
+export default function SubMenuBar({ subMenuList, useQueryParams = false }) {
   const [activeSubMenu, setActiveSubMenu] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const handleSubMenuClick = (menu) => {
     setActiveSubMenu(menu);
     const currentPath = location.pathname.split("/").slice(0, 2).join("/");
-    navigate(`${currentPath}/${menu}`);
+
+    if (useQueryParams) {
+      setSearchParams({ myPosts: menu });
+    } else {
+      navigate(`${currentPath}/${menu}`);
+    }
   };
 
   return (
@@ -20,9 +26,7 @@ export default function SubMenuBar({ subMenuList }) {
           key={menu.path}
           data-label={menu.label}
           isActive={activeSubMenu === menu.path}
-          onClick={() => {
-            handleSubMenuClick(menu.path);
-          }}
+          onClick={() => handleSubMenuClick(menu.path)}
           color={menu.color}
         >
           {menu.label}

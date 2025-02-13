@@ -1,4 +1,5 @@
 import PatInfoCard from "@/domains/pat/components/PatInfoCard";
+import MyPosts from "@/domains/post/MyPosts";
 import UserInfoCard from "@/domains/user/components/UserInfoCard";
 import { useGetUserInfo } from "@/domains/user/hooks/useGetUserInfo";
 import { PageTop } from "@/shared/components/layout/PageTopTitle";
@@ -16,6 +17,7 @@ export default function IndividualUser() {
       </PageTop>
       <UserInfoCard name={name} phone={phone} email={email} />
       <PatInfoCard />
+      <MyPosts />
     </IndividualUserLayout>
   );
 }

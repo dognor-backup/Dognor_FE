@@ -91,7 +91,6 @@ const PatInfoLayout = styled.div`
   display: flex;
   flex-direction: column;
   width: 1008px;
-  height: 637px;
   align-items: center;
   gap: 38px;
 `;
