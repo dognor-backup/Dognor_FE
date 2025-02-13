@@ -4,6 +4,7 @@ import Checkbox from "@/shared/components/checkbox/Checkbox";
 import SubMenuBar from "@/shared/components/submenubar/SubMenuBar";
 import styled from "@emotion/styled";
 import DeleteIcon from "../../assets/icons/primary/Trash.svg?react";
+import { DnTable } from "@/shared/components/DnTable";
 
 export default function MyPosts() {
   const subMenuList = [
@@ -37,6 +38,7 @@ export default function MyPosts() {
             <DeleteIcon />
           </IconBtn>
         </DeleteActionContainer>
+        <DnTable />
       </TableContainer>
     </MyPostsLayout>
   );
