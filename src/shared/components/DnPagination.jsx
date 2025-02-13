@@ -1,11 +1,21 @@
-import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationPrevious, PaginationNext } from "@/components/ui/pagination";
+import { 
+  Pagination, 
+  PaginationContent, 
+  PaginationItem, 
+  PaginationLink, 
+  PaginationPrevious, 
+  PaginationNext 
+} from "@/components/ui/pagination";
 
 export function DnPagination({ currentPage, totalPages, onPageChange }) {
   return (
     <Pagination>
       <PaginationContent>
         <PaginationItem>
-          <PaginationPrevious onClick={() => onPageChange(currentPage - 1)} disabled={currentPage === 1} />
+          <PaginationPrevious 
+            onClick={() => onPageChange(Math.max(1, currentPage - 1))} 
+            disabled={currentPage === 1} 
+          />
         </PaginationItem>
         {Array.from({ length: totalPages }, (_, index) => (
           <PaginationItem key={index}>
@@ -18,7 +28,10 @@ export function DnPagination({ currentPage, totalPages, onPageChange }) {
           </PaginationItem>
         ))}
         <PaginationItem>
-          <PaginationNext onClick={() => onPageChange(currentPage + 1)} disabled={currentPage === totalPages} />
+          <PaginationNext 
+            onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))} 
+            disabled={currentPage === totalPages} 
+          />
         </PaginationItem>
       </PaginationContent>
     </Pagination>

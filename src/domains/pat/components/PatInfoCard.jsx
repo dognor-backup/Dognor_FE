@@ -9,7 +9,7 @@ import { IconBtn } from "@/shared/components/buttons/IconBtn";
 import PlusIcon from "../../../assets/icons/white/plus_w.svg?react";
 import BlackPlus from "../../../assets/icons/black/plus.svg?react";
 import useModalStore from "@/shared/hooks/useModalStore";
-import { DnPagination } from "@/shared/components/DnPagenation";
+import { DnPagination } from "@/shared/components/DnPagination";
 import LineBoundary from "../../../assets/icons/line/Line1008-mypage.svg?react";
 
 export default function PatInfoCard() {
