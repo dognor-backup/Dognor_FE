@@ -1,6 +1,9 @@
 import { Button } from "@/shared/components/buttons/Button";
+import { IconBtn } from "@/shared/components/buttons/IconBtn";
+import Checkbox from "@/shared/components/checkbox/Checkbox";
 import SubMenuBar from "@/shared/components/submenubar/SubMenuBar";
 import styled from "@emotion/styled";
+import DeleteIcon from "../../assets/icons/primary/Trash.svg?react";
 
 export default function MyPosts() {
   const subMenuList = [
@@ -27,7 +30,12 @@ export default function MyPosts() {
           </Button>
         </FilterBtnContainer>
         <DeleteActionContainer>
-
+          <CheckboxContainer>
+            <Checkbox name={"selectAll"} label={"전체 선택"} size={"small"} />
+          </CheckboxContainer>
+          <IconBtn variant="primary" size="medium" state="outline">
+            <DeleteIcon />
+          </IconBtn>
         </DeleteActionContainer>
       </TableContainer>
     </MyPostsLayout>
@@ -73,4 +81,8 @@ const FilterBtnContainer = styled.div`
 const DeleteActionContainer = styled.div`
   display: flex;
   justify-content: space-between;
+`;
+
+const CheckboxContainer = styled.div`
+  padding: 12px 16px;
 `;
