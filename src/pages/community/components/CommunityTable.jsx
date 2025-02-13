@@ -8,8 +8,9 @@ import { TableContainer, TableHeader, TableHeadText, TableBodyText, BdBtm, TextM
 import { useRemovePosts } from "../hooks/useRemovePosts";
 import { useViewCount } from "../hooks/useViewCount";
 import useUserStore from "@/domains/auth/store/useUserStore";
+import { DnPagination } from "./Pagination";
 
-export function CommunityTable({ currentPath, postsData }) {
+export function CommunityTable({ currentPath, postsData, totalPage, getClickedPageNumber }) {
   const [checkedItems, setCheckedItems] = useState({});
   const [changedPosts, setChangedPosts] = useState([]);
   const [checked, setChecked] = useState(false);
@@ -27,7 +28,7 @@ export function CommunityTable({ currentPath, postsData }) {
     }));
     setChangedPosts(formattedPosts);
 
-    const filterUserPost = postsData.filter((post) => post.firstSaveUser == userId);
+    const filterUserPost = postsData?.filter((post) => post.firstSaveUser == userId);
     setUserPost(filterUserPost);
   }, [postsData]);
 
@@ -167,6 +168,7 @@ export function CommunityTable({ currentPath, postsData }) {
           </tbody>
         )}
       </TableContainer>
+      <DnPagination totalPage={totalPage} getClickedPageNumber={getClickedPageNumber} />
     </>
   );
 }

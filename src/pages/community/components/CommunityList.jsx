@@ -9,17 +9,13 @@ import { Button } from "@/shared/components/buttons/Button";
 import usePostStore from "@/domains/post/store/usePostStore";
 
 export function CommunityList() {
-  // const [selectedPost, setSelectedPost] = useState(null);
-  //선택되서 들어온 카테고리
   const { currentCategory, setCurrentCategory } = useOutletContext();
-
-  //탭을 눌러 변경하는 카테고리
   const [currentTitle, setCurrentTitle] = useState(currentCategory);
   const location = useLocation();
   const pathLink = location.pathname.split("/");
   let currentPath = pathLink[pathLink.length - 1];
   const navigate = useNavigate();
-
+  const [totalPage, setTotalPage] = useState(null);
   const [getCategoryList, setCategoryList] = useState({
     searchParam: {
       page: 1,
@@ -30,6 +26,11 @@ export function CommunityList() {
       categoryCd: 1,
     },
   });
+  const { data } = useGetPostList(getCategoryList);
+
+  useEffect(() => {
+    setTotalPage(data?.data?.totalPage);
+  }, [totalPage]);
 
   useGetPostList(getCategoryList);
   const { postsData: categoryList } = usePostStore();
@@ -124,7 +125,23 @@ export function CommunityList() {
         break;
     }
   };
-
+  const getClickedPageNumber = (clicked) => {
+    const currentPage = getCategoryList.searchParam.page;
+    let newPage;
+    if (clicked === "next" && currentPage < totalPage) {
+      newPage = currentPage + 1;
+    } else if (clicked === "prev" && currentPage > 1) {
+      newPage = currentPage - 1;
+    } else {
+      newPage = Number(clicked);
+    }
+    if (newPage) {
+      setCategoryList((prev) => ({
+        ...prev,
+        searchParam: { ...prev.searchParam, page: newPage },
+      }));
+    }
+  };
   return (
     <CommunityWrapper>
       <PageWrapper>
@@ -152,7 +169,13 @@ export function CommunityList() {
               내 작성글
             </Button>
           </BtnsContainer>
-          <CommunityTable currentPath={currentPath} postsData={categoryList} />
+          <CommunityTable
+            currentPath={currentPath}
+            postsData={categoryList}
+            getCategoryList={getCategoryList}
+            totalPage={totalPage}
+            getClickedPageNumber={getClickedPageNumber}
+          />
         </MarginTop>
       </PageWrapper>
     </CommunityWrapper>

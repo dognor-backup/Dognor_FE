@@ -15,11 +15,10 @@ export function useGetPostList(getCategoryList) {
   });
   useEffect(() => {
     if (data?.data) {
-      const { msg, code, data: nestedData } = data.data;
+      const { msg, code, data: nestedData, totalPage } = data.data;
       setPostData(nestedData);
     }
   }, [data, setPostData]);
-
   return { data, isLoading, isError };
 }
 
@@ -40,6 +39,5 @@ export function useGetNoticeList(getCategoryList) {
       setNoticeData(nestedData);
     }
   }, [data, setNoticeData]);
-
   return { data, isLoading, isError };
 }

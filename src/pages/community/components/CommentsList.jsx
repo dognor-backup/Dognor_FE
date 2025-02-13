@@ -22,9 +22,9 @@ export function CommentsList({ comments = { data: [] } }) {
 
   const editCommentMutation = useMutation({
     mutationFn: editComment,
-    onSuccess: async ({ success, data }) => {
+    onSuccess: ({ success }) => {
       if (success) {
-        await queryClient.invalidateQueries(["comment"]);
+        queryClient.invalidateQueries(["comment"]);
       }
     },
   });

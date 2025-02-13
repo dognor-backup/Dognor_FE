@@ -36,7 +36,6 @@ export function Notice({ currentPath, pathName }) {
       size: 5,
       sortByHitCnt: false,
       sortByLatest: false,
-      myPostsOnly: false,
       categoryCd: 1,
     },
   });
