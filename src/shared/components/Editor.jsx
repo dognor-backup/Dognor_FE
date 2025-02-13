@@ -1,14 +1,13 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import ReactQuill, { Quill } from "react-quill";
-import "react-quill/dist/quill.snow.css";
 import ImageResize from "quill-image-resize";
 Quill.register("modules/ImageResize", ImageResize);
+import { useConvetImg } from "@/domains/post/hooks/useConvertImg";
 import styled from "@emotion/styled";
-
-import { PageTop, PageWrapper } from "@/shared/components/layout/PageTopTitle";
+import "react-quill/dist/quill.snow.css";
+import { PageWrapper } from "@/shared/components/layout/PageTopTitle";
 import { InputForm } from "@/shared/components/input/InputForm";
 import useGetValueFromTextInput from "../hooks/useGetValueFromTextInput";
-import { useConvetImg } from "@/domains/post/hooks/useConvertImg";
 
 function ReactQuillEditor({ children, getEditorText }) {
   const { inputValues, getInputValue } = useGetValueFromTextInput();
@@ -17,6 +16,7 @@ function ReactQuillEditor({ children, getEditorText }) {
   let quillObj = quillRef.current?.getEditor();
   const range = quillObj?.getSelection();
   const { mutate } = useConvetImg(quillObj, range);
+
   const modules = useMemo(
     () => ({
       toolbar: {
@@ -49,7 +49,7 @@ function ReactQuillEditor({ children, getEditorText }) {
     input.setAttribute("type", "file");
     input.setAttribute("accept", "image/*");
     input.click();
-    input.onchange = async () => {
+    input.onchange = () => {
       const file = input.files ? input.files[0] : null;
       if (!file) return;
       if (file) {
@@ -93,6 +93,7 @@ export default ReactQuillEditor;
 const EditorContainer = styled.div`
   margin-bottom: 48px;
   margin-top: 48px;
+  width: calc(100% - 172px);
 `;
 const InputContainer = styled.div`
   width: calc(100% - 172px);

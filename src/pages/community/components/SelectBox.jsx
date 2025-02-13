@@ -10,8 +10,8 @@ export function SelectBox({ label, getValueFromSelect, optionList }) {
           <SelectValue placeholder="게시판을 선택해주세요" />
         </SelectTrigger>
         <SelectContent>
-          {optionList.map((item) => (
-            <SelectItem key={item.code} value={item.code.toString()}>
+          {optionList.map((item, index) => (
+            <SelectItem key={index} value={item.code.toString()}>
               {item.name}
             </SelectItem>
           ))}

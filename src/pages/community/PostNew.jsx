@@ -1,30 +1,30 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import ReactQuillEditor from "@/shared/components/Editor";
 import { usePostContent } from "@/domains/post/hooks/usePostContent";
 import useAlertStore from "@/shared/hooks/useAlertStore";
 import Alert from "@/shared/components/alert/Alert";
 
-import { DatePicker } from "./DatePicker";
+import { DatePicker } from "./components/DatePicker";
 import styled from "@emotion/styled";
 import Checkbox from "@/shared/components/checkbox/Checkbox";
 import { Button } from "@/shared/components/buttons/Button";
 import { PageTop } from "@/shared/components/layout/PageTopTitle";
 import { SelectBox } from "./components/SelectBox";
-import useUserStore from "@/domains/auth/store/useUserStore";
+import { useGetUserId } from "./hooks/useGetUserId";
 
 export function PostNew() {
-  const { user } = useUserStore();
-  const isAdmin = user?.userData?.userId === "admin";
+  const { userRole } = useGetUserId() || {};
+  const isAdmin = userRole === "admin";
   const { isAlertOpen, openAlert } = useAlertStore();
+  let [selectedCategory, setSelectedCategory] = useState("");
+  const uploadPostMutation = usePostContent(selectedCategory);
+  const [agreePolicy, setAgreePolicy] = useState(false);
   const [CommunicationInput, setCommunicationInput] = useState({
     title: "",
     content: "",
     categoryCd: null,
     usageDate: "",
   });
-
-  let [selectedCategory, setSelectedCategory] = useState("");
-
   const categoryList = isAdmin
     ? [{ name: "공지사항", code: 1, path: "" }]
     : [
@@ -35,8 +35,6 @@ export function PostNew() {
         { name: "혈액이 필요해요", code: 6, path: "needbloods" },
       ];
 
-  const [agreePolicy, setAgreePolicy] = useState(false);
-  const uploadPostMutation = usePostContent(selectedCategory);
   const handleSubmit = (e) => {
     let isNotEmpty;
     const { title, content, categoryCd, usageDate } = CommunicationInput;
@@ -47,23 +45,18 @@ export function PostNew() {
       isNotEmpty = title && content && categoryCd && usageDate;
     }
     if (!isNotEmpty || !agreePolicy) return openAlert();
-
     uploadPostMutation.mutate(CommunicationInput);
   };
-
   const getEditorText = ({ title, content }) => setCommunicationInput((prev) => ({ ...prev, title, content }));
-
   const getSelectedDate = (date) => {
     const dateForm = date.toISOString();
     const usageDate = dateForm.split("T")[0];
     setCommunicationInput((prev) => ({ ...prev, usageDate }));
   };
-
   const getValueFromSelect = (categoryCd) => {
     setCommunicationInput((prev) => ({ ...prev, categoryCd: Number(categoryCd) }));
     setSelectedCategory(categoryList.find((el) => el.code == categoryCd).path);
   };
-
   const getCheckValues = () => setAgreePolicy((prev) => !prev);
 
   return (
@@ -100,7 +93,7 @@ export function PostNew() {
           </Button>
         </BtnCover>
       </FlexCenter>
-      <Alert isAlertOpen={isAlertOpen}> {<>내용을 모두 입력해 주세요</>} </Alert>;
+      <Alert isAlertOpen={isAlertOpen}> {<>내용을 모두 입력해 주세요</>} </Alert>
     </form>
   );
 }
@@ -112,13 +105,11 @@ const SelectBoxes = styled.div`
   gap: 10px;
   margin-top: 64px;
 `;
-
 const FlexCenter = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
 `;
-
 const BtnCover = styled.div`
   margin-top: 48px;
   margin-bottom: 100px;

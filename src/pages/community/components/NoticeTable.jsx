@@ -1,30 +1,33 @@
-import { IconBtn } from "@/shared/components/buttons/IconBtn";
-import CheckboxSmall from "@/shared/components/checkbox/CheckboxSmall";
 import { useEffect, useState } from "react";
-import TrashIcon from "/src/assets/icons/secondary/trash.svg?react";
-import { OnlyCheckBox } from "@/shared/components/checkbox/CheckboxLabel";
 import { useNavigate } from "react-router-dom";
-import { TableContainer, TableHeader, TableHeadText, TableBodyText, BdBtm, TextMg, Flex } from "./TableStyle";
+import useUserStore from "@/domains/auth/store/useUserStore";
+import usePostStore from "@/domains/post/store/usePostStore";
 import { useGetNoticeList } from "@/domains/post/hooks/useGetPostList";
 import { useRemovePosts } from "../hooks/useRemovePosts";
 import { useViewCount } from "../hooks/useViewCount";
-import { PageTop } from "@/shared/components/layout/PageTopTitle";
-import useUserStore from "@/domains/auth/store/useUserStore";
 import styled from "@emotion/styled";
+import { IconBtn } from "@/shared/components/buttons/IconBtn";
+import CheckboxSmall from "@/shared/components/checkbox/CheckboxSmall";
+import TrashIcon from "/src/assets/icons/secondary/trash.svg?react";
+import { OnlyCheckBox } from "@/shared/components/checkbox/CheckboxLabel";
+import { TableContainer, TableHeader, TableHeadText, TableBodyText, BdBtm, TextMg, Flex } from "./TableStyle";
+import { PageTop } from "@/shared/components/layout/PageTopTitle";
 import { Button } from "@/shared/components/buttons/Button";
-import usePostStore from "@/domains/post/store/usePostStore";
+import { DnPagination } from "./Pagination";
 
 export function Notice({ currentPath, pathName }) {
+  const navigate = useNavigate();
+  const { user } = useUserStore();
+  const userId = user?.userData?.userId || null;
+  const { handleRemovePost } = useRemovePosts();
+  const viewCountMutation = useViewCount();
   const [checkedItems, setCheckedItems] = useState({});
   const [changedPosts, setChangedPosts] = useState([]);
   const [checked, setChecked] = useState(false);
-  const navigate = useNavigate();
-  const viewCountMutation = useViewCount();
-  const { handleRemovePost } = useRemovePosts();
-  const { user } = useUserStore();
-  const userId = user?.userData?.userId || null;
   const [isAdmin, setIsAdmin] = useState(false);
   const [isUserPost, setUserPost] = useState();
+  const [totalPage, setTotalPage] = useState(null);
+  const { noticeData: categoryList } = usePostStore();
 
   useEffect(() => {
     setIsAdmin(userId === "admin");
@@ -34,21 +37,24 @@ export function Notice({ currentPath, pathName }) {
     searchParam: {
       page: 1,
       size: 5,
-      sortByHitCnt: false,
-      sortByLatest: false,
+      sortByHitCnt: true,
+      sortByLatest: true,
       categoryCd: 1,
     },
   });
-  useGetNoticeList(getCategoryList);
-  const { noticeData } = usePostStore();
+
+  const { data } = useGetNoticeList(getCategoryList);
+  useEffect(() => {
+    setTotalPage(data?.data?.totalPage);
+  }, [totalPage]);
 
   useEffect(() => {
-    const formattedPosts = noticeData?.map((post) => ({
+    const formattedPosts = categoryList?.map((post) => ({
       ...post,
       firstSaveDt: post.firstSaveDt.split("T"),
     }));
     setChangedPosts(formattedPosts);
-    const filterUserPost = noticeData?.filter((post) => post.firstSaveUser == userId);
+    const filterUserPost = categoryList?.filter((post) => post?.firstSaveUser == userId);
     setUserPost(filterUserPost);
   }, [getCategoryList]);
 
@@ -60,11 +66,9 @@ export function Notice({ currentPath, pathName }) {
       }));
     }
   };
-
   const toggleCheckbox = (postSeq) => {
     setCheckedItems((prev) => ({ ...prev, [postSeq]: !prev[postSeq] }));
   };
-
   const handleMoveToPostDetail = (item) => {
     navigate(`/postdetail/${item.postSeq}`, { state: { item } });
   };
@@ -73,7 +77,6 @@ export function Notice({ currentPath, pathName }) {
   };
   const handleListUpPosts = (e) => {
     const targetBtn = e.target.name;
-    console.log(targetBtn);
     setCategoryList((prev) => ({
       ...prev,
       searchParam: { ...prev.searchParam, sortByHitCnt: false, sortByLatest: false },
@@ -85,7 +88,6 @@ export function Notice({ currentPath, pathName }) {
           ...prev,
           searchParam: { ...prev.searchParam, sortByLatest: true },
         }));
-        console.log("최신", getCategoryList);
         break;
       case "조회순":
         setCategoryList((prev) => ({
@@ -93,11 +95,28 @@ export function Notice({ currentPath, pathName }) {
           searchParam: { ...prev.searchParam, sortByHitCnt: true },
         }));
         break;
-
       default:
         break;
     }
   };
+  const getClickedPageNumber = (clicked) => {
+    const currentPage = getCategoryList.searchParam.page;
+    let newPage;
+    if (clicked === "next" && currentPage < totalPage) {
+      newPage = currentPage + 1;
+    } else if (clicked === "prev" && currentPage > 1) {
+      newPage = currentPage - 1;
+    } else {
+      newPage = Number(clicked);
+    }
+    if (newPage) {
+      setCategoryList((prev) => ({
+        ...prev,
+        searchParam: { ...prev.searchParam, page: newPage },
+      }));
+    }
+  };
+
   return (
     <>
       <PageTop noNav={pathName === "community" ? false : true}>
@@ -132,7 +151,6 @@ export function Notice({ currentPath, pathName }) {
           </>
         )}
       </Flex>
-      {/* 관리자 혹은 내가 쓴 글을 필터링 하면 체크박스와 ...이 있는 테이블  */}
 
       <TableContainer>
         <TableHeader>
@@ -144,7 +162,6 @@ export function Notice({ currentPath, pathName }) {
             <TableHeadText scope="col" padding="auto" style={{ width: "100%" }}>
               제목
             </TableHeadText>
-
             <TableHeadText padding="45px" scope="col">
               작성자
             </TableHeadText>
@@ -219,6 +236,7 @@ export function Notice({ currentPath, pathName }) {
           </tbody>
         )}
       </TableContainer>
+      <DnPagination totalPage={totalPage} getClickedPageNumber={getClickedPageNumber} />
     </>
   );
 }

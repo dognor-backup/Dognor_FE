@@ -34,8 +34,7 @@ export function useGetNoticeList(getCategoryList) {
   });
   useEffect(() => {
     if (data?.data) {
-      const { msg, code, data: nestedData } = data.data;
-      console.log("sssss", nestedData);
+      const { msg, code, data: nestedData, totalPage } = data.data;
       setNoticeData(nestedData);
     }
   }, [data, setNoticeData]);

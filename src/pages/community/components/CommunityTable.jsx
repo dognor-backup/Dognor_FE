@@ -1,25 +1,25 @@
-import { IconBtn } from "@/shared/components/buttons/IconBtn";
-import CheckboxSmall from "@/shared/components/checkbox/CheckboxSmall";
 import { useEffect, useState } from "react";
-import TrashIcon from "/src/assets/icons/secondary/trash.svg?react";
-import { OnlyCheckBox } from "@/shared/components/checkbox/CheckboxLabel";
 import { useNavigate } from "react-router-dom";
-import { TableContainer, TableHeader, TableHeadText, TableBodyText, BdBtm, TextMg, Flex } from "./TableStyle";
 import { useRemovePosts } from "../hooks/useRemovePosts";
 import { useViewCount } from "../hooks/useViewCount";
-import useUserStore from "@/domains/auth/store/useUserStore";
+import { useGetUserId } from "../hooks/useGetUserId";
+import { IconBtn } from "@/shared/components/buttons/IconBtn";
+import { TableContainer, TableBodyText, BdBtm, TextMg, Flex } from "./TableStyle";
+import CheckboxSmall from "@/shared/components/checkbox/CheckboxSmall";
+import { OnlyCheckBox } from "@/shared/components/checkbox/CheckboxLabel";
+import TrashIcon from "/src/assets/icons/secondary/trash.svg?react";
 import { DnPagination } from "./Pagination";
+import { CoTableHeader } from "./TableHeader";
 
 export function CommunityTable({ currentPath, postsData, totalPage, getClickedPageNumber }) {
+  const navigate = useNavigate();
+  const { userId } = useGetUserId() || {};
+  const { handleRemovePost } = useRemovePosts();
+  const viewCountMutation = useViewCount();
+  const [isUserPost, setUserPost] = useState(userId);
   const [checkedItems, setCheckedItems] = useState({});
   const [changedPosts, setChangedPosts] = useState([]);
   const [checked, setChecked] = useState(false);
-  const navigate = useNavigate();
-  const { handleRemovePost } = useRemovePosts();
-  const viewCountMutation = useViewCount();
-  const { user } = useUserStore();
-  const userId = user?.userData?.userId || null;
-  const [isUserPost, setUserPost] = useState();
 
   useEffect(() => {
     const formattedPosts = postsData?.map((post) => ({
@@ -27,21 +27,13 @@ export function CommunityTable({ currentPath, postsData, totalPage, getClickedPa
       firstSaveDt: post.firstSaveDt.split("T"),
     }));
     setChangedPosts(formattedPosts);
-
     const filterUserPost = postsData?.filter((post) => post.firstSaveUser == userId);
     setUserPost(filterUserPost);
   }, [postsData]);
 
-  const toggleCheckbox = (postSeq) => {
-    setCheckedItems((prev) => ({ ...prev, [postSeq]: !prev[postSeq] }));
-  };
-
-  const handleMoveToPostDetail = (item) => {
-    navigate(`/postdetail/${item.postSeq}`, { state: { item } });
-  };
-  const handleSendCheckedPost = () => {
-    handleRemovePost(checkedItems);
-  };
+  const toggleCheckbox = (postSeq) => setCheckedItems((prev) => ({ ...prev, [postSeq]: !prev[postSeq] }));
+  const handleMoveToPostDetail = (item) => navigate(`/postdetail/${item.postSeq}`, { state: { item } });
+  const handleSendCheckedPost = () => handleRemovePost(checkedItems);
 
   const handleCheckAllBox = () => {
     for (const data of isUserPost) {
@@ -70,40 +62,9 @@ export function CommunityTable({ currentPath, postsData, totalPage, getClickedPa
           </IconBtn>
         </Flex>
       )}
-      {/* 관리자 혹은 내가 쓴 글을 필터링 하면 체크박스와 ...이 있는 테이블  */}
-
       <TableContainer>
-        <TableHeader>
-          <tr>
-            <TableHeadText padding="20px" scope="col" />
-            <TableHeadText padding="20px" scope="col">
-              No.
-            </TableHeadText>
-            <TableHeadText scope="col" padding="auto" style={{ width: "100%" }}>
-              제목
-            </TableHeadText>
-            {currentPath === "all" ? (
-              <TableHeadText padding="35px" scope="col">
-                커뮤니티
-              </TableHeadText>
-            ) : null}
-            {currentPath === "needbloods" ? (
-              <TableHeadText padding="28px" scope="col">
-                사용 예정일
-              </TableHeadText>
-            ) : null}
-            <TableHeadText padding="45px" scope="col">
-              작성자
-            </TableHeadText>
-            <TableHeadText padding="35px" scope="col">
-              작성일
-            </TableHeadText>
-            <TableHeadText padding="23px" scope="col">
-              조회
-            </TableHeadText>
-            <TableHeadText padding="20px" scope="col" />
-          </tr>
-        </TableHeader>
+        <CoTableHeader currentPath={currentPath} />
+
         {changedPosts?.length > 0 ? (
           <tbody>
             {changedPosts?.map((item, idx) => {
@@ -133,7 +94,6 @@ export function CommunityTable({ currentPath, postsData, totalPage, getClickedPa
                         <input
                           name={postSeq}
                           type="checkbox"
-                          checked={!!checkedItems[postSeq]}
                           onClick={(e) => e.stopPropagation()}
                           onChange={() => toggleCheckbox(postSeq)}
                         />
@@ -147,7 +107,9 @@ export function CommunityTable({ currentPath, postsData, totalPage, getClickedPa
                     <TextMg>{title}</TextMg>
                   </TableBodyText>
                   {currentPath == "all" ? <TableBodyText>{categoryName}</TableBodyText> : null}
-                  {currentPath == "needbloods" ? <TableBodyText>{usageDate}</TableBodyText> : null}
+                  {currentPath == "needbloods" ? (
+                    <TableBodyText style={{ color: "#B93A3A" }}>{usageDate}</TableBodyText>
+                  ) : null}
                   <TableBodyText>{firstSaveUser}</TableBodyText>
                   <TableBodyText>{firstSaveDt[0]}</TableBodyText>
                   <TableBodyText>{hitCnt}</TableBodyText>

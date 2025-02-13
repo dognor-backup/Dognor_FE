@@ -1,6 +1,6 @@
+import axios from "axios";
 import { getAccessTokenFromDB } from "@/shared/utils/axiosInstance";
 import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
 
 export const useConvetImg = (quillObj, range) => {
   return useMutation({
