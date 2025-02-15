@@ -3,7 +3,6 @@ import { useState, useEffect, useRef } from "react";
 import styled from "@emotion/styled";
 import DotsVertical from "../../../../assets/icons/black/dots_vertical.svg?react";
 
-// Styled components
 const SelectContainer = styled.div`
   position: relative;
   display: inline-block;
@@ -50,7 +49,6 @@ const SelectItem = styled.li`
   }
 `;
 
-// React Component
 const VerticalDotsSelect = ({ handleEdit, handleDelete }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
