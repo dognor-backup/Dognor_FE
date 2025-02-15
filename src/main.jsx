@@ -32,7 +32,7 @@ createRoot(document.getElementById("root")).render(
           <App />
         </RouterProvider>
       </ThemeProvider>
-      {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+      <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   </StrictMode>
 );

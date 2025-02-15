@@ -14,7 +14,7 @@ import { CoTableHeader } from "./TableHeader";
 export function CommunityTable({ currentPath, postsData, totalPage, getClickedPageNumber }) {
   const navigate = useNavigate();
   const { userId } = useGetUserId() || {};
-  const { handleRemovePost } = useRemovePosts();
+  const { handleRemovePost } = useRemovePosts("post");
   const viewCountMutation = useViewCount();
   const [isUserPost, setUserPost] = useState(userId);
   const [checkedItems, setCheckedItems] = useState({});

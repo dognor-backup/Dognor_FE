@@ -8,6 +8,7 @@ import { searchComments, updateComment } from "@/domains/post/api/post";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { CommentsList } from "./components/CommentsList";
+import { DnPagination } from "./components/Pagination";
 
 export function PostDetail() {
   const [userComment, setUserComment] = useState("");
@@ -15,6 +16,7 @@ export function PostDetail() {
   const location = useLocation();
   const post = location.state?.item;
   const [postComments, setPostComments] = useState();
+  const [totalPage, setTotalPage] = useState(1);
   const navigate = useNavigate();
   const { categoryCd, categoryName, content, firstSaveDt, firstSaveUser, hitCnt, postSeq, title, usageDate } =
     post || {};
@@ -50,7 +52,7 @@ export function PostDetail() {
   }, [data]);
 
   const getValueFromCommentArea = (data) => setUserComment(data);
-
+  const getClickedPageNumber = (clicked) => {};
   return (
     <div>
       <PageWrapper>
@@ -84,10 +86,12 @@ export function PostDetail() {
           />
           <CommentsList comments={postComments} />
         </Form>
-
-        <Button style={{ width: "320px" }} onClick={() => navigate(-1)}>
-          목록으로 돌아가기
-        </Button>
+        <DnPagination totalPage={totalPage} getClickedPageNumber={getClickedPageNumber} />
+        <BtnContainer>
+          <Button style={{ width: "320px" }} onClick={() => navigate(-1)}>
+            페이지 돌아가기
+          </Button>
+        </BtnContainer>
       </PageWrapper>
     </div>
   );
@@ -99,7 +103,7 @@ const PostHeader = styled.div(
   width: 100%;
   border-bottom: 1px solid ${theme.colors.neutrals_04};
   padding-bottom: 8px;
-  margin-bottom: 48px
+
 `
 );
 const PostTitle = styled.div`
@@ -134,4 +138,8 @@ const ContentContainer = styled.div(
 );
 const Form = styled.form`
   width: 100%;
+`;
+const BtnContainer = styled.div`
+  margin-top: 80px;
+  margin-bottom: 100px;
 `;

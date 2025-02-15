@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import useUserStore from "@/domains/auth/store/useUserStore";
 import usePostStore from "@/domains/post/store/usePostStore";
 import { useGetNoticeList } from "@/domains/post/hooks/useGetPostList";
 import { useRemovePosts } from "../hooks/useRemovePosts";
@@ -10,16 +9,17 @@ import { IconBtn } from "@/shared/components/buttons/IconBtn";
 import CheckboxSmall from "@/shared/components/checkbox/CheckboxSmall";
 import TrashIcon from "/src/assets/icons/secondary/trash.svg?react";
 import { OnlyCheckBox } from "@/shared/components/checkbox/CheckboxLabel";
-import { TableContainer, TableHeader, TableHeadText, TableBodyText, BdBtm, TextMg, Flex } from "./TableStyle";
+import { TableContainer, TableBodyText, BdBtm, TextMg, Flex } from "./TableStyle";
 import { PageTop } from "@/shared/components/layout/PageTopTitle";
 import { Button } from "@/shared/components/buttons/Button";
 import { DnPagination } from "./Pagination";
+import { NoTableHeader } from "./TableHeader";
+import { useGetUserId } from "../hooks/useGetUserId";
 
 export function Notice({ currentPath, pathName }) {
   const navigate = useNavigate();
-  const { user } = useUserStore();
-  const userId = user?.userData?.userId || null;
-  const { handleRemovePost } = useRemovePosts();
+  const { userId, userRole } = useGetUserId() || {};
+  const { handleRemovePost } = useRemovePosts("notice");
   const viewCountMutation = useViewCount();
   const [checkedItems, setCheckedItems] = useState({});
   const [changedPosts, setChangedPosts] = useState([]);
@@ -28,35 +28,36 @@ export function Notice({ currentPath, pathName }) {
   const [isUserPost, setUserPost] = useState();
   const [totalPage, setTotalPage] = useState(null);
   const { noticeData: categoryList } = usePostStore();
-
   useEffect(() => {
-    setIsAdmin(userId === "admin");
+    setIsAdmin(userRole === "ADMIN");
   }, []);
 
   const [getCategoryList, setCategoryList] = useState({
     searchParam: {
       page: 1,
       size: 5,
-      sortByHitCnt: true,
+      sortByHitCnt: false,
       sortByLatest: true,
       categoryCd: 1,
     },
   });
 
   const { data } = useGetNoticeList(getCategoryList);
-  useEffect(() => {
-    setTotalPage(data?.data?.totalPage);
-  }, [totalPage]);
+  const { data: postsData, totalPage: allPage } = data?.data || { data: [], totalPage: 0 };
 
   useEffect(() => {
-    const formattedPosts = categoryList?.map((post) => ({
+    setTotalPage(allPage);
+  }, [data]);
+
+  useEffect(() => {
+    const formattedPosts = postsData?.map((post) => ({
       ...post,
       firstSaveDt: post.firstSaveDt.split("T"),
     }));
     setChangedPosts(formattedPosts);
-    const filterUserPost = categoryList?.filter((post) => post?.firstSaveUser == userId);
+    const filterUserPost = postsData?.filter((post) => post?.firstSaveUser == userId);
     setUserPost(filterUserPost);
-  }, [getCategoryList]);
+  }, [postsData]);
 
   const handleCheckAllBox = () => {
     for (const data of isUserPost) {
@@ -66,6 +67,7 @@ export function Notice({ currentPath, pathName }) {
       }));
     }
   };
+
   const toggleCheckbox = (postSeq) => {
     setCheckedItems((prev) => ({ ...prev, [postSeq]: !prev[postSeq] }));
   };
@@ -77,28 +79,19 @@ export function Notice({ currentPath, pathName }) {
   };
   const handleListUpPosts = (e) => {
     const targetBtn = e.target.name;
+    const newSearchParam = {
+      sortByHitCnt: false,
+      sortByLatest: true,
+    };
+    if (targetBtn === "최신순") newSearchParam.sortByLatest = true;
+    if (targetBtn === "조회순") newSearchParam.sortByHitCnt = true;
+
     setCategoryList((prev) => ({
       ...prev,
-      searchParam: { ...prev.searchParam, sortByHitCnt: false, sortByLatest: false },
+      searchParam: { ...prev.searchParam, ...newSearchParam },
     }));
-
-    switch (targetBtn) {
-      case "최신순":
-        setCategoryList((prev) => ({
-          ...prev,
-          searchParam: { ...prev.searchParam, sortByLatest: true },
-        }));
-        break;
-      case "조회순":
-        setCategoryList((prev) => ({
-          ...prev,
-          searchParam: { ...prev.searchParam, sortByHitCnt: true },
-        }));
-        break;
-      default:
-        break;
-    }
   };
+
   const getClickedPageNumber = (clicked) => {
     const currentPage = getCategoryList.searchParam.page;
     let newPage;
@@ -123,7 +116,7 @@ export function Notice({ currentPath, pathName }) {
         <h2>공지사항</h2>
       </PageTop>
       <BtnsContainer>
-        <Button variant="secondary" size="small" onClick={() => navigate("/postnew")}>
+        <Button variant="secondary" size="small" onClick={() => (!userId ? navigate("/login") : navigate("/postnew"))}>
           글쓰기
         </Button>
         <Button variant="normal" size="small" state="outline" name="최신순" onClick={handleListUpPosts}>
@@ -133,6 +126,7 @@ export function Notice({ currentPath, pathName }) {
           조회순
         </Button>
       </BtnsContainer>
+
       <Flex>
         {isAdmin && (
           <>
@@ -153,27 +147,8 @@ export function Notice({ currentPath, pathName }) {
       </Flex>
 
       <TableContainer>
-        <TableHeader>
-          <tr>
-            <TableHeadText padding="20px" scope="col" />
-            <TableHeadText padding="20px" scope="col">
-              No.
-            </TableHeadText>
-            <TableHeadText scope="col" padding="auto" style={{ width: "100%" }}>
-              제목
-            </TableHeadText>
-            <TableHeadText padding="45px" scope="col">
-              작성자
-            </TableHeadText>
-            <TableHeadText padding="35px" scope="col">
-              작성일
-            </TableHeadText>
-            <TableHeadText padding="23px" scope="col">
-              조회
-            </TableHeadText>
-            <TableHeadText padding="20px" scope="col" />
-          </tr>
-        </TableHeader>
+        <NoTableHeader />
+
         {changedPosts?.length > 0 ? (
           <tbody>
             {changedPosts?.map((item, idx) => {

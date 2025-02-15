@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 import { CommunityTable } from "./CommunityTable";
 import { useGetPostList } from "@/domains/post/hooks/useGetPostList";
 import { Button } from "@/shared/components/buttons/Button";
-import usePostStore from "@/domains/post/store/usePostStore";
 import { communityTitles } from "../data/communityData";
 import { useGetUserId } from "../hooks/useGetUserId";
 
@@ -18,25 +17,26 @@ export function CommunityList() {
   const { currentCategory, setCurrentCategory } = useOutletContext();
   const [currentTitle, setCurrentTitle] = useState(currentCategory);
   const navigate = useNavigate();
-  const [totalPage, setTotalPage] = useState(null);
+  const [totalPage, setTotalPage] = useState();
   const PageTitle = communityTitles[currentTitle]?.title;
   const pageSubTitle = communityTitles[currentTitle]?.subtitle?.split("\n");
+
   const [getCategoryList, setCategoryList] = useState({
     searchParam: {
       page: 1,
       size: 15,
       sortByHitCnt: false,
-      sortByLatest: false,
+      sortByLatest: true,
       myPostsOnly: false,
       categoryCd: 1,
     },
   });
   const { data } = useGetPostList(getCategoryList);
-  const { postsData: categoryList } = usePostStore();
+  const { data: postsData, totalPage: allPage } = data?.data || { data: [], totalPage: 0 };
 
   useEffect(() => {
-    setTotalPage(data?.data?.totalPage);
-  }, [totalPage]);
+    setTotalPage(allPage);
+  }, [data]);
 
   const getCurrentPathTitle = () => {
     let selected = communityTitles.findIndex((communityTitle) => communityTitle.path.includes(currentPath));
@@ -63,7 +63,7 @@ export function CommunityList() {
 
     const newSearchParam = {
       sortByHitCnt: false,
-      sortByLatest: false,
+      sortByLatest: true,
       myPostsOnly: false,
     };
     if (targetBtn === "최신순") newSearchParam.sortByLatest = true;
@@ -127,7 +127,7 @@ export function CommunityList() {
           </BtnsContainer>
           <CommunityTable
             currentPath={currentPath}
-            postsData={categoryList}
+            postsData={postsData}
             getCategoryList={getCategoryList}
             totalPage={totalPage}
             getClickedPageNumber={getClickedPageNumber}
@@ -137,6 +137,7 @@ export function CommunityList() {
     </CommunityWrapper>
   );
 }
+
 const SubText = styled.span`
   line-height: 30px;
   font-size: 18px;

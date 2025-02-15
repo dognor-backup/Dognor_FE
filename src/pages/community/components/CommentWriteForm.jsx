@@ -68,7 +68,7 @@ border-radius: 6px
 const CommentInput = styled.textarea`
   all: unset;
   position: absolute;
-  top: 26px;
+  top: 28px;
   left: 8px;
   width: calc(100% - 16px);
   height: calc(100% - 28px);

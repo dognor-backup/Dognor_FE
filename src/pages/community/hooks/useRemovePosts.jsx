@@ -1,7 +1,7 @@
 import { useDeleteMutation } from "@/domains/post/hooks/useDeletePost";
 
-export function useRemovePosts() {
-  const deleteMutation = useDeleteMutation();
+export function useRemovePosts(division) {
+  const deleteMutation = useDeleteMutation(division);
   const handleRemovePost = (checked) => {
     const postSeq = [];
     for (const [key, value] of Object.entries(checked)) {

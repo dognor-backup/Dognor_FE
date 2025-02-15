@@ -3,7 +3,7 @@ import { PageTop, PageWrapper } from "@/shared/components/layout/PageTopTitle";
 import styled from "@emotion/styled";
 import { useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
-
+import { Spinner } from "@/shared/components/Spinner";
 export default function Community() {
   const [currentCategory, setCurrentCategory] = useState(0);
   const location = useLocation();
@@ -21,13 +21,16 @@ export default function Community() {
   ];
   const selectedBanner = BannerImages.find((banner) => banner.name === pathName);
   return (
-    <CommunityWrapper>
-      {selectedBanner && <BannerImg pathName={pathName} link={selectedBanner.img} />}
-      <PageWrapper>
-        <Notice pathName={pathName} />
-        <Outlet context={{ currentCategory, setCurrentCategory }} />
-      </PageWrapper>
-    </CommunityWrapper>
+    <>
+      <Spinner />
+      <CommunityWrapper>
+        {selectedBanner && <BannerImg pathName={pathName} link={selectedBanner.img} />}
+        <PageWrapper>
+          <Notice pathName={pathName} />
+          <Outlet context={{ currentCategory, setCurrentCategory }} />
+        </PageWrapper>
+      </CommunityWrapper>
+    </>
   );
 }
 const CommunityWrapper = styled.div`

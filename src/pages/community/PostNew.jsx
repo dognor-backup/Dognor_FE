@@ -14,7 +14,7 @@ import { useGetUserId } from "./hooks/useGetUserId";
 
 export function PostNew() {
   const { userRole } = useGetUserId() || {};
-  const isAdmin = userRole === "admin";
+  const isAdmin = userRole === "ADMIN";
   const { isAlertOpen, openAlert } = useAlertStore();
   let [selectedCategory, setSelectedCategory] = useState("");
   const uploadPostMutation = usePostContent(selectedCategory);
@@ -25,6 +25,7 @@ export function PostNew() {
     categoryCd: null,
     usageDate: "",
   });
+
   const categoryList = isAdmin
     ? [{ name: "공지사항", code: 1, path: "" }]
     : [
@@ -55,7 +56,7 @@ export function PostNew() {
   };
   const getValueFromSelect = (categoryCd) => {
     setCommunicationInput((prev) => ({ ...prev, categoryCd: Number(categoryCd) }));
-    setSelectedCategory(categoryList.find((el) => el.code == categoryCd).path);
+    setSelectedCategory(categoryList.find((el) => el.code == categoryCd).path || "");
   };
   const getCheckValues = () => setAgreePolicy((prev) => !prev);
 

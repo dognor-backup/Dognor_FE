@@ -5,7 +5,6 @@ import { useEffect } from "react";
 
 //카테고리 불러오기
 export function useGetPostList(getCategoryList) {
-  const { setPostData } = usePostStore();
   const { data, isLoading, isError } = useQuery({
     queryKey: ["post", getCategoryList],
     queryFn: async () => {
@@ -13,30 +12,16 @@ export function useGetPostList(getCategoryList) {
       return response;
     },
   });
-  useEffect(() => {
-    if (data?.data) {
-      const { msg, code, data: nestedData, totalPage } = data.data;
-      setPostData(nestedData);
-    }
-  }, [data, setPostData]);
   return { data, isLoading, isError };
 }
 
 //공지사항 불러오기
 export function useGetNoticeList(getCategoryList) {
-  const { setNoticeData } = usePostStore();
   const { data, isLoading, isError } = useQuery({
     queryKey: ["notice", getCategoryList],
     queryFn: async () => {
-      const response = await postSearch(getCategoryList);
-      return response;
+      return postSearch(getCategoryList);
     },
   });
-  useEffect(() => {
-    if (data?.data) {
-      const { msg, code, data: nestedData, totalPage } = data.data;
-      setNoticeData(nestedData);
-    }
-  }, [data, setNoticeData]);
   return { data, isLoading, isError };
 }

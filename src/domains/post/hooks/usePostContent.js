@@ -7,13 +7,13 @@ export const usePostContent = (selectedCategory) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { setPostData } = usePostStore();
-
   return useMutation({
     mutationFn: post,
-    onSuccess: async ({ success, data }) => {
+    onSuccess: async ({ success }) => {
       if (success) {
-        await queryClient.invalidateQueries({ queryKey: ["post"] });
-        const updatedPosts = queryClient.getQueryData(["post"]);
+        const queryKey = !selectedCategory ? "notice" : "post";
+        await queryClient.invalidateQueries({ queryKey: [queryKey] });
+        const updatedPosts = queryClient.getQueryData([queryKey]);
         setPostData(updatedPosts);
         navigate(`/community${selectedCategory && `/${selectedCategory}`}`, { replace: true });
       }

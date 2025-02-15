@@ -5,12 +5,14 @@ import Dots from "/src/assets/icons/gray/dots_vertical_g.svg?react";
 import useUserStore from "@/domains/auth/store/useUserStore";
 import { editComment } from "@/domains/post/api/post";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+
 const maxLength = 400;
 
 export function CommentsList({ comments = { data: [] } }) {
   const [checkTextLength, setTextLength] = useState(0);
   const [text, setText] = useState("");
   const [isEditing, setIsEditing] = useState(false);
+
   const { user } = useUserStore();
   const { userId } = user.userData || "undefined";
   const [currentEdit, setCurrentEdit] = useState(null);
@@ -40,14 +42,15 @@ export function CommentsList({ comments = { data: [] } }) {
     setCurrentEdit(null);
     editCommentMutation.mutate({ commentSeq, comment: text });
   };
+
   return (
     <>
       {comments.data?.map((item) => {
         const { comment, commentSeq, firstSaveDt, firstSaveUser } = item;
         const currentEditingComment = currentEdit === commentSeq && userId === firstSaveUser && isEditing;
         return (
-          <CommentWrapper key={commentSeq}>
-            <InputContainer>
+          <CommentWrapper key={commentSeq} isEditing={currentEditingComment ? true : false}>
+            <InputContainer isEditing={currentEditingComment ? true : false}>
               <UserName>{firstSaveUser}</UserName>
               {currentEditingComment ? (
                 <>
@@ -98,37 +101,37 @@ export function CommentsList({ comments = { data: [] } }) {
   );
 }
 
-const CommentWrapper = styled.article`
+const CommentWrapper = styled.article(
+  ({ theme, isEditing }) => `
   display: flex;
   gap: 8px;
-  margin: 16px 0;
-`;
+  padding: ${isEditing ? "16px 0" : "0"};
+  border-bottom: 1px solid ${theme.colors.neutrals_05};
+`
+);
 const UserName = styled.span(
   ({ theme }) => `
     font-size: 14px;
     font-weight: 700;
     color: ${theme.colors.neutrals_02};
-    position: absolute;
-    top: 8px;
-    left: 8px
+    line-height: 20px
 `
 );
 const InputContainer = styled.div(
-  ({ theme }) => `
-border: 1px solid ${theme.colors.neutrals_05};
-position: relative;
-width: calc(100% - 50px);
-height: 96px;
-border-radius: 6px
+  ({ theme, isEditing }) => `
+    border: 1px solid ${isEditing ? theme.colors.purple_normal_200 : "transparent"};
+    position: relative;
+    width: calc(100% - 50px);
+    height:${isEditing ? "96px" : "fit-content"};
+    border-radius: ${isEditing ? "6px" : "0px"};
+
+    padding: 6px 8px;
 `
 );
 const CommentInput = styled.textarea`
   all: unset;
-  position: absolute;
-  top: 26px;
-  left: 8px;
-  width: calc(100% - 16px);
-  height: calc(100% - 28px);
+  width: 100%;
+  height: calc(100% - 18px);
   padding: 0;
   margin: 0;
   font-size: 14px;
@@ -153,11 +156,7 @@ text-align: right
 `
 );
 const CommentValue = styled.div`
-  position: absolute;
-  top: 26px;
-  left: 8px;
   width: calc(100% - 16px);
-  height: calc(100% - 28px);
   padding: 0;
   margin: 0;
   font-size: 14px;
