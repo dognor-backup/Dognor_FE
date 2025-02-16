@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Button } from "@/shared/components/buttons/Button";
 import { IconBtn } from "@/shared/components/buttons/IconBtn";
 import Checkbox from "@/shared/components/checkbox/Checkbox";
@@ -5,16 +6,43 @@ import SubMenuBar from "@/shared/components/submenubar/SubMenuBar";
 import styled from "@emotion/styled";
 import DeleteIcon from "../../assets/icons/primary/Trash.svg?react";
 import { DnTable } from "@/shared/components/DnTable";
+import { useSearchCommunityPosts } from "./hooks/useSearchCommunityPosts";
+import useUserStore from "../auth/store/useUserStore";
+import { PostTable } from "@/shared/components/Table/PostTable";
 
 export default function MyPosts() {
+  const { user } = useUserStore();
+  const userSeq = user?.userData?.userSeq;
+  const [communityPosts, setCommunityPosts] = useState([]);
+  const { mutate, isLoading, error } =
+    useSearchCommunityPosts(setCommunityPosts);
+
+  useEffect(() => {
+    if (userSeq) {
+      mutate({
+        page: 1,
+        size: 15,
+        sortByHitCnt: false,
+        sortByLatest: true,
+        myPostsOnly: true, // 나의 게시글만 조회
+        categoryCd: null,
+      });
+    }
+  }, [userSeq, mutate]);
+
   const subMenuList = [
     { path: "all", label: "전체" },
     { path: "showcase", label: "헌혈견 자랑" },
     { path: "free", label: "자유게시판" },
     { path: "dognor", label: "병원 헌혈 후기" },
     { path: "thanks", label: "고마워요" },
-    { path: "needbloods", label: "헐액이 필요해요", color: "red" },
+    { path: "needbloods", label: "혈액이 필요해요", color: "red" },
   ];
+
+  if (!userSeq) return <div>로그인이 필요합니다.</div>;
+  if (isLoading) return <div>로딩 중...</div>;
+  if (error) return <div>에러 발생: {error.message}</div>;
+
   return (
     <MyPostsLayout>
       <MyPostsHeaderContainer>
@@ -38,7 +66,7 @@ export default function MyPosts() {
             <DeleteIcon />
           </IconBtn>
         </DeleteActionContainer>
-        <DnTable />
+        <PostTable data={communityPosts} />
       </TableContainer>
     </MyPostsLayout>
   );
