@@ -3,7 +3,7 @@ import HeartFilled from "../../../../assets/icons/secondary/heart_filled_seconda
 import Heart from "../../../../assets/icons/secondary/Heart_Secondary.svg?react";
 import { useState } from "react";
 import useUserStore from "@/domains/auth/store/useUserStore";
-import VerticalDotsSelect from "../postcard/VerticalDotsSelect";
+import VerticalDotsSelect from "../../VerticalDotsSelect";
 
 export default function TagCard({ handleDelete, handleEdit, campaign }) {
   const {

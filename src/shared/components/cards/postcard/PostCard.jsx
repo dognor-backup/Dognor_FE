@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import useUserStore from "@/domains/auth/store/useUserStore";
 import { useLikeDonationStory } from "@/domains/donationstory/hooks/useLikeDonationStory";
 import { useNavigate } from "react-router-dom";
-import VerticalDotsSelect from "./VerticalDotsSelect";
+import VerticalDotsSelect from "../../VerticalDotsSelect";
 
 export default function PostCard({ story, handleDelete, handleEdit }) {
   const {
