@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { useState, useEffect, useRef } from "react";
 import styled from "@emotion/styled";
-import DotsVertical from "../../../../assets/icons/black/dots_vertical.svg?react";
+import DotsVertical from "../../assets/icons/black/dots_vertical.svg?react";
 
 const SelectContainer = styled.div`
   position: relative;
