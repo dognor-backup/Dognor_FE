@@ -1,6 +1,6 @@
 import { Button } from "@/shared/components/buttons/Button";
 import styled from "@emotion/styled";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Dots from "/src/assets/icons/gray/dots_vertical_g.svg?react";
 import useUserStore from "@/domains/auth/store/useUserStore";
 import { editComment } from "@/domains/post/api/post";
@@ -8,11 +8,10 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const maxLength = 400;
 
-export function CommentsList({ comments = { data: [] } }) {
+export function CommentsList({ comments = { data: [] }, openAlert, deleteTargetSeq }) {
   const [checkTextLength, setTextLength] = useState(0);
   const [text, setText] = useState("");
   const [isEditing, setIsEditing] = useState(false);
-
   const { user } = useUserStore();
   const { userId } = user.userData || "undefined";
   const [currentEdit, setCurrentEdit] = useState(null);
@@ -89,7 +88,13 @@ export function CommentsList({ comments = { data: [] } }) {
                 >
                   수정
                 </Button>
-                <Button variant="normal" size="medium" state="default" style={{ height: "50%" }}>
+                <Button
+                  variant="normal"
+                  size="medium"
+                  state="default"
+                  style={{ height: "50%" }}
+                  onClick={() => openAlert("comment", commentSeq)}
+                >
                   삭제
                 </Button>
               </Flex>

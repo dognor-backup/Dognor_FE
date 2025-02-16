@@ -12,7 +12,7 @@ import { useGetUserId } from "../hooks/useGetUserId";
 export function CommunityList() {
   const location = useLocation();
   const { userId } = useGetUserId() || {};
-  const pathLink = location.pathname.split("/");
+  const pathLink = location?.pathname?.split("/");
   let currentPath = pathLink[pathLink.length - 1];
   const { currentCategory, setCurrentCategory } = useOutletContext();
   const [currentTitle, setCurrentTitle] = useState(currentCategory);
@@ -39,9 +39,9 @@ export function CommunityList() {
   }, [data]);
 
   const getCurrentPathTitle = () => {
-    let selected = communityTitles.findIndex((communityTitle) => communityTitle.path.includes(currentPath));
+    let selected = communityTitles.findIndex((communityTitle) => communityTitle?.path.includes(currentPath));
     setCurrentTitle(selected);
-    setCurrentCategory(communityTitles[selected].categoryCd);
+    setCurrentCategory(communityTitles[selected]?.categoryCd);
   };
 
   useEffect(() => {
@@ -53,7 +53,7 @@ export function CommunityList() {
       ...prev,
       searchParam: {
         ...prev.searchParam,
-        categoryCd: communityTitles[currentTitle].categoryCd,
+        categoryCd: communityTitles[currentTitle]?.categoryCd,
       },
     }));
   }, [location, currentTitle]);

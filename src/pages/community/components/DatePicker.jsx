@@ -8,12 +8,12 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import styled from "@emotion/styled";
 import { useEffect } from "react";
 
-export function DatePicker({ label, color, getSelectedDate }) {
-  const [date, setDate] = React.useState(null);
-
+export function DatePicker({ label, color, getSelectedDate, selected }) {
+  const [date, setDate] = React.useState(selected || null);
   useEffect(() => {
-    if (!date) return;
-    getSelectedDate(date);
+    if (date) {
+      getSelectedDate(date);
+    }
   }, [date]);
   return (
     <CalendarContainer>
@@ -29,7 +29,7 @@ export function DatePicker({ label, color, getSelectedDate }) {
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="start">
-          <Calendar mode="single" selected={date} onSelect={setDate} initialFocus />
+          <Calendar mode="single" selected={date} onSelect={(newDate) => setDate(newDate)} initialFocus />
         </PopoverContent>
       </Popover>
     </CalendarContainer>

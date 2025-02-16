@@ -1,5 +1,5 @@
 import { Notice } from "./components/NoticeTable";
-import { PageTop, PageWrapper } from "@/shared/components/layout/PageTopTitle";
+import { PageWrapper } from "@/shared/components/layout/PageTopTitle";
 import styled from "@emotion/styled";
 import { useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";

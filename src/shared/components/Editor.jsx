@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import ReactQuill, { Quill } from "react-quill";
 import ImageResize from "quill-image-resize";
 Quill.register("modules/ImageResize", ImageResize);
@@ -9,14 +9,14 @@ import { PageWrapper } from "@/shared/components/layout/PageTopTitle";
 import { InputForm } from "@/shared/components/input/InputForm";
 import useGetValueFromTextInput from "../hooks/useGetValueFromTextInput";
 
-function ReactQuillEditor({ children, getEditorText }) {
+function ReactQuillEditor({ children, getEditorText, title, content: PrevContent }) {
   const { inputValues, getInputValue } = useGetValueFromTextInput();
-  const [content, setContent] = useState("");
+  const [content, setContent] = useState(PrevContent || "");
   const quillRef = useRef(null);
   let quillObj = quillRef.current?.getEditor();
   const range = quillObj?.getSelection();
   const { mutate } = useConvetImg(quillObj, range);
-
+  const [titleValue, setTitleValue] = useState(title || "");
   const modules = useMemo(
     () => ({
       toolbar: {
@@ -39,9 +39,9 @@ function ReactQuillEditor({ children, getEditorText }) {
     }),
     []
   );
-  const onChagecontent = (e) => {
-    setContent(e);
-    getEditorText({ content, ...inputValues });
+  const onChagecontent = (content) => {
+    setContent(content);
+    getEditorText({ content, title: titleValue, ...inputValues });
   };
 
   function ImageHandler() {
@@ -63,6 +63,7 @@ function ReactQuillEditor({ children, getEditorText }) {
       }
     };
   }
+
   return (
     <form>
       <PageWrapper>
@@ -75,6 +76,8 @@ function ReactQuillEditor({ children, getEditorText }) {
             label="게시글 제목"
             status="normal"
             getInputValue={getInputValue}
+            value={titleValue}
+            onChange={(e) => setTitleValue(e.target.value)}
           />
         </InputContainer>
         <EditorContainer>
@@ -83,6 +86,7 @@ function ReactQuillEditor({ children, getEditorText }) {
             style={{ width: "100%", height: "600px", boxSizing: "borderbox" }}
             modules={modules}
             onChange={onChagecontent}
+            value={content}
           />
         </EditorContainer>
       </PageWrapper>

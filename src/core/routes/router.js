@@ -56,7 +56,7 @@ const router = createBrowserRouter([
       { path: "noticedetail/:id", Component: Home },
       { path: "postnew", Component: PostNew },
       { path: "postdetail/:id", Component: PostDetail },
-      { path: "postedit/:id", Component: Home },
+      { path: "postedit/:id", Component: PostNew },
       { path: "dashboard", Component: Home },
     ],
   },
