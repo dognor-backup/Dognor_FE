@@ -11,11 +11,11 @@ import {
 export function DnPagination({ totalPage = 1, getClickedPageNumber }) {
   const hideNumber = totalPage - 3;
   const maxNumber = totalPage > 3 ? totalPage - hideNumber : totalPage;
-
   const handleGetCurrentTaget = (e) => {
     const clicked = e.target.name;
     getClickedPageNumber(clicked);
   };
+
   return (
     <Pagination>
       <PaginationContent>

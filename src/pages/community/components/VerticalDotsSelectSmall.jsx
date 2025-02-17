@@ -1,15 +1,15 @@
 /** @jsxImportSource @emotion/react */
 import { useState, useEffect, useRef } from "react";
 import styled from "@emotion/styled";
-import DotsVertical from "/src/assets/icons/black/dots_vertical.svg?react";
+import Dots from "/src/assets/icons/gray/dots_vertical_g.svg?react";
 
 const SelectContainer = styled.div`
   position: relative;
-  display: inline-block;
+  display: flex;
+  height: inherit;
 `;
 
 const SelectTrigger = styled.button`
-  padding: 8px 16px;
   background-color: transparent;
   border: none;
   display: flex;
@@ -43,13 +43,12 @@ const SelectItem = styled.li`
   color: ${({ theme }) => theme.colors.neutrals_00};
   border-radius: 6px;
   cursor: pointer;
-
   &:hover {
     background-color: ${({ theme }) => theme.colors.neutrals_05};
   }
 `;
 
-const VerticalDotsSelect = ({ handleEdit, handleDelete, size }) => {
+const VerticalDotsSelectSmall = ({ handleEdit, handleDelete, size }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -80,7 +79,7 @@ const VerticalDotsSelect = ({ handleEdit, handleDelete, size }) => {
   return (
     <SelectContainer ref={dropdownRef}>
       <SelectTrigger onClick={toggleDropdown}>
-        <DotsVertical />
+        <Dots />
       </SelectTrigger>
 
       {isOpen && (
@@ -93,4 +92,4 @@ const VerticalDotsSelect = ({ handleEdit, handleDelete, size }) => {
   );
 };
 
-export default VerticalDotsSelect;
+export default VerticalDotsSelectSmall;

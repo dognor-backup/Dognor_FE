@@ -2,24 +2,24 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import usePostStore from "@/domains/post/store/usePostStore";
 import { useGetNoticeList } from "@/domains/post/hooks/useGetPostList";
-import { useRemovePosts } from "../hooks/useRemovePosts";
+import { useHandleDeletePosts } from "../hooks/useHandleDeletePosts";
+import { useGetUserId } from "../hooks/useGetUserId";
 import { useViewCount } from "../hooks/useViewCount";
-import styled from "@emotion/styled";
 import { IconBtn } from "@/shared/components/buttons/IconBtn";
 import CheckboxSmall from "@/shared/components/checkbox/CheckboxSmall";
-import TrashIcon from "/src/assets/icons/secondary/trash.svg?react";
 import { OnlyCheckBox } from "@/shared/components/checkbox/CheckboxLabel";
 import { TableContainer, TableBodyText, BdBtm, TextMg, Flex } from "./TableStyle";
 import { PageTop } from "@/shared/components/layout/PageTopTitle";
 import { Button } from "@/shared/components/buttons/Button";
-import { DnPagination } from "./Pagination";
+import { DnPagination } from "./DnPagination";
 import { NoTableHeader } from "./TableHeader";
-import { useGetUserId } from "../hooks/useGetUserId";
+import TrashIcon from "/src/assets/icons/secondary/trash.svg?react";
+import styled from "@emotion/styled";
 
 export function NoticeTable({ currentPath, pathName }) {
   const navigate = useNavigate();
   const { userId, userRole } = useGetUserId() || {};
-  const { handleRemovePost } = useRemovePosts("notice");
+  const { handleDeletePosts } = useHandleDeletePosts("notice");
   const viewCountMutation = useViewCount("notice");
   const [checkedItems, setCheckedItems] = useState({});
   const [changedPosts, setChangedPosts] = useState([]);
@@ -27,7 +27,7 @@ export function NoticeTable({ currentPath, pathName }) {
   const [isAdmin, setIsAdmin] = useState(false);
   const [isUserPost, setUserPost] = useState();
   const [totalPage, setTotalPage] = useState(null);
-  const { noticeData: categoryList } = usePostStore();
+
   useEffect(() => {
     setIsAdmin(userRole === "ADMIN");
   }, []);
@@ -74,9 +74,8 @@ export function NoticeTable({ currentPath, pathName }) {
   const handleMoveToPostDetail = (item) => {
     navigate(`/postdetail/${item.postSeq}`, { state: { item } });
   };
-  const handleSendCheckedPost = () => {
-    handleRemovePost(checkedItems);
-  };
+  const handleSendCheckedPost = () => handleDeletePosts(checkedItems);
+
   const handleListUpPosts = (e) => {
     const targetBtn = e.target.name;
     const newSearchParam = {
@@ -196,7 +195,9 @@ export function NoticeTable({ currentPath, pathName }) {
                   <TableBodyText>{firstSaveUser}</TableBodyText>
                   <TableBodyText>{firstSaveDt[0]}</TableBodyText>
                   <TableBodyText>{hitCnt}</TableBodyText>
-                  <TableBodyText onClick={(e) => e.stopPropagation()}>{isAdmin && <>...</>}</TableBodyText>
+                  <TableBodyText onClick={(e) => e.stopPropagation()}>
+                    {isAdmin && <VerticalDotsSelectSmall />}
+                  </TableBodyText>
                 </BdBtm>
               );
             })}

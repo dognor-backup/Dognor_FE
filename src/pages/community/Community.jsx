@@ -35,6 +35,7 @@ export default function Community() {
     </>
   );
 }
+
 const CommunityWrapper = styled.div`
   padding-bottom: 100px;
 `;

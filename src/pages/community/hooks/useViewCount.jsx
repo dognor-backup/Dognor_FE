@@ -6,9 +6,8 @@ export function useViewCount(key) {
   const invalidateUpdatePost = useInvalidateUpdatePost();
   return useMutation({
     mutationFn: viewCount,
-    onSuccess: async ({ success, data }) => {
+    onSuccess: async ({ success }) => {
       if (success) {
-        console.log("aaa", data);
         await invalidateUpdatePost(key);
       }
     },

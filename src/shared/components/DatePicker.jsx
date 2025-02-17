@@ -35,12 +35,12 @@ export function DatePicker({ label, color, getSelectedDate, selected }) {
     </CalendarContainer>
   );
 }
+
 const CalendarLabel = styled.div(
   ({ theme, color }) => `
-color: ${color === "red" ? "#F64D4D" : theme.colors.neutrals01};
-font-weight: 700;
-    margin-bottom: 10px;
-
+  color: ${color === "red" ? "#F64D4D" : theme.colors.neutrals01};
+  font-weight: 700;
+  margin-bottom: 10px;
 `
 );
 const CalendarContainer = styled.div`

@@ -21,12 +21,14 @@ export const TableHeadText = styled.th(
 export const TableBodyText = styled.td(
   ({ align, bold, pdtop }) => `
   text-align: ${align ? align : "center"};
-  padding: 8px 0;
+  padding: 0;
+  height: 40px;
   font-size: 14px;
+  vertical-align: middle;
   font-weight: ${bold ? bold : "400"};
   line-height: 24px;
   position: relative;
-  padding-top: ${pdtop}
+  padding-top: ${pdtop};
 `
 );
 export const BdBtm = styled.tr(
@@ -39,7 +41,6 @@ export const TextMg = styled.span`
 `;
 export const Flex = styled.div`
   display: flex;
-  width: 100%;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 4px;

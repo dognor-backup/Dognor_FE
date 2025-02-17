@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useRemovePosts } from "../hooks/useRemovePosts";
+import { useHandleDeletePosts } from "../hooks/useHandleDeletePosts";
 import { useViewCount } from "../hooks/useViewCount";
 import { useGetUserId } from "../hooks/useGetUserId";
 import { IconBtn } from "@/shared/components/buttons/IconBtn";
@@ -8,13 +8,14 @@ import { TableContainer, TableBodyText, BdBtm, TextMg, Flex } from "./TableStyle
 import CheckboxSmall from "@/shared/components/checkbox/CheckboxSmall";
 import { OnlyCheckBox } from "@/shared/components/checkbox/CheckboxLabel";
 import TrashIcon from "/src/assets/icons/secondary/trash.svg?react";
-import { DnPagination } from "./Pagination";
+import { DnPagination } from "./DnPagination";
 import { CoTableHeader } from "./TableHeader";
+import VerticalDotsSelectSmall from "./VerticalDotsSelectSmall";
 
 export function CommunityTable({ currentPath, postsData, totalPage, getClickedPageNumber }) {
   const navigate = useNavigate();
   const { userId } = useGetUserId() || {};
-  const { handleRemovePost } = useRemovePosts("post");
+  const { handleDeletePosts } = useHandleDeletePosts("post");
   const viewCountMutation = useViewCount("post");
   const [isUserPost, setUserPost] = useState(userId);
   const [checkedItems, setCheckedItems] = useState({});
@@ -33,7 +34,7 @@ export function CommunityTable({ currentPath, postsData, totalPage, getClickedPa
 
   const toggleCheckbox = (postSeq) => setCheckedItems((prev) => ({ ...prev, [postSeq]: !prev[postSeq] }));
   const handleMoveToPostDetail = (item) => navigate(`/postdetail/${item.postSeq}`, { state: { item } });
-  const handleSendCheckedPost = () => handleRemovePost(checkedItems);
+  const handleSendCheckedPost = () => handleDeletePosts(checkedItems);
 
   const handleCheckAllBox = () => {
     for (const data of isUserPost) {
@@ -114,7 +115,7 @@ export function CommunityTable({ currentPath, postsData, totalPage, getClickedPa
                   <TableBodyText>{firstSaveDt[0]}</TableBodyText>
                   <TableBodyText>{hitCnt}</TableBodyText>
                   <TableBodyText onClick={(e) => e.stopPropagation()}>
-                    {userId === firstSaveUser ? <>...</> : <></>}
+                    {userId === firstSaveUser ? <VerticalDotsSelectSmall /> : <></>}
                   </TableBodyText>
                 </BdBtm>
               );

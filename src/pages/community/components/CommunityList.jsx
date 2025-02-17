@@ -11,12 +11,12 @@ import { useGetUserId } from "../hooks/useGetUserId";
 
 export function CommunityList() {
   const location = useLocation();
+  const navigate = useNavigate();
   const { userId } = useGetUserId() || {};
   const pathLink = location?.pathname?.split("/");
   let currentPath = pathLink[pathLink.length - 1];
   const { currentCategory, setCurrentCategory } = useOutletContext();
   const [currentTitle, setCurrentTitle] = useState(currentCategory);
-  const navigate = useNavigate();
   const [totalPage, setTotalPage] = useState();
   const PageTitle = communityTitles[currentTitle]?.title;
   const pageSubTitle = communityTitles[currentTitle]?.subtitle?.split("\n");
@@ -31,6 +31,7 @@ export function CommunityList() {
       categoryCd: 1,
     },
   });
+
   const { data } = useGetPostList(getCategoryList);
   const { data: postsData, totalPage: allPage } = data?.data || { data: [], totalPage: 0 };
 
@@ -60,7 +61,6 @@ export function CommunityList() {
 
   const handleListUpPosts = (e) => {
     const targetBtn = e.target.name;
-
     const newSearchParam = {
       sortByHitCnt: false,
       sortByLatest: true,
@@ -111,7 +111,7 @@ export function CommunityList() {
             <Button
               variant="secondary"
               size="small"
-              onClick={() => (!userId ? navigate("/login") : navigate("/postnew"))}
+              onClick={() => (userId ? navigate("/postnew") : navigate("/login"))}
             >
               글쓰기
             </Button>

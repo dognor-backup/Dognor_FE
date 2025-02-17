@@ -1,10 +1,9 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import ReactQuillEditor from "@/shared/components/Editor";
 import { useEditPost, usePostContent } from "@/pages/community/hooks/usePostContent";
 import useAlertStore from "@/shared/hooks/useAlertStore";
 import Alert from "@/shared/components/alert/Alert";
-
-import { DatePicker } from "./components/DatePicker";
+import { DatePicker } from "../../shared/components/DatePicker";
 import styled from "@emotion/styled";
 import Checkbox from "@/shared/components/checkbox/Checkbox";
 import { Button } from "@/shared/components/buttons/Button";

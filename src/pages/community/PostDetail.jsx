@@ -8,7 +8,7 @@ import { deleteComment, searchComments, updateComment } from "@/domains/post/api
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { CommentsList } from "./components/CommentsList";
-import { DnPagination } from "./components/Pagination";
+import { DnPagination } from "./components/DnPagination";
 import VerticalDotsSelect from "./components/ToggleBtn";
 import { useGetUserId } from "./hooks/useGetUserId";
 import useAlertStore from "@/shared/hooks/useAlertStore";

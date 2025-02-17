@@ -1,8 +1,8 @@
 import { useDeletePostsMutation } from "@/pages/community/hooks/useDeletePost";
 
-export function useRemovePosts(division) {
-  const deleteMutation = useDeletePostsMutation(division);
-  const handleRemovePost = (checked) => {
+export function useHandleDeletePosts(key) {
+  const deleteMutation = useDeletePostsMutation(key);
+  const handleDeletePosts = (checked) => {
     const postSeq = [];
     for (const [key, value] of Object.entries(checked)) {
       if (value) {
@@ -11,5 +11,5 @@ export function useRemovePosts(division) {
     }
     deleteMutation.mutate(postSeq);
   };
-  return { handleRemovePost };
+  return { handleDeletePosts };
 }
