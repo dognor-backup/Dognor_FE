@@ -1,7 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
 import { postSearch } from "../api/post";
-import usePostStore from "../store/usePostStore";
-import { useEffect } from "react";
 
 //카테고리 불러오기
 export function useGetPostList(getCategoryList) {

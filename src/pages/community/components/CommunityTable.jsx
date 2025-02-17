@@ -15,7 +15,7 @@ export function CommunityTable({ currentPath, postsData, totalPage, getClickedPa
   const navigate = useNavigate();
   const { userId } = useGetUserId() || {};
   const { handleRemovePost } = useRemovePosts("post");
-  const viewCountMutation = useViewCount();
+  const viewCountMutation = useViewCount("post");
   const [isUserPost, setUserPost] = useState(userId);
   const [checkedItems, setCheckedItems] = useState({});
   const [changedPosts, setChangedPosts] = useState([]);

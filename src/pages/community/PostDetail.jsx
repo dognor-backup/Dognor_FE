@@ -13,7 +13,7 @@ import VerticalDotsSelect from "./components/ToggleBtn";
 import { useGetUserId } from "./hooks/useGetUserId";
 import useAlertStore from "@/shared/hooks/useAlertStore";
 import DelAlert from "@/shared/components/alert/DelAlert";
-import { useDeleteTargetPostMutation } from "@/domains/post/hooks/useDeletePost";
+import { useDeleteTargetPostMutation } from "@/pages/community/hooks/useDeletePost";
 
 export function PostDetail() {
   const navigate = useNavigate();

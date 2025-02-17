@@ -1,4 +1,3 @@
-import { data } from "react-router-dom";
 import { create } from "zustand";
 
 const usePostStore = create((set) => ({

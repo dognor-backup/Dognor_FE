@@ -14,7 +14,7 @@ export const useConvetImg = (quillObj, range) => {
       return response.data;
     },
     onSuccess: (data) => {
-      const { msg, code, data: nestedDate, totalPage } = data;
+      const { data: nestedDate, totalPage } = data;
       quillObj?.insertEmbed(range.index, "image", `${nestedDate}`);
     },
     onError: (error) => {

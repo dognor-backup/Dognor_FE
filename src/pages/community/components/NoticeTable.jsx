@@ -16,11 +16,11 @@ import { DnPagination } from "./Pagination";
 import { NoTableHeader } from "./TableHeader";
 import { useGetUserId } from "../hooks/useGetUserId";
 
-export function Notice({ currentPath, pathName }) {
+export function NoticeTable({ currentPath, pathName }) {
   const navigate = useNavigate();
   const { userId, userRole } = useGetUserId() || {};
   const { handleRemovePost } = useRemovePosts("notice");
-  const viewCountMutation = useViewCount();
+  const viewCountMutation = useViewCount("notice");
   const [checkedItems, setCheckedItems] = useState({});
   const [changedPosts, setChangedPosts] = useState([]);
   const [checked, setChecked] = useState(false);

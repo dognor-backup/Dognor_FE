@@ -1,17 +1,15 @@
+import { useMutation } from "@tanstack/react-query";
 import { viewCount } from "@/domains/post/api/post";
-import usePostStore from "@/domains/post/store/usePostStore";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useInvalidateUpdatePost } from "./useInvalidateUpdatePost";
 
-export function useViewCount() {
-  const queryClient = useQueryClient();
-  const { setPostData } = usePostStore();
+export function useViewCount(key) {
+  const invalidateUpdatePost = useInvalidateUpdatePost();
   return useMutation({
     mutationFn: viewCount,
     onSuccess: async ({ success, data }) => {
       if (success) {
-        await queryClient.invalidateQueries("post");
-        const updatedPosts = queryClient.getQueryData(["post"]);
-        setPostData(updatedPosts);
+        console.log("aaa", data);
+        await invalidateUpdatePost(key);
       }
     },
   });

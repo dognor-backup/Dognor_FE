@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import ReactQuillEditor from "@/shared/components/Editor";
-import { useEditPost, usePostContent } from "@/domains/post/hooks/usePostContent";
+import { useEditPost, usePostContent } from "@/pages/community/hooks/usePostContent";
 import useAlertStore from "@/shared/hooks/useAlertStore";
 import Alert from "@/shared/components/alert/Alert";
 
@@ -13,7 +13,7 @@ import { SelectBox } from "./components/SelectBox";
 import { useGetUserId } from "./hooks/useGetUserId";
 import { useLocation } from "react-router-dom";
 
-export function PostNew() {
+export function PostForm() {
   const location = useLocation();
   const post = location.state || {};
 
@@ -91,6 +91,7 @@ export function PostNew() {
             label="등록할 게시판"
             getValueFromSelect={getValueFromSelect}
             value={isEditing ? selectedCategory.toString() : selectedCategory}
+            placeholder="게시판을 선택해주세요"
           />
           {CommunicationInput.categoryCd === 6 && (
             <DatePicker label="혈액이 필요한 날짜" color="red" getSelectedDate={getSelectedDate} selected={usageDate} />

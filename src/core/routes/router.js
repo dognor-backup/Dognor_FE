@@ -12,7 +12,7 @@ import FindAccount from "@/pages/findaccount/FindAccount";
 import SignUp from "@/pages/signup/SignUp";
 import App from "@/App";
 
-import { PostNew } from "@/pages/community/PostNew";
+import { PostForm } from "@/pages/community/PostForm";
 import { CommunityList } from "@/pages/community/components/CommunityList";
 import { CommunityLink } from "@/pages/community/components/ComminityLink";
 import { PostDetail } from "@/pages/community/PostDetail";
@@ -53,14 +53,12 @@ const router = createBrowserRouter([
           { path: ":menu", Component: CommunityList },
         ],
       },
-      { path: "noticedetail/:id", Component: Home },
-      { path: "postnew", Component: PostNew },
+      { path: "postnew", Component: PostForm },
       { path: "postdetail/:id", Component: PostDetail },
-      { path: "postedit/:id", Component: PostNew },
-      { path: "dashboard", Component: Home },
+      { path: "postedit/:id", Component: PostForm },
     ],
   },
-
+  { path: "dashboard", Component: Home },
   { path: "findaccount", Component: FindAccount },
   { path: "guidepage", Component: Home },
   { path: "changepassword", Component: Home },

@@ -1,14 +1,15 @@
-import { Notice } from "./components/NoticeTable";
-import { PageWrapper } from "@/shared/components/layout/PageTopTitle";
-import styled from "@emotion/styled";
 import { useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
+import { NoticeTable } from "./components/NoticeTable";
+import { PageWrapper } from "@/shared/components/layout/PageTopTitle";
 import { Spinner } from "@/shared/components/Spinner";
+import styled from "@emotion/styled";
+
 export default function Community() {
-  const [currentCategory, setCurrentCategory] = useState(0);
   const location = useLocation();
   const pathSplit = location.pathname.split("/");
   const pathName = pathSplit[pathSplit.length - 1];
+  const [currentCategory, setCurrentCategory] = useState(0);
 
   const BannerImages = [
     { name: "all", img: "banner_all.svg" },
@@ -20,13 +21,14 @@ export default function Community() {
     { name: "thanks", img: "banner_thanks.svg" },
   ];
   const selectedBanner = BannerImages.find((banner) => banner.name === pathName);
+
   return (
     <>
       <Spinner />
       <CommunityWrapper>
         {selectedBanner && <BannerImg pathName={pathName} link={selectedBanner.img} />}
         <PageWrapper>
-          <Notice pathName={pathName} />
+          <NoticeTable pathName={pathName} />
           <Outlet context={{ currentCategory, setCurrentCategory }} />
         </PageWrapper>
       </CommunityWrapper>

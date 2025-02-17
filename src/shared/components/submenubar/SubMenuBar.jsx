@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 export default function SubMenuBar({ subMenuList }) {
@@ -12,6 +12,14 @@ export default function SubMenuBar({ subMenuList }) {
     const currentPath = location.pathname.split("/").slice(0, 2).join("/");
     navigate(`${currentPath}/${menu}`);
   };
+  const getInitialActiveMenu = () => {
+    const currentPath = location.pathname.split("/").slice(2).join("/");
+    return subMenuList.find((menu) => menu.path === currentPath)?.path || null;
+  };
+
+  useEffect(() => {
+    setActiveSubMenu(getInitialActiveMenu());
+  }, [location.pathname]);
 
   return (
     <SubMenuBarLayout>

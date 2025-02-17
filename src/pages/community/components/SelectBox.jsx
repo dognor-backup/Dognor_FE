@@ -1,7 +1,7 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import styled from "@emotion/styled";
 
-export function SelectBox({ label, getValueFromSelect, optionList, value }) {
+export function SelectBox({ label, getValueFromSelect, optionList, value, placeholder }) {
   const handleChange = (value) => {
     getValueFromSelect(value);
   };
@@ -10,7 +10,7 @@ export function SelectBox({ label, getValueFromSelect, optionList, value }) {
       <BoxLabel>{label}</BoxLabel>
       <Select onValueChange={handleChange} value={value}>
         <SelectTrigger className="w-full">
-          <SelectValue placeholder="게시판을 선택해주세요" />
+          <SelectValue placeholder={placeholder} />
         </SelectTrigger>
         <SelectContent>
           {optionList.map((item, index) => (
