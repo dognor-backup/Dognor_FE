@@ -33,9 +33,6 @@ export const searchCommunityPosts = async (params) => {
   }
 };
 
-/**
- * API 요청 실패 시 오류를 핸들링하는 함수
- */
 const handleAxiosError = (error) => {
   if (error.response) {
     const { status, data } = error.response;

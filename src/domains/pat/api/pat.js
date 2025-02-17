@@ -44,8 +44,6 @@ export const getPatInfo = async (userSeq, page, size) => {
     const response = await AxiosInstance.get(
       `/pat/info/${userSeq}/${page}/${size}`
     );
-    console.log(response.data, "📌 Fetched Patient Info");
-
     return { success: true, data: response.data };
   } catch (error) {
     return handleAxiosError(error);

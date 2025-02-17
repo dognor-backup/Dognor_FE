@@ -10,6 +10,7 @@ export const useSearchCommunityPosts = (setCommunityPosts) => {
     mutationFn: searchCommunityPosts,
     onSuccess: ({ success, data }) => {
       if (success) {
+        console.log(data);
         setCommunityPosts(data);
       } else {
         console.log("검색 실패");

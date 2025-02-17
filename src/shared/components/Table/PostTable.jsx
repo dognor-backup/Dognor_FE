@@ -28,20 +28,14 @@ export function PostTable({ data = [], emptyMessage = "게시글이 없습니다
             data.map((item, index) => (
               <TableRow key={item.communityPostSeq || index}>
                 <SmallTableCell>
-                  <Checkbox name={"selectBox"} size={"small"} />
+                  <Checkbox name={item.title} size={"small"} />
                 </SmallTableCell>
                 <TableCell>{index + 1}</TableCell>
-                <TableCell>{item.title}</TableCell> {/* 제목/내용 */}
-                <SmallTableCell>{item.category || "미정"}</SmallTableCell>{" "}
-                {/* 구분 */}
-                <SmallTableCell>{item.board || "없음"}</SmallTableCell>{" "}
-                {/* 게시판/병원 */}
-                <SmallTableCell>
-                  {item.createdAt || "날짜 없음"}
-                </SmallTableCell>{" "}
-                {/* 작성일 */}
-                <SmallTableCell>{item.hitCount ?? 0}</SmallTableCell>{" "}
-                {/* 조회수 */}
+                <TableCell>{item.title}</TableCell>
+                <SmallTableCell>{item.categoryName || "미정"}</SmallTableCell>
+                <SmallTableCell>{item.board || "없음"}</SmallTableCell>
+                <SmallTableCell>{item.usageDate || "날짜 없음"}</SmallTableCell>
+                <SmallTableCell>{item.hitCnt ?? 0}</SmallTableCell>
               </TableRow>
             ))
           ) : (
