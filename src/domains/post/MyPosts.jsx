@@ -1,43 +1,98 @@
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Button } from "@/shared/components/buttons/Button";
 import { IconBtn } from "@/shared/components/buttons/IconBtn";
 import Checkbox from "@/shared/components/checkbox/Checkbox";
 import SubMenuBar from "@/shared/components/submenubar/SubMenuBar";
 import styled from "@emotion/styled";
 import DeleteIcon from "../../assets/icons/primary/Trash.svg?react";
-import { DnTable } from "@/shared/components/DnTable";
 import { useSearchCommunityPosts } from "./hooks/useSearchCommunityPosts";
 import useUserStore from "../auth/store/useUserStore";
 import { PostTable } from "@/shared/components/Table/PostTable";
+import { DnPagination } from "@/shared/components/DnPagination";
+
+const subMenuList = [
+  { path: "all", label: "전체", categoryCd: 0 },
+  { path: "notice", label: "공지 사항", categoryCd: 1 },
+  { path: "free", label: "자유게시판", categoryCd: 2 },
+  { path: "dognor", label: "병원 헌혈 후기", categoryCd: 3 },
+  { path: "question", label: "질문있어요", categoryCd: 4 },
+  { path: "thanks", label: "고마워요", categoryCd: 5 },
+  { path: "needbloods", label: "혈액이 필요해요", categoryCd: 6, color: "red" },
+];
 
 export default function MyPosts() {
   const { user } = useUserStore();
   const userSeq = user?.userData?.userSeq;
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const [communityPosts, setCommunityPosts] = useState([]);
-  const { mutate, isLoading, error } =
-    useSearchCommunityPosts(setCommunityPosts);
+
+  const page = parseInt(searchParams.get("page")) || 1;
+  const categoryCd = parseInt(searchParams.get("category")) || 0;
+  const sortByLatest = searchParams.get("sortByLatest") === "true";
+  const sortByHitCnt = searchParams.get("sortByHitCnt") === "true";
+
+  const { mutate, isLoading, error } = useSearchCommunityPosts();
 
   useEffect(() => {
     if (userSeq) {
-      mutate({
-        page: 1,
-        size: 15,
-        sortByHitCnt: false,
-        sortByLatest: true,
-        myPostsOnly: true, // 나의 게시글만 조회
-        categoryCd: null,
-      });
+      mutate(
+        {
+          page,
+          size: 15,
+          sortByHitCnt,
+          sortByLatest,
+          myPostsOnly: true,
+          categoryCd: categoryCd === 0 ? null : categoryCd,
+        },
+        {
+          onSuccess: ({ success, data }) => {
+            if (success) {
+              console.log(data);
+              setCommunityPosts(data);
+            } else {
+              console.log("검색 실패");
+            }
+          },
+        }
+      );
     }
-  }, [userSeq, mutate]);
+  }, [userSeq, page, categoryCd, sortByLatest, sortByHitCnt, mutate]);
 
-  const subMenuList = [
-    { path: "all", label: "전체" },
-    { path: "showcase", label: "헌혈견 자랑" },
-    { path: "free", label: "자유게시판" },
-    { path: "dognor", label: "병원 헌혈 후기" },
-    { path: "thanks", label: "고마워요" },
-    { path: "needbloods", label: "혈액이 필요해요", color: "red" },
-  ];
+  const handlePageChange = (newPage) => {
+    setSearchParams((prevParams) => {
+      prevParams.set("page", newPage);
+      return prevParams;
+    });
+  };
+
+  const handleCategoryChange = (newCategoryCd) => {
+    setSearchParams((prevParams) => {
+      prevParams.set("category", newCategoryCd);
+      prevParams.set("page", "1");
+      return prevParams;
+    });
+  };
+
+  const handleSortChange = (sortType) => {
+    setSearchParams((prevParams) => {
+      if (sortType === "latest") {
+        prevParams.set("sortByLatest", "true");
+        prevParams.set("sortByHitCnt", "false");
+      } else if (sortType === "hitCnt") {
+        prevParams.set("sortByLatest", "false");
+        prevParams.set("sortByHitCnt", "true");
+      }
+      prevParams.set("page", "1");
+      return prevParams;
+    });
+  };
+
+  const totalPages =
+    communityPosts && Array.isArray(communityPosts)
+      ? Math.ceil(communityPosts.length / 15) || 1
+      : 1;
 
   if (!userSeq) return <div>로그인이 필요합니다.</div>;
   if (isLoading) return <div>로딩 중...</div>;
@@ -47,14 +102,29 @@ export default function MyPosts() {
     <MyPostsLayout>
       <MyPostsHeaderContainer>
         <MyPostsTitleText>나의 게시글</MyPostsTitleText>
-        <SubMenuBar subMenuList={subMenuList} useQueryParams={true} />
+        <SubMenuBar
+          subMenuList={subMenuList}
+          useQueryParams={true}
+          activeCategory={categoryCd}
+          onCategoryChange={handleCategoryChange}
+        />
       </MyPostsHeaderContainer>
       <TableContainer>
         <FilterBtnContainer>
-          <Button variant="normal" size="small" state="outline">
+          <Button
+            variant="normal"
+            size="small"
+            state="outline"
+            onClick={() => handleSortChange("latest")}
+          >
             최신순
           </Button>
-          <Button variant="normal" size="small" state="outline">
+          <Button
+            variant="normal"
+            size="small"
+            state="outline"
+            onClick={() => handleSortChange("hitCnt")}
+          >
             조회순
           </Button>
         </FilterBtnContainer>
@@ -68,6 +138,11 @@ export default function MyPosts() {
         </DeleteActionContainer>
         <PostTable data={communityPosts} />
       </TableContainer>
+      <DnPagination
+        currentPage={page}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
     </MyPostsLayout>
   );
 }

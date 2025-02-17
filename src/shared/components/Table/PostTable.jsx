@@ -1,3 +1,4 @@
+import { formatDate } from "@/shared/utils/formatDate";
 import Checkbox from "../checkbox/Checkbox";
 import VerticalDotsSelect from "../VerticalDotsSelect";
 import {
@@ -37,8 +38,10 @@ export function PostTable({ data = [], emptyMessage = "게시글이 없습니다
                 <TableCell>{index + 1}</TableCell>
                 <TableCell>{item.title}</TableCell>
                 <SmallTableCell>{item.categoryName || "미정"}</SmallTableCell>
-                <SmallTableCell>{item.board || "없음"}</SmallTableCell>
-                <SmallTableCell>{item.usageDate || "날짜 없음"}</SmallTableCell>
+                <SmallTableCell>{item.categoryName || "없음"}</SmallTableCell>
+                <SmallTableCell>
+                  {formatDate(item.firstSaveDt) || "날짜 없음"}
+                </SmallTableCell>
                 <SmallTableCell>{item.hitCnt ?? 0}</SmallTableCell>
                 <SmallTableCell>
                   <VerticalDotsSelect />
