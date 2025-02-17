@@ -1,4 +1,5 @@
 import Checkbox from "../checkbox/Checkbox";
+import VerticalDotsSelect from "../VerticalDotsSelect";
 import {
   TableWrapper,
   StyledTable,
@@ -11,16 +12,19 @@ import {
 } from "./baseTable";
 
 export function PostTable({ data = [], emptyMessage = "게시글이 없습니다." }) {
-  const headers = ["No.", "제목/내용", "구분", "게시판/병원", "작성일", "조회"];
-
   return (
     <TableWrapper>
       <StyledTable>
         <TableHeader>
           <TableRow>
-            {headers.map((header, index) => (
-              <TableHead key={index}>{header}</TableHead>
-            ))}
+            <TableHead width={32}></TableHead>
+            <TableHead width={70}>No.</TableHead>
+            <TableHead width={354}>제목/내용</TableHead>
+            <TableHead width={140}>구분</TableHead>
+            <TableHead width={140}>게시판/병원</TableHead>
+            <TableHead width={120}>작성일</TableHead>
+            <TableHead width={80}>조회</TableHead>
+            <TableHead width={40}></TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -36,11 +40,14 @@ export function PostTable({ data = [], emptyMessage = "게시글이 없습니다
                 <SmallTableCell>{item.board || "없음"}</SmallTableCell>
                 <SmallTableCell>{item.usageDate || "날짜 없음"}</SmallTableCell>
                 <SmallTableCell>{item.hitCnt ?? 0}</SmallTableCell>
+                <SmallTableCell>
+                  <VerticalDotsSelect />
+                </SmallTableCell>
               </TableRow>
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={headers.length} className="text-center">
+              <TableCell colSpan={8} className="text-center">
                 {emptyMessage}
               </TableCell>
             </TableRow>
