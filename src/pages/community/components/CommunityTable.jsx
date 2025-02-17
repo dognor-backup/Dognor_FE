@@ -4,13 +4,13 @@ import { useHandleDeletePosts } from "../hooks/useHandleDeletePosts";
 import { useViewCount } from "../hooks/useViewCount";
 import { useGetUserId } from "../hooks/useGetUserId";
 import { IconBtn } from "@/shared/components/buttons/IconBtn";
-import { TableContainer, TableBodyText, BdBtm, TextMg, Flex } from "./TableStyle";
+import { TableContainer, TableBodyText, BdBtm, TextMg, Flex } from "../../../shared/components/table/TableStyle";
 import CheckboxSmall from "@/shared/components/checkbox/CheckboxSmall";
 import { OnlyCheckBox } from "@/shared/components/checkbox/CheckboxLabel";
 import TrashIcon from "/src/assets/icons/secondary/trash.svg?react";
 import { DnPagination } from "./DnPagination";
 import { CoTableHeader } from "./TableHeader";
-import VerticalDotsSelectSmall from "./VerticalDotsSelectSmall";
+import useAlertStore from "@/shared/hooks/useAlertStore";
 
 export function CommunityTable({ currentPath, postsData, totalPage, getClickedPageNumber }) {
   const navigate = useNavigate();
@@ -114,9 +114,6 @@ export function CommunityTable({ currentPath, postsData, totalPage, getClickedPa
                   <TableBodyText>{firstSaveUser}</TableBodyText>
                   <TableBodyText>{firstSaveDt[0]}</TableBodyText>
                   <TableBodyText>{hitCnt}</TableBodyText>
-                  <TableBodyText onClick={(e) => e.stopPropagation()}>
-                    {userId === firstSaveUser ? <VerticalDotsSelectSmall /> : <></>}
-                  </TableBodyText>
                 </BdBtm>
               );
             })}

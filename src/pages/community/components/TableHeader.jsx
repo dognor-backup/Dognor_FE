@@ -1,4 +1,4 @@
-import { TableHeader, TableHeadText } from "./TableStyle";
+import { TableHeader, TableHeadText } from "../../../shared/components/table/TableStyle";
 export function CoTableHeader({ currentPath }) {
   return (
     <TableHeader>
@@ -29,7 +29,6 @@ export function CoTableHeader({ currentPath }) {
         <TableHeadText padding="23px" scope="col">
           조회
         </TableHeadText>
-        <TableHeadText padding="20px" scope="col" />
       </tr>
     </TableHeader>
   );
@@ -55,7 +54,6 @@ export function NoTableHeader() {
         <TableHeadText padding="23px" scope="col">
           조회
         </TableHeadText>
-        <TableHeadText padding="20px" scope="col" />
       </tr>
     </TableHeader>
   );

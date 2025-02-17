@@ -69,8 +69,6 @@ export function CommentsList({ comments = { data: [] }, openAlert, deleteTargetS
                 <CommentValue>{comment}</CommentValue>
               )}
             </InputContainer>
-            {/* 로그인한 유저와 댓글을 작성한 유저가 같으면 ... 버튼이 뜬다. */}
-            {/* 현재 수정중인 코멘트와 코멘트가 일치하지 않을 때  */}
             {userId === firstSaveUser && currentEdit !== commentSeq && (
               <DotsContainer onClick={() => handleEditClick({ commentSeq, comment })}>
                 <Dots style={{ cursor: "pointer" }} />
@@ -116,21 +114,20 @@ const CommentWrapper = styled.article(
 );
 const UserName = styled.span(
   ({ theme }) => `
-    font-size: 14px;
-    font-weight: 700;
-    color: ${theme.colors.neutrals_02};
-    line-height: 20px
+  font-size: 14px;
+  font-weight: 700;
+  color: ${theme.colors.neutrals_02};
+  line-height: 20px
 `
 );
 const InputContainer = styled.div(
   ({ theme, isEditing }) => `
-    border: 1px solid ${isEditing ? theme.colors.purple_normal_200 : "transparent"};
-    position: relative;
-    width: calc(100% - 50px);
-    height:${isEditing ? "96px" : "fit-content"};
-    border-radius: ${isEditing ? "6px" : "0px"};
-
-    padding: 6px 8px;
+  border: 1px solid ${isEditing ? theme.colors.purple_normal_200 : "transparent"};
+  position: relative;
+  width: calc(100% - 50px);
+  height:${isEditing ? "96px" : "fit-content"};
+  border-radius: ${isEditing ? "6px" : "0px"};
+  padding: 6px 8px;
 `
 );
 const CommentInput = styled.textarea`
@@ -152,12 +149,12 @@ const DotsContainer = styled.div`
 `;
 const CkLength = styled.span(
   ({ theme }) => `
-font-size: 14px;
-color: ${theme.colors.neutrals_02};
-position: absolute;
-right: 14px;
-top: 4px;
-text-align: right
+  font-size: 14px;
+  color: ${theme.colors.neutrals_02};
+  position: absolute;
+  right: 14px;
+  top: 4px;
+  text-align: right
 `
 );
 const CommentValue = styled.div`

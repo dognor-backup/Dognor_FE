@@ -48,21 +48,21 @@ const CommentWrapper = styled.article`
 `;
 const UserName = styled.span(
   ({ theme }) => `
-    font-size: 14px;
-    font-weight: 700;
-    color: ${theme.colors.neutrals_02};
-    position: absolute;
-    top: 8px;
-    left: 8px
+  font-size: 14px;
+  font-weight: 700;
+  color: ${theme.colors.neutrals_02};
+  position: absolute;
+  top: 8px;
+  left: 8px
 `
 );
 const InputContainer = styled.div(
   ({ theme }) => `
-border: 1px solid ${theme.colors.neutrals_05};
-position: relative;
-width: calc(100% - 50px);
-height: 96px;
-border-radius: 6px
+  border: 1px solid ${theme.colors.neutrals_05};
+  position: relative;
+  width: calc(100% - 50px);
+  height: 96px;
+  border-radius: 6px
 `
 );
 const CommentInput = styled.textarea`
@@ -82,11 +82,11 @@ const Flex = styled.div`
 `;
 const CkLength = styled.span(
   ({ theme }) => `
-font-size: 14px;
-color: ${theme.colors.neutrals_02};
-position: absolute;
-right: 14px;
-top: 4px;
-text-align: right
+  font-size: 14px;
+  color: ${theme.colors.neutrals_02};
+  position: absolute;
+  right: 14px;
+  top: 4px;
+  text-align: right
 `
 );

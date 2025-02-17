@@ -44,4 +44,5 @@ export const Flex = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-bottom: 4px;
+  width: 100%;
 `;

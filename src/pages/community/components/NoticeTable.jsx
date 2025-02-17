@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import usePostStore from "@/domains/post/store/usePostStore";
 import { useGetNoticeList } from "@/domains/post/hooks/useGetPostList";
 import { useHandleDeletePosts } from "../hooks/useHandleDeletePosts";
 import { useGetUserId } from "../hooks/useGetUserId";
@@ -8,7 +7,7 @@ import { useViewCount } from "../hooks/useViewCount";
 import { IconBtn } from "@/shared/components/buttons/IconBtn";
 import CheckboxSmall from "@/shared/components/checkbox/CheckboxSmall";
 import { OnlyCheckBox } from "@/shared/components/checkbox/CheckboxLabel";
-import { TableContainer, TableBodyText, BdBtm, TextMg, Flex } from "./TableStyle";
+import { TableContainer, TableBodyText, BdBtm, TextMg, Flex } from "../../../shared/components/table/TableStyle";
 import { PageTop } from "@/shared/components/layout/PageTopTitle";
 import { Button } from "@/shared/components/buttons/Button";
 import { DnPagination } from "./DnPagination";
@@ -195,9 +194,6 @@ export function NoticeTable({ currentPath, pathName }) {
                   <TableBodyText>{firstSaveUser}</TableBodyText>
                   <TableBodyText>{firstSaveDt[0]}</TableBodyText>
                   <TableBodyText>{hitCnt}</TableBodyText>
-                  <TableBodyText onClick={(e) => e.stopPropagation()}>
-                    {isAdmin && <VerticalDotsSelectSmall />}
-                  </TableBodyText>
                 </BdBtm>
               );
             })}
@@ -216,6 +212,7 @@ export function NoticeTable({ currentPath, pathName }) {
     </>
   );
 }
+
 const BtnsContainer = styled.div`
   text-align: left;
   display: flex;

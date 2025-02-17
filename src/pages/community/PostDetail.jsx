@@ -90,12 +90,10 @@ export function PostDetail() {
   });
 
   const handleEditPosting = () => {
-    console.log("수정");
     navigate(`/postedit/${postSeq}`, { state: post });
   };
 
   const handleConfirmDelete = () => {
-    console.log(deleteType, deleteTargetSeq);
     if (deleteType === "post") {
       deletePostMutation.mutate(postSeq);
       return navigate("/community/all");
