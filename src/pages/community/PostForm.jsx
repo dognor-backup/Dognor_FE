@@ -15,8 +15,6 @@ import { useLocation } from "react-router-dom";
 export function PostForm() {
   const location = useLocation();
   const post = location.state || {};
-
-  //post가 있으면 수정하기
   const { postSeq, title, content, categoryCd, usageDate } = post;
   const [isEditing, setIsEditing] = useState(() => Object.keys(post).length > 0);
   const { userRole } = useGetUserId() || {};
@@ -29,7 +27,9 @@ export function PostForm() {
     categoryCd: isEditing ? categoryCd : null,
     usageDate: "",
   });
+
   const [selectedCategory, setSelectedCategory] = useState(isEditing ? categoryCd : "");
+
   const categoryList = isAdmin
     ? [{ name: "공지사항", code: 1, path: "" }]
     : [
@@ -42,6 +42,7 @@ export function PostForm() {
   const [targetPath, setTargetPath] = useState(isEditing && categoryList.find((el) => el.code == categoryCd).path);
   const uploadPostMutation = usePostContent(targetPath);
   const editPostMutation = useEditPost(targetPath);
+
   const handleSubmit = (e) => {
     let isNotEmpty;
     const { title, content, categoryCd, usageDate } = CommunicationInput;
@@ -70,11 +71,11 @@ export function PostForm() {
     setCommunicationInput((prev) => ({ ...prev, usageDate }));
   };
   const getValueFromSelect = (categoryCd) => {
-    console.log("cd", categoryCd);
     setCommunicationInput((prev) => ({ ...prev, categoryCd: Number(categoryCd) }));
     setSelectedCategory(categoryList.find((el) => el.code == categoryCd).code?.toString());
     setTargetPath(categoryList.find((el) => el.code == categoryCd).path);
   };
+
   const getCheckValues = () => setAgreePolicy((prev) => !prev);
 
   return (

@@ -2,33 +2,23 @@ import { Button } from "@/shared/components/buttons/Button";
 import styled from "@emotion/styled";
 import { useState } from "react";
 import Dots from "/src/assets/icons/gray/dots_vertical_g.svg?react";
-import useUserStore from "@/domains/auth/store/useUserStore";
-import { editComment } from "@/domains/post/api/post";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useGetUserId } from "../hooks/useGetUserId";
+import { editCommentMutation } from "../hooks/useComment";
 
 const maxLength = 400;
 
-export function CommentsList({ comments = { data: [] }, openAlert, deleteTargetSeq }) {
+export function CommentsList({ comments, openAlert }) {
   const [checkTextLength, setTextLength] = useState(0);
   const [text, setText] = useState("");
   const [isEditing, setIsEditing] = useState(false);
-  const { user } = useUserStore();
-  const { userId } = user.userData || "undefined";
+  const { userId } = useGetUserId();
   const [currentEdit, setCurrentEdit] = useState(null);
-  const queryClient = useQueryClient();
+  const editComment = editCommentMutation();
+
   const handleChange = (e) => {
     setTextLength(text.length);
     setText(e.target.value);
   };
-
-  const editCommentMutation = useMutation({
-    mutationFn: editComment,
-    onSuccess: ({ success }) => {
-      if (success) {
-        queryClient.invalidateQueries(["comment"]);
-      }
-    },
-  });
 
   const handleEditClick = ({ commentSeq, comment }) => {
     setCurrentEdit(commentSeq);
@@ -39,12 +29,12 @@ export function CommentsList({ comments = { data: [] }, openAlert, deleteTargetS
   const handleUpdateComment = (commentSeq) => {
     setIsEditing(false);
     setCurrentEdit(null);
-    editCommentMutation.mutate({ commentSeq, comment: text });
+    editComment.mutate({ commentSeq, comment: text });
   };
 
   return (
     <>
-      {comments.data?.map((item) => {
+      {comments?.map((item) => {
         const { comment, commentSeq, firstSaveDt, firstSaveUser } = item;
         const currentEditingComment = currentEdit === commentSeq && userId === firstSaveUser && isEditing;
         return (

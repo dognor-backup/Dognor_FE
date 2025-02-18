@@ -1,12 +1,11 @@
-import useUserStore from "@/domains/auth/store/useUserStore";
 import { Button } from "@/shared/components/buttons/Button";
 import styled from "@emotion/styled";
 import { useEffect, useState } from "react";
+import { useGetUserId } from "../hooks/useGetUserId";
 const maxLength = 400;
 
-export function CommentWriteForm({ getValueFromCommentArea, updateCommentMutation }) {
-  const { user } = useUserStore();
-  const { userId } = user.userData || "undefined";
+export function CommentWriteForm({ getValueFromCommentArea, updateComment }) {
+  const { userId } = useGetUserId();
   const [checkTextLength, setTextLength] = useState(0);
   const [text, setText] = useState("");
 
@@ -17,11 +16,11 @@ export function CommentWriteForm({ getValueFromCommentArea, updateCommentMutatio
   };
 
   useEffect(() => {
-    if (updateCommentMutation.isSuccess) {
+    if (updateComment.isSuccess) {
       setText("");
       setTextLength(0);
     }
-  }, [updateCommentMutation.isSuccess]);
+  }, [updateComment.isSuccess]);
 
   return (
     <CommentWrapper>

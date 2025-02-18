@@ -1,19 +1,20 @@
-import { PageTop, PageWrapper } from "@/shared/components/layout/PageTopTitle";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import parse from "html-react-parser";
-import styled from "@emotion/styled";
+import { searchComments } from "@/domains/post/api/post";
+import { deleteCommentMutation, updateCommentMutation } from "./hooks/useComment";
+import { useGetUserId } from "./hooks/useGetUserId";
+import { useDeleteTargetPostMutation } from "@/pages/community/hooks/useDeletePost";
+import { PageTop, PageWrapper } from "@/shared/components/layout/PageTopTitle";
 import { Button } from "@/shared/components/buttons/Button";
 import { CommentWriteForm } from "./components/CommentWriteForm";
-import { deleteComment, searchComments, updateComment } from "@/domains/post/api/post";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
 import { CommentsList } from "./components/CommentsList";
 import { DnPagination } from "./components/DnPagination";
 import VerticalDotsSelect from "./components/ToggleBtn";
-import { useGetUserId } from "./hooks/useGetUserId";
 import useAlertStore from "@/shared/hooks/useAlertStore";
 import DelAlert from "@/shared/components/alert/DelAlert";
-import { useDeleteTargetPostMutation } from "@/pages/community/hooks/useDeletePost";
+import styled from "@emotion/styled";
 
 export function PostDetail() {
   const navigate = useNavigate();
@@ -24,45 +25,30 @@ export function PostDetail() {
   const [currentPage, setCurrentPage] = useState(1);
   const [postComments, setPostComments] = useState();
   const [totalPage, setTotalPage] = useState();
-  const queryClient = useQueryClient();
-  const { isAlertOpen, openAlert, closeAlert, deleteType, deleteTargetSeq } = useAlertStore();
   const deletePostMutation = useDeleteTargetPostMutation("post");
+  const deleteComment = deleteCommentMutation();
+  const updateComment = updateCommentMutation();
+  const { isAlertOpen, openAlert, deleteType, deleteTargetSeq } = useAlertStore();
   const { categoryCd, categoryName, content, firstSaveDt, firstSaveUser, hitCnt, postSeq, title, usageDate } =
     post || {};
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (userComment.length > 1) updateCommentMutation.mutate({ postSeq, comment: userComment });
+    if (userComment.length > 1) updateComment.mutate({ postSeq, comment: userComment });
   };
 
-  const { data } = useQuery({
+  const { data: commentList } = useQuery({
     queryKey: ["comment"],
     queryFn: () => searchComments({ postSeq, page: currentPage, size: 8 }),
   });
+
   useEffect(() => {
-    if (data?.data) {
-      const { data: commentsList, totalPage: allPage } = data?.data;
+    if (commentList?.success) {
+      const { data, totalPage: allPage } = commentList?.data;
       setTotalPage(allPage);
+      setPostComments(data);
     }
-  }, [data]);
-
-  const updateCommentMutation = useMutation({
-    mutationFn: updateComment,
-    onSuccess: async ({ success }) => {
-      if (success) {
-        await queryClient.invalidateQueries({ queryKey: ["comment"] });
-      }
-    },
-    onError: (error) => {
-      console.error(error);
-    },
-  });
-
-  useEffect(() => {
-    if (data?.success) {
-      setPostComments(data?.data);
-    }
-  }, [data]);
+  }, [commentList]);
 
   const getValueFromCommentArea = (data) => setUserComment(data);
 
@@ -79,19 +65,8 @@ export function PostDetail() {
       setCurrentPage(newPage);
     }
   };
-  const deleteCommentMutation = useMutation({
-    mutationFn: deleteComment,
-    onSuccess: ({ success }) => {
-      if (success) {
-        queryClient.removeQueries({ queryKey: ["comment"] });
-        queryClient.invalidateQueries({ queryKey: ["comment"] });
-      }
-    },
-  });
 
-  const handleEditPosting = () => {
-    navigate(`/postedit/${postSeq}`, { state: post });
-  };
+  const handleEditPosting = () => navigate(`/postedit/${postSeq}`, { state: post });
 
   const handleConfirmDelete = () => {
     if (deleteType === "post") {
@@ -99,7 +74,7 @@ export function PostDetail() {
       return navigate("/community/all");
     }
     if (deleteType === "comment") {
-      deleteCommentMutation.mutate(deleteTargetSeq);
+      return deleteComment.mutate(deleteTargetSeq);
     }
   };
 
@@ -148,16 +123,19 @@ export function PostDetail() {
           {
             <CountComments>
               <Mg20>댓글수</Mg20>
-              {postComments?.data?.length}
+              {postComments?.length}
             </CountComments>
           }
-          <CommentWriteForm
-            getValueFromCommentArea={getValueFromCommentArea}
-            updateCommentMutation={updateCommentMutation}
-          />
+          {userId && (
+            <CommentWriteForm getValueFromCommentArea={getValueFromCommentArea} updateComment={updateComment} />
+          )}
           <CommentsList comments={postComments} openAlert={openAlert} deleteTargetSeq={deleteTargetSeq} />
         </Form>
-        <DnPagination totalPage={totalPage} getClickedPageNumber={getClickedPageNumber} />
+        {postComments?.length < 1 ? (
+          <></>
+        ) : (
+          <DnPagination totalPage={totalPage} getClickedPageNumber={getClickedPageNumber} />
+        )}
         <BtnContainer>
           <Button style={{ width: "320px" }} onClick={() => navigate(-1)}>
             페이지 돌아가기
@@ -175,7 +153,6 @@ const PostHeader = styled.div(
   border-bottom: 1px solid ${theme.colors.neutrals_04};
   padding-bottom: 8px;
   position: relative;
-
 `
 );
 const PostTitle = styled.div`
