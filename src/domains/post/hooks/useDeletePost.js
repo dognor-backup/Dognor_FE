@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { deletePost, deleteSelectedPosts } from "../../../domains/post/api/post";
+import { deletePost, deleteSelectedPosts } from "../api/post";
 import { useInvalidateUpdatePost } from "./useInvalidateUpdatePost";
 
 export const useDeletePostsMutation = (key) => {

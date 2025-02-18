@@ -1,7 +1,7 @@
 import { Button } from "@/shared/components/buttons/Button";
 import styled from "@emotion/styled";
 import { useEffect, useState } from "react";
-import { useGetUserId } from "../hooks/useGetUserId";
+import { useGetUserId } from "../../../domains/post/hooks/useGetUserId";
 const maxLength = 400;
 
 export function CommentWriteForm({ getValueFromCommentArea, updateComment }) {

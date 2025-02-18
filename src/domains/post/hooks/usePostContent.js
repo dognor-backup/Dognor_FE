@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
-import { post, postEdit } from "../../../domains/post/api/post";
+import { post, postEdit } from "../api/post";
 import { useInvalidateUpdatePost } from "./useInvalidateUpdatePost";
 
 export const usePostContent = (key) => {

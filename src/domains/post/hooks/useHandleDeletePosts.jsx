@@ -1,4 +1,4 @@
-import { useDeletePostsMutation } from "@/pages/community/hooks/useDeletePost";
+import { useDeletePostsMutation } from "@/domains/post/hooks/useDeletePost";
 
 export function useHandleDeletePosts(key) {
   const deleteMutation = useDeletePostsMutation(key);

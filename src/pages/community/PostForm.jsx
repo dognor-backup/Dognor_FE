@@ -1,6 +1,6 @@
 import { useState } from "react";
 import ReactQuillEditor from "@/shared/components/Editor";
-import { useEditPost, usePostContent } from "@/pages/community/hooks/usePostContent";
+import { useEditPost, usePostContent } from "@/domains/post/hooks/usePostContent";
 import useAlertStore from "@/shared/hooks/useAlertStore";
 import Alert from "@/shared/components/alert/Alert";
 import { DatePicker } from "../../shared/components/DatePicker";
@@ -9,7 +9,7 @@ import Checkbox from "@/shared/components/checkbox/Checkbox";
 import { Button } from "@/shared/components/buttons/Button";
 import { PageTop } from "@/shared/components/layout/PageTopTitle";
 import { SelectBox } from "./components/SelectBox";
-import { useGetUserId } from "./hooks/useGetUserId";
+import { useGetUserId } from "../../domains/post/hooks/useGetUserId";
 import { useLocation } from "react-router-dom";
 
 export function PostForm() {

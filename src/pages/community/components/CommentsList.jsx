@@ -2,8 +2,8 @@ import { Button } from "@/shared/components/buttons/Button";
 import styled from "@emotion/styled";
 import { useState } from "react";
 import Dots from "/src/assets/icons/gray/dots_vertical_g.svg?react";
-import { useGetUserId } from "../hooks/useGetUserId";
-import { editCommentMutation } from "../hooks/useComment";
+import { useGetUserId } from "../../../domains/post/hooks/useGetUserId";
+import { editCommentMutation } from "../../../domains/post/hooks/useComment";
 
 const maxLength = 400;
 

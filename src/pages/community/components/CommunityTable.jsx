@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useHandleDeletePosts } from "../hooks/useHandleDeletePosts";
-import { useViewCount } from "../hooks/useViewCount";
-import { useGetUserId } from "../hooks/useGetUserId";
+import { useHandleDeletePosts } from "../../../domains/post/hooks/useHandleDeletePosts";
+import { useViewCount } from "../../../domains/post/hooks/useViewCount";
+import { useGetUserId } from "../../../domains/post/hooks/useGetUserId";
 import { IconBtn } from "@/shared/components/buttons/IconBtn";
 import { TableContainer, TableBodyText, BdBtm, TextMg, Flex } from "../../../shared/components/table/TableStyle";
 import CheckboxSmall from "@/shared/components/checkbox/CheckboxSmall";
