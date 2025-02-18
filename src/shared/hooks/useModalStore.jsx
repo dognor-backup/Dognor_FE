@@ -3,12 +3,12 @@ import { create } from "zustand";
 const useModalStore = create((set) => ({
   //state
   isModalOpen: false,
-  modalName: null,
+  modalname: null,
   //action
-  openModal: (name) => set({ isModalOpen: true, modalName: name }),
+  openModal: (name) => set({ isModalOpen: true, modalname: name }),
   closeModal: (onClose) => {
-    if (onClose) onClose(); 
-    set({ isModalOpen: false, modalName: null });
+    if (onClose) onClose();
+    set({ isModalOpen: false, modalname: null });
   },
 }));
 export default useModalStore;

@@ -36,7 +36,7 @@ AxiosFormDataInstance.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-const getAccessTokenFromDB = async () => {
+export const getAccessTokenFromDB = async () => {
   const db = await openDatabase();
   const transaction = db.transaction("AuthStore", "readonly");
   const store = transaction.objectStore("AuthStore");

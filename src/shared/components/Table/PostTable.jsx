@@ -1,5 +1,4 @@
 import { formatDate } from "@/shared/utils/formatDate";
-import Checkbox from "../checkbox/Checkbox";
 import VerticalDotsSelect from "../VerticalDotsSelect";
 import {
   TableWrapper,
@@ -11,8 +10,23 @@ import {
   TableCell,
   SmallTableCell,
 } from "./baseTable";
+import SelectableCheckbox from "./SelectableCheckbox";
 
-export function PostTable({ data = [], emptyMessage = "게시글이 없습니다." }) {
+export function PostTable({
+  data = [],
+  selectedPosts,
+  setSelectedPosts,
+  emptyMessage = "게시글이 없습니다.",
+}) {
+    
+  const handleCheckboxChange = (postSeq) => {
+    setSelectedPosts((prev) =>
+      prev.includes(postSeq)
+        ? prev.filter((id) => id !== postSeq)
+        : [...prev, postSeq]
+    );
+  };
+
   return (
     <TableWrapper>
       <StyledTable>
@@ -31,16 +45,20 @@ export function PostTable({ data = [], emptyMessage = "게시글이 없습니다
         <TableBody>
           {data.length > 0 ? (
             data.map((item, index) => (
-              <TableRow key={item.communityPostSeq || index}>
+              <TableRow key={item.writeDt || index}>
                 <SmallTableCell>
-                  <Checkbox name={item.title} size={"small"} />
+                  <SelectableCheckbox
+                    name={item.writeDt}
+                    checked={selectedPosts.includes(item.writeDt)}
+                    onChange={() => handleCheckboxChange(item.writeDt)}
+                  />
                 </SmallTableCell>
                 <TableCell>{index + 1}</TableCell>
                 <TableCell>{item.title}</TableCell>
-                <SmallTableCell>{item.categoryName || "미정"}</SmallTableCell>
+                <SmallTableCell>{item.division || "미정"}</SmallTableCell>
                 <SmallTableCell>{item.categoryName || "없음"}</SmallTableCell>
                 <SmallTableCell>
-                  {formatDate(item.firstSaveDt) || "날짜 없음"}
+                  {formatDate(item.writeDt) || "날짜 없음"}
                 </SmallTableCell>
                 <SmallTableCell>{item.hitCnt ?? 0}</SmallTableCell>
                 <SmallTableCell>

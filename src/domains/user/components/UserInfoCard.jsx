@@ -75,10 +75,10 @@ export default function UserInfoCard({ name, phone, email }) {
               BtnText="확인"
               size="small"
               isModalOpen={isModalOpen}
-              modalName="memberVerification"
+              modalname="memberVerification"
               onSubmit={handleMemberVerification}
               formName="memberVerification"
-              // onClose={resetInputValues}
+              onClose={resetInputValues}
             >
               <ModalTextContainer>
                 <InputForm

@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 
 export default function SubMenuBar({ subMenuList, useQueryParams = false }) {
   const [activeSubMenu, setActiveSubMenu] = useState(null);

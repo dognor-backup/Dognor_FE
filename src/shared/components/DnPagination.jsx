@@ -1,37 +1,48 @@
-import { 
-  Pagination, 
-  PaginationContent, 
-  PaginationItem, 
-  PaginationLink, 
-  PaginationPrevious, 
-  PaginationNext 
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
 } from "@/components/ui/pagination";
 
-export function DnPagination({ currentPage, totalPages, onPageChange }) {
+export function DnPagination({ totalPage = 1, getClickedPageNumber }) {
+  const hideNumber = totalPage - 3;
+  const maxNumber = totalPage > 3 ? totalPage - hideNumber : totalPage;
+  const handleGetCurrentTaget = (e) => {
+    const clicked = e.target.name;
+    getClickedPageNumber(clicked);
+  };
+
   return (
     <Pagination>
       <PaginationContent>
         <PaginationItem>
-          <PaginationPrevious 
-            onClick={() => onPageChange(Math.max(1, currentPage - 1))} 
-            disabled={currentPage === 1} 
-          />
+          <PaginationPrevious name="prev" onClick={handleGetCurrentTaget} />
         </PaginationItem>
-        {Array.from({ length: totalPages }, (_, index) => (
-          <PaginationItem key={index}>
-            <PaginationLink 
-              isActive={currentPage === index + 1} 
-              onClick={() => onPageChange(index + 1)}
-            >
-              {index + 1}
+        {[...Array(maxNumber)].map((_, i) => (
+          <PaginationItem key={i + 1}>
+            <PaginationLink name={i + 1} onClick={handleGetCurrentTaget}>
+              {i + 1}
             </PaginationLink>
           </PaginationItem>
         ))}
+        {totalPage > 3 ? (
+          <>
+            <PaginationItem>
+              <PaginationEllipsis />
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink name={totalPage} onClick={handleGetCurrentTaget}>
+                {totalPage}
+              </PaginationLink>
+            </PaginationItem>
+          </>
+        ) : null}
         <PaginationItem>
-          <PaginationNext 
-            onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))} 
-            disabled={currentPage === totalPages} 
-          />
+          <PaginationNext name="next" onClick={handleGetCurrentTaget} />
         </PaginationItem>
       </PaginationContent>
     </Pagination>

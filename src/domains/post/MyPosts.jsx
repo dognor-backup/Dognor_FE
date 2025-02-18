@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { Button } from "@/shared/components/buttons/Button";
 import { IconBtn } from "@/shared/components/buttons/IconBtn";
-import Checkbox from "@/shared/components/checkbox/Checkbox";
 import SubMenuBar from "@/shared/components/submenubar/SubMenuBar";
 import styled from "@emotion/styled";
 import DeleteIcon from "../../assets/icons/primary/Trash.svg?react";
-import { useSearchCommunityPosts } from "./hooks/useSearchCommunityPosts";
 import useUserStore from "../auth/store/useUserStore";
 import { PostTable } from "@/shared/components/Table/PostTable";
 import { DnPagination } from "@/shared/components/DnPagination";
+import CheckboxSmall from "@/shared/components/checkbox/CheckboxSmall";
+import { useSearchMyPost } from "../dashboard/hooks/useSearchMyPost";
+import { Spinner } from "@/shared/components/Spinner";
 
 const subMenuList = [
   { path: "all", label: "전체", categoryCd: 0 },
@@ -25,77 +26,80 @@ export default function MyPosts() {
   const { user } = useUserStore();
   const userSeq = user?.userData?.userSeq;
   const [searchParams, setSearchParams] = useSearchParams();
-
-  const [communityPosts, setCommunityPosts] = useState([]);
+  const navigate = useNavigate();
+  const [selectedPosts, setSelectedPosts] = useState([]); // ✅ 전체 선택 상태 관리
+  const [myPosts, setMyPosts] = useState([]);
 
   const page = parseInt(searchParams.get("page")) || 1;
   const categoryCd = parseInt(searchParams.get("category")) || 0;
   const sortByLatest = searchParams.get("sortByLatest") === "true";
   const sortByHitCnt = searchParams.get("sortByHitCnt") === "true";
+  const [totalPage, setTotalPage] = useState(1);
 
-  const { mutate, isLoading, error } = useSearchCommunityPosts();
+  const { mutate, isLoading, error } = useSearchMyPost();
 
   useEffect(() => {
     if (userSeq) {
       mutate(
         {
           page,
-          size: 15,
+          size: 10,
           sortByHitCnt,
           sortByLatest,
           myPostsOnly: true,
-          categoryCd: categoryCd === 0 ? null : categoryCd,
+          categoryCd: categoryCd || 0,
         },
         {
-          onSuccess: ({ success, data }) => {
-            if (success) {
-              console.log(data);
-              setCommunityPosts(data);
+          onSuccess: (response) => {
+            if (response && response.data) {
+              setMyPosts(response.data);
+              setSelectedPosts([]);
+              setTotalPage(response.totalPage);
             } else {
-              console.log("검색 실패");
+              console.error("게시글 검색 실패: 데이터 없음");
             }
+          },
+          onError: (error) => {
+            console.error("게시글 검색 실패:", error);
           },
         }
       );
     }
   }, [userSeq, page, categoryCd, sortByLatest, sortByHitCnt, mutate]);
 
-  const handlePageChange = (newPage) => {
-    setSearchParams((prevParams) => {
-      prevParams.set("page", newPage);
-      return prevParams;
-    });
+  const handleCheckAllBox = () => {
+    if (selectedPosts.length === myPosts.length) {
+      setSelectedPosts([]);
+    } else {
+      setSelectedPosts(myPosts.map((item) => item.writeDt));
+    }
   };
 
-  const handleCategoryChange = (newCategoryCd) => {
-    setSearchParams((prevParams) => {
-      prevParams.set("category", newCategoryCd);
-      prevParams.set("page", "1");
-      return prevParams;
-    });
+  const handleSendCheckedPost = () => {
+    console.log("삭제할 게시글:", selectedPosts);
   };
 
-  const handleSortChange = (sortType) => {
-    setSearchParams((prevParams) => {
-      if (sortType === "latest") {
-        prevParams.set("sortByLatest", "true");
-        prevParams.set("sortByHitCnt", "false");
-      } else if (sortType === "hitCnt") {
-        prevParams.set("sortByLatest", "false");
-        prevParams.set("sortByHitCnt", "true");
-      }
-      prevParams.set("page", "1");
-      return prevParams;
-    });
-  };
+  const getClickedPageNumber = (clicked) => {
+    const currentPage = getCategoryList.searchParam.page;
 
-  const totalPages =
-    communityPosts && Array.isArray(communityPosts)
-      ? Math.ceil(communityPosts.length / 15) || 1
-      : 1;
+    let newPage;
+    if (clicked === "next" && currentPage < totalPage) {
+      newPage = currentPage + 1;
+    } else if (clicked === "prev" && currentPage > 1) {
+      newPage = currentPage - 1;
+    } else {
+      newPage = Number(clicked);
+    }
+    if (newPage) {
+      setCategoryList((prev) => ({
+        ...prev,
+        searchParam: { ...prev.searchParam, page: newPage },
+      }));
+    }
+  };
 
   if (!userSeq) return <div>로그인이 필요합니다.</div>;
-  if (isLoading) return <div>로딩 중...</div>;
+  if (isLoading) return <Spinner />;
   if (error) return <div>에러 발생: {error.message}</div>;
 
   return (
@@ -104,9 +108,14 @@ export default function MyPosts() {
         <MyPostsTitleText>나의 게시글</MyPostsTitleText>
         <SubMenuBar
           subMenuList={subMenuList}
-          useQueryParams={true}
           activeCategory={categoryCd}
-          onCategoryChange={handleCategoryChange}
+          onCategoryChange={(newCategoryCd) => {
+            setSearchParams((prevParams) => {
+              prevParams.set("category", newCategoryCd);
+              prevParams.set("page", "1");
+              return prevParams;
+            });
+          }}
         />
       </MyPostsHeaderContainer>
       <TableContainer>
@@ -115,7 +124,14 @@ export default function MyPosts() {
             variant="normal"
             size="small"
             state="outline"
-            onClick={() => handleSortChange("latest")}
+            onClick={() => {
+              setSearchParams((prevParams) => {
+                prevParams.set("sortByLatest", "true");
+                prevParams.set("sortByHitCnt", "false");
+                prevParams.set("page", "1");
+                return prevParams;
+              });
+            }}
           >
             최신순
           </Button>
@@ -123,25 +139,46 @@ export default function MyPosts() {
             variant="normal"
             size="small"
             state="outline"
-            onClick={() => handleSortChange("hitCnt")}
+            onClick={() => {
+              setSearchParams((prevParams) => {
+                prevParams.set("sortByLatest", "false");
+                prevParams.set("sortByHitCnt", "true");
+                prevParams.set("page", "1");
+                return prevParams;
+              });
+            }}
           >
             조회순
           </Button>
         </FilterBtnContainer>
         <DeleteActionContainer>
           <CheckboxContainer>
-            <Checkbox name={"selectAll"} label={"전체 선택"} size={"small"} />
+            <CheckboxSmall
+              name="checkAll"
+              checked={
+                selectedPosts.length === myPosts.length && myPosts.length > 0
+              }
+              onChange={handleCheckAllBox}
+            />
           </CheckboxContainer>
-          <IconBtn variant="primary" size="medium" state="outline">
+          <IconBtn
+            variant="primary"
+            size="medium"
+            state="outline"
+            onClick={handleSendCheckedPost}
+          >
             <DeleteIcon />
           </IconBtn>
         </DeleteActionContainer>
-        <PostTable data={communityPosts} />
+        <PostTable
+          data={myPosts}
+          selectedPosts={selectedPosts}
+          setSelectedPosts={setSelectedPosts}
+        />
       </TableContainer>
       <DnPagination
-        currentPage={page}
-        totalPages={totalPages}
-        onPageChange={handlePageChange}
+        totalPages={totalPage}
+        getClickedPageNumber={getClickedPageNumber}
       />
     </MyPostsLayout>
   );
@@ -152,7 +189,6 @@ const MyPostsLayout = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 48px;
 `;
 
 const MyPostsTitleText = styled.p`
@@ -181,6 +217,7 @@ const FilterBtnContainer = styled.div`
   justify-content: flex-start;
   width: 100%;
   gap: 4px;
+  margin-top: 48px;
 `;
 
 const DeleteActionContainer = styled.div`

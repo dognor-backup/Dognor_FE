@@ -77,7 +77,7 @@ export default function AddPatInfoCard() {
       BtnText="추가하기"
       size=""
       isModalOpen={isModalOpen}
-      modalName="addDogInfo"
+      modalname="addDogInfo"
       formName="addDogInfo"
       onSubmit={handleSavePatInfo}
     >

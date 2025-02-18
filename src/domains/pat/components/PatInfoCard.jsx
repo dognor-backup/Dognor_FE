@@ -1,6 +1,5 @@
 import { useState } from "react";
 import styled from "@emotion/styled";
-import Spinner from "@/shared/components/Spinner";
 import { useGetPatInfo } from "../hooks/useGetPatInfo";
 import AddPatInfoCard from "./AddPatInfoCard";
 import useUserStore from "@/domains/auth/store/useUserStore";
@@ -11,6 +10,7 @@ import BlackPlus from "../../../assets/icons/black/plus.svg?react";
 import useModalStore from "@/shared/hooks/useModalStore";
 import { DnPagination } from "@/shared/components/DnPagination";
 import LineBoundary from "../../../assets/icons/line/Line1008-mypage.svg?react";
+import { Spinner } from "@/shared/components/Spinner";
 
 export default function PatInfoCard() {
   const { isModalOpen, openModal } = useModalStore();
