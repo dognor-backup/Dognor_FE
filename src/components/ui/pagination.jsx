@@ -1,6 +1,5 @@
 import * as React from "react";
 import { ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react";
-
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 
@@ -8,7 +7,7 @@ const Pagination = ({ className, ...props }) => (
   <nav
     role="navigation"
     aria-label="pagination"
-    className={cn("mx-auto flex w-full justify-center", className)}
+    className={cn("mx-auto flex w-full justify-center mt-10", className)}
     {...props}
   />
 );

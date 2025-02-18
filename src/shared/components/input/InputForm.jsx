@@ -11,6 +11,8 @@ import { Flex, Input, Label, Info, Layout } from "./inputStyle";
         infoMessage="Enter your email address"
         status="normal"
         getInputValue={getInputValue}
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
       />
 */
 export const InputForm = ({
@@ -23,10 +25,17 @@ export const InputForm = ({
   status,
   getInputValue,
   value,
+  onChange,
 }) => {
   const handleInputValue = (e) => {
     const { name, value } = e.target;
     getInputValue({ name, value });
+    if (onChange) {
+      onChange(e);
+    }
+    if (getInputValue) {
+      getInputValue({ name, value });
+    }
   };
 
   return (

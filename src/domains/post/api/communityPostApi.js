@@ -23,7 +23,10 @@ export const searchCommunityPosts = async (params) => {
       },
     };
 
-    const response = await AxiosInstance.post("/community/posts/search", requestBody);
+    const response = await AxiosInstance.post(
+      "/community/posts/search",
+      requestBody
+    );
 
     if (response.data.code === 200) {
       return { success: true, data: response.data.data };
@@ -38,7 +41,10 @@ const handleAxiosError = (error) => {
     const { status, data } = error.response;
     switch (status) {
       case 400:
-        return { success: false, msg: data.msg || "Bad Request: 잘못된 요청입니다." };
+        return {
+          success: false,
+          msg: data.msg || "Bad Request: 잘못된 요청입니다.",
+        };
       case 500:
         return { success: false, msg: "서버 오류가 발생했습니다." };
       default:

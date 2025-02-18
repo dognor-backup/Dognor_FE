@@ -14,6 +14,11 @@ import App from "@/App";
 import AccountSettings from "@/pages/accountsettings/AccountSettings";
 import IndividualUser from "@/pages/mypage/IndividualUser";
 
+import { PostForm } from "@/pages/community/PostForm";
+import { CommunityList } from "@/pages/community/components/CommunityList";
+import { CommunityLink } from "@/pages/community/components/ComminityLink";
+import { PostDetail } from "@/pages/community/PostDetail";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -45,25 +50,20 @@ const router = createBrowserRouter([
         path: "accountsettings",
         Component: AccountSettings,
       },
-
       {
         path: "community",
         Component: Community,
         children: [
-          { path: "noticedetail/:id", Component: Home },
-          {
-            path: "communitylist/:categoryid",
-            Component: Home,
-            children: [{ path: "postdetail/:id", Component: Home }],
-          },
-          { path: "postedit/:id", Component: Home },
-          { path: "postnew", Component: Home },
+          { index: true, Component: CommunityLink },
+          { path: ":menu", Component: CommunityList },
         ],
       },
-      { path: "dashboard", Component: Home },
+      { path: "postnew", Component: PostForm },
+      { path: "postdetail/:id", Component: PostDetail },
+      { path: "postedit/:id", Component: PostForm },
     ],
   },
-
+  { path: "dashboard", Component: Home },
   { path: "findaccount", Component: FindAccount },
   { path: "guidepage", Component: Home },
   { path: "changepassword", Component: Home },

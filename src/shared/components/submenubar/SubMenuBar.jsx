@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
-import { useState } from "react";
-import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function SubMenuBar({ subMenuList, useQueryParams = false }) {
   const [activeSubMenu, setActiveSubMenu] = useState(null);
@@ -18,6 +18,14 @@ export default function SubMenuBar({ subMenuList, useQueryParams = false }) {
       navigate(`${currentPath}/${menu}`);
     }
   };
+  const getInitialActiveMenu = () => {
+    const currentPath = location.pathname.split("/").slice(2).join("/");
+    return subMenuList.find((menu) => menu.path === currentPath)?.path || null;
+  };
+
+  useEffect(() => {
+    setActiveSubMenu(getInitialActiveMenu());
+  }, [location.pathname]);
 
   return (
     <SubMenuBarLayout>
@@ -62,7 +70,6 @@ const SubMenuBarBtn = styled.button`
   text-align: center;
   font-size: 18px;
   font-weight: ${({ isActive }) => (isActive ? 700 : 400)};
-
   &:hover {
     color: ${({ theme }) => theme.colors.purple_normal_100};
     font-weight: 700;

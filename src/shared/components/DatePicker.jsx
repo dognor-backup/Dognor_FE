@@ -12,14 +12,13 @@ import {
 import styled from "@emotion/styled";
 import { useEffect } from "react";
 
-export function DatePicker({ label, color, getSelectedDate }) {
-  const [date, setDate] = React.useState(null);
-
+export function DatePicker({ label, color, getSelectedDate, selected }) {
+  const [date, setDate] = React.useState(selected || null);
   useEffect(() => {
-    if (!date) return;
-    getSelectedDate(date);
+    if (date) {
+      getSelectedDate(date);
+    }
   }, [date]);
-
   return (
     <CalendarContainer>
       <CalendarLabel color={color}>{label}</CalendarLabel>
@@ -40,7 +39,7 @@ export function DatePicker({ label, color, getSelectedDate }) {
           <Calendar
             mode="single"
             selected={date}
-            onSelect={setDate}
+            onSelect={(newDate) => setDate(newDate)}
             initialFocus
           />
         </PopoverContent>
@@ -48,17 +47,16 @@ export function DatePicker({ label, color, getSelectedDate }) {
     </CalendarContainer>
   );
 }
+
 const CalendarLabel = styled.div(
   ({ theme, color }) => `
-color: ${color === "red" ? "#F64D4D" : theme.colors.neutrals01};
-font-weight: 700;
-    margin-bottom: 10px;
-
+  color: ${color === "red" ? "#F64D4D" : theme.colors.neutrals01};
+  font-weight: 700;
+  margin-bottom: 10px;
 `
 );
 const CalendarContainer = styled.div`
   display: flex;
   width: 100%;
   flex-direction: column;
-  margin-bottom: 10px;
 `;

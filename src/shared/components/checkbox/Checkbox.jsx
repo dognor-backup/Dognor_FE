@@ -1,19 +1,10 @@
 import styled from "@emotion/styled";
-import { useState } from "react";
 
-const Checkbox = ({ name, size, label }) => {
-  const [isChecked, setChecked] = useState(false);
-
+const Checkbox = ({ name, label, className, checked, weight, ...props }) => {
   return (
     <div>
-      <InputChk
-        type="checkbox"
-        name={name}
-        id={name}
-        onChange={() => setChecked((prev) => !prev)}
-        checked={isChecked}
-      />
-      <LabelChk htmlFor={name} checked={isChecked} size={size}>
+      <InputChk type="checkbox" name={name} id={name} checked={checked} {...props} />
+      <LabelChk htmlFor={name} checked={checked} weight={weight} className={className}>
         {label}
       </LabelChk>
     </div>
@@ -29,22 +20,22 @@ const InputChk = styled.input`
   overflow: hidden;
   appearance: none;
 `;
-const LabelChk = styled.label(({ theme, checked, size }) => ({
-  fontWeight: size === "small" ? 400 : 700,
-  display: "flex",
+const LabelChk = styled.label(({ theme, checked, weight }) => ({
+  fontWeight: weight === "regular" ? 400 : 700,
+  display: "inline-block",
   alignItems: "center",
   cursor: "pointer",
+  lineHeight: "1.5",
+  display: "flex",
   color: theme.colors.neutrals_01,
   "&::before": {
     content: '""',
     display: "inline-block",
     marginRight: "8px",
-    width: size === "small" ? "16px" : "24px",
-    height: size === "small" ? "16px" : "24px",
+    width: "24px",
+    height: "24px",
     border: `1px solid ${theme.colors.neutrals_01}`,
-    backgroundColor: !checked
-      ? theme.colors.neutrals_08
-      : theme.colors.neutrals_01,
+    backgroundColor: !checked ? theme.colors.neutrals_08 : theme.colors.neutrals_01,
     borderRadius: "4px",
     backgroundImage: "url('/src/assets/icons/Check_W.svg')",
     backgroundSize: "15px",

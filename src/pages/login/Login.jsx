@@ -55,9 +55,7 @@ export default function Login() {
               name="idInput"
               placeholder="아이디를 입력해주세요"
               label="아이디"
-              infoMessage={
-                validationError === "error" ? "다시 확인해주세요" : ""
-              }
+              infoMessage={validationError === "error" ? "다시 확인해주세요" : ""}
               status={validationError}
               getInputValue={getInputValue}
             />
@@ -69,9 +67,7 @@ export default function Login() {
               placeholder="비밀번호를 입력해주세요"
               label="비밀번호"
               type="password"
-              infoMessage={
-                validationError === "error" ? "다시 확인해주세요" : ""
-              }
+              infoMessage={validationError === "error" ? "다시 확인해주세요" : ""}
               status={validationError}
               getInputValue={getInputValue}
             />
@@ -84,9 +80,7 @@ export default function Login() {
               checked={rememberMe}
               onChange={() => setRememberMe((prev) => !prev)}
             />
-            <FindAccountLink to="/findaccount">
-              아이디 및 비밀번호 찾기
-            </FindAccountLink>
+            <FindAccountLink to="/findaccount">아이디 및 비밀번호 찾기</FindAccountLink>
           </LoginOptionsContainer>
         </InputContainer>
         <AuthButtonContainer>
