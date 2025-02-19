@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGetNoticeList } from "@/domains/post/hooks/useGetPostList";
 import { useHandleDeletePosts } from "../../../domains/post/hooks/useHandleDeletePosts";
-import { useGetUserId } from "../../../domains/post/hooks/useGetUserId";
+import { useGetUserId } from "../../../domains/auth/hooks/useGetUserId";
 import { useViewCount } from "../../../domains/post/hooks/useViewCount";
 import { IconBtn } from "@/shared/components/buttons/IconBtn";
 import CheckboxSmall from "@/shared/components/checkbox/CheckboxSmall";

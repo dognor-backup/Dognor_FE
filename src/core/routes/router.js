@@ -16,6 +16,8 @@ import { PostForm } from "@/pages/community/PostForm";
 import { CommunityList } from "@/pages/community/components/CommunityList";
 import { CommunityLink } from "@/pages/community/components/ComminityLink";
 import { PostDetail } from "@/pages/community/PostDetail";
+import { CampaignForm } from "@/pages/campaigns/CampaignForm";
+import { CampaignDetail } from "@/pages/campaigns/CampaignDeatil";
 
 const router = createBrowserRouter([
   {
@@ -33,13 +35,10 @@ const router = createBrowserRouter([
       {
         path: "campaigns",
         Component: Campaigns,
-        children: [
-          { path: ":id", Component: Home },
-          { path: "edit/:id", Component: Home },
-          { path: "new", Component: Home },
-        ],
       },
-
+      { path: "campaigns/postnew", Component: CampaignForm },
+      { path: "campaign/:id", Component: CampaignDetail },
+      { path: "campaignedit/:id", Component: CampaignForm },
       {
         path: "mypage",
         Component: MyPage,

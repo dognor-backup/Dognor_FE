@@ -1,6 +1,6 @@
 import { Button } from "@/shared/components/buttons/Button";
 import { useNavigate, useOutletContext } from "react-router-dom";
-import { useGetUserId } from "../../../domains/post/hooks/useGetUserId";
+import { useGetUserId } from "../../../domains/auth/hooks/useGetUserId";
 import styled from "@emotion/styled";
 import Hospital from "/src/assets/icons/subicon/local_hospital.svg?react";
 import Thanks from "/src/assets/icons/subicon/diversity_4.svg?react";

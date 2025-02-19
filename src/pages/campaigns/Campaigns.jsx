@@ -1,3 +1,5 @@
+import { Cards } from "./components/Cards";
+
 export default function Campaigns() {
-  return <div>campaigns</div>;
+  return <Cards></Cards>;
 }
