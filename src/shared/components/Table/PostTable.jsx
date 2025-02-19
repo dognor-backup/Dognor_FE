@@ -1,5 +1,4 @@
 import { formatDate } from "@/shared/utils/formatDate";
-import VerticalDotsSelect from "../VerticalDotsSelect";
 import {
   TableWrapper,
   StyledTable,
@@ -18,7 +17,6 @@ export function PostTable({
   setSelectedPosts,
   emptyMessage = "게시글이 없습니다.",
 }) {
-    
   const handleCheckboxChange = (postSeq) => {
     setSelectedPosts((prev) =>
       prev.includes(postSeq)
@@ -61,14 +59,11 @@ export function PostTable({
                   {formatDate(item.writeDt) || "날짜 없음"}
                 </SmallTableCell>
                 <SmallTableCell>{item.hitCnt ?? 0}</SmallTableCell>
-                <SmallTableCell>
-                  <VerticalDotsSelect />
-                </SmallTableCell>
               </TableRow>
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={8} className="text-center">
+              <TableCell colSpan={8} className="text-center" height={"40px"}>
                 {emptyMessage}
               </TableCell>
             </TableRow>

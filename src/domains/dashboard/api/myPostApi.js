@@ -5,10 +5,10 @@ export const searchMyPost = async (params) => {
     const requestData = {
       postsSearchParam: {
         page: params.page || 1,
-        size: params.size || 10,
+        size: params.size || 15,
         sortByHitCnt: params.sortByHitCnt ?? false,
         sortByLatest: params.sortByLatest ?? true,
-        categoryCd: params.categoryCd > 0 ? params.categoryCd : null,
+        categoryCd: params.categoryCd || 0,
         postType: params.postType || "all",
       },
     };

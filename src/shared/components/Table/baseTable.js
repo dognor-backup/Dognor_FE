@@ -8,7 +8,7 @@ export const TableWrapper = styled.div`
 export const StyledTable = styled.table`
   width: 100%;
   border-collapse: collapse;
-  table-layout: auto; 
+  table-layout: auto;
 `;
 
 export const TableHeader = styled.thead`
@@ -23,7 +23,7 @@ export const TableRow = styled.tr`
 `;
 
 export const TableHead = styled.th`
-  padding: 16px 16px; 
+  padding: 16px 16px;
   text-align: center;
   font-size: 18px;
   font-weight: 700;
@@ -32,14 +32,13 @@ export const TableHead = styled.th`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-
-  ${({ width }) => width && `width: ${width}px;`} 
+  ${({ width }) => width && `width: ${width}px;`}
 `;
 
 export const TableBody = styled.tbody``;
 
 export const TableCell = styled.td`
-  padding: 0 16px; 
+  padding: 0 16px;
   text-align: center;
   font-size: 14px;
   font-weight: 400;
@@ -49,11 +48,11 @@ export const TableCell = styled.td`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  ${({ width }) => width && `width: ${width}px;`} 
+  ${({ width }) => width && `width: ${width}px;`}
 `;
 
 export const SmallTableCell = styled.td`
-  padding: 0 16px; 
+  padding: 8px 16px;
   text-align: center;
   font-size: 14px;
   font-weight: 400;
@@ -63,5 +62,5 @@ export const SmallTableCell = styled.td`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  ${({ width }) => width && `width: ${width}px;`} 
+  ${({ width }) => width && `width: ${width}px;`}
 `;

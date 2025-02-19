@@ -27,14 +27,19 @@ export default function MyPosts() {
   const userSeq = user?.userData?.userSeq;
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
-  const [selectedPosts, setSelectedPosts] = useState([]); // ✅ 전체 선택 상태 관리
+  const [selectedPosts, setSelectedPosts] = useState([]);
   const [myPosts, setMyPosts] = useState([]);
+  const [totalPage, setTotalPage] = useState(1);
+
+  const currentCategoryPath = searchParams.get("myPosts") || "all";
+  const currentCategory =
+    subMenuList.find((item) => item.path === currentCategoryPath)?.categoryCd ||
+    0;
 
   const page = parseInt(searchParams.get("page")) || 1;
-  const categoryCd = parseInt(searchParams.get("category")) || 0;
   const sortByLatest = searchParams.get("sortByLatest") === "true";
   const sortByHitCnt = searchParams.get("sortByHitCnt") === "true";
-  const [totalPage, setTotalPage] = useState(1);
+  const postType = currentCategory === 0 ? "all" : "community";
 
   const { mutate, isLoading, error } = useSearchMyPost();
 
@@ -43,15 +48,17 @@ export default function MyPosts() {
       mutate(
         {
           page,
-          size: 10,
+          size: 14,
           sortByHitCnt,
           sortByLatest,
           myPostsOnly: true,
-          categoryCd: categoryCd || 0,
+          categoryCd: currentCategory,
+          postType,
         },
         {
           onSuccess: (response) => {
             if (response && response.data) {
+              console.log(response.data);
               setMyPosts(response.data);
               setSelectedPosts([]);
               setTotalPage(response.totalPage);
@@ -65,7 +72,25 @@ export default function MyPosts() {
         }
       );
     }
-  }, [userSeq, page, categoryCd, sortByLatest, sortByHitCnt, mutate]);
+  }, [
+    userSeq,
+    page,
+    currentCategory,
+    sortByLatest,
+    sortByHitCnt,
+    mutate,
+    postType,
+  ]);
+
+  const handleCategoryChange = (newCategoryPath) => {
+    setSearchParams((prevParams) => {
+      prevParams.set("myPosts", newCategoryPath);
+      prevParams.set("sortByLatest", "false");
+      prevParams.set("sortByHitCnt", "false");
+      prevParams.set("page", "1");
+      return prevParams;
+    });
+  };
 
   const handleCheckAllBox = () => {
     if (selectedPosts.length === myPosts.length) {
@@ -77,25 +102,24 @@ export default function MyPosts() {
 
   const handleSendCheckedPost = () => {
     console.log("삭제할 게시글:", selectedPosts);
+    console.log(totalPage);
   };
 
   const getClickedPageNumber = (clicked) => {
-    const currentPage = getCategoryList.searchParam.page;
+    let newPage = page;
 
-    let newPage;
-    if (clicked === "next" && currentPage < totalPage) {
-      newPage = currentPage + 1;
-    } else if (clicked === "prev" && currentPage > 1) {
-      newPage = currentPage - 1;
+    if (clicked === "next" && page < totalPage) {
+      newPage = page + 1;
+    } else if (clicked === "prev" && page > 1) {
+      newPage = page - 1;
     } else {
       newPage = Number(clicked);
     }
-    if (newPage) {
-      setCategoryList((prev) => ({
-        ...prev,
-        searchParam: { ...prev.searchParam, page: newPage },
-      }));
-    }
+
+    setSearchParams((prevParams) => {
+      prevParams.set("page", newPage);
+      return prevParams;
+    });
   };
 
   if (!userSeq) return <div>로그인이 필요합니다.</div>;
@@ -108,14 +132,9 @@ export default function MyPosts() {
         <MyPostsTitleText>나의 게시글</MyPostsTitleText>
         <SubMenuBar
           subMenuList={subMenuList}
-          activeCategory={categoryCd}
-          onCategoryChange={(newCategoryCd) => {
-            setSearchParams((prevParams) => {
-              prevParams.set("category", newCategoryCd);
-              prevParams.set("page", "1");
-              return prevParams;
-            });
-          }}
+          useQueryParams={true}
+          activeCategory={currentCategoryPath}
+          onCategoryChange={handleCategoryChange}
         />
       </MyPostsHeaderContainer>
       <TableContainer>
@@ -155,6 +174,7 @@ export default function MyPosts() {
           <CheckboxContainer>
             <CheckboxSmall
               name="checkAll"
+              label={"전체 선택"}
               checked={
                 selectedPosts.length === myPosts.length && myPosts.length > 0
               }
@@ -177,7 +197,7 @@ export default function MyPosts() {
         />
       </TableContainer>
       <DnPagination
-        totalPages={totalPage}
+        totalPage={totalPage}
         getClickedPageNumber={getClickedPageNumber}
       />
     </MyPostsLayout>
@@ -223,6 +243,7 @@ const FilterBtnContainer = styled.div`
 const DeleteActionContainer = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
 `;
 
 const CheckboxContainer = styled.div`
