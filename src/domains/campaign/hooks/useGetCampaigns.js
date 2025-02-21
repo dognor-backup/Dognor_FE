@@ -1,13 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { getCampaigns } from "../api/campaign";
 
-export const useGetCampaigns = (setCampaignList) => {
+export const useGetCampaigns = (postdata) => {
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["campaign"],
+    queryKey: ["campaign", postdata],
     queryFn: async () => {
-      const response = await getCampaigns(setCampaignList);
-      console.log("캠페인", response);
-      return setCampaignList(response);
+      const response = await getCampaigns(postdata);
+      return response;
     },
   });
   return { data, isLoading, isError };

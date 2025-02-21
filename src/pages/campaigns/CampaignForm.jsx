@@ -7,30 +7,80 @@ import { InputForm } from "@/shared/components/input/InputForm";
 import { InputBtn } from "@/shared/components/input/InputBtn";
 import { DatePicker } from "@/shared/components/DatePicker";
 import { SelectBox } from "@/shared/components/dropbox/SelectBox";
+import { useMutation } from "@tanstack/react-query";
+import { saveCampaign } from "@/domains/campaign/api/campaign";
+import { formatDate } from "./hooks/formatDate";
+import { useNavigate } from "react-router-dom";
 
 export function CampaignForm() {
   const [isEditing, setIsEditing] = useState(false);
   const fileInputRef = useRef();
-  const handleSubmit = () => {};
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [post, setPost] = useState({
+    title: "",
+    detail: "",
+    strDate: "",
+    endDate: "",
+    keyword1: "",
+    keyword2: "",
+    keyword3: "",
+  });
+  const navigate = useNavigate();
   const getEditorText = ({ title, content }) => {
-    console.log(title, content);
+    setPost((prev) => ({ ...prev, title, detail: content }));
   };
-  const getInputValue = (value) => {
-    console.log(value);
+  const [fileName, setFileName] = useState("");
+  const getInputValue = ({ name, value }) => {
+    setPost((prev) => ({ ...prev, [name]: value }));
   };
+
   const campaign = ["캠페인"];
-  const getSelectedDate = () => {};
 
   const handleOpenFile = (e) => {
-    console.log("dd");
     if (fileInputRef.current) {
-      fileInputRef.current.click(); // 파일 선택 창 열기
+      fileInputRef.current.click();
     }
   };
+  const handleFileChange = () => {
+    if (fileInputRef.current?.files?.length > 0) {
+      setFileName(fileInputRef.current.files[0].name);
+    }
+  };
+  const getValueFromSelect = () => {};
+
+  const handleUpdateCampaign = useMutation({
+    mutationFn: saveCampaign,
+    onSuccess: ({ success }) => {
+      if (success) {
+        navigate("/campaigns");
+      }
+    },
+  });
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+    formData.append("imgFile", fileInputRef.current.files[0]);
+    for (const key in post) {
+      if (post[key]) {
+        formData.append(key, post[key]);
+      }
+    }
+    handleUpdateCampaign.mutate(formData);
+  };
+
+  const getStartDate = (date) => {
+    const strDate = formatDate(date);
+    setPost((prev) => ({ ...prev, strDate }));
+  };
+  const getEndDate = (date) => {
+    const endDate = formatDate(date);
+    setPost((prev) => ({ ...prev, endDate }));
+  };
+
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} id="campaignForm">
       <PageWrapper>
         <PageTop>
           <h2>캠페인 등록하기</h2>
@@ -39,31 +89,33 @@ export function CampaignForm() {
         <CampaignContainer>
           <Flex mgBtm="14px">
             <InputContainer>
-              <SelectBox optionList={campaign} label={"등록할 게시판"} />
+              <SelectBox
+                optionList={campaign}
+                label="등록할 게시판"
+                placeholder={"캠페인"}
+                getValueFromSelect={getValueFromSelect}
+              />
             </InputContainer>
             <InputContainer onClick={handleOpenFile}>
-              <File type="file" id="fileInput" ref={fileInputRef} />
+              <File type="file" id="fileInput" ref={fileInputRef} onChange={handleFileChange} />
               <InputBtn
                 id="id"
                 name="InputName"
-                BtnText="Button"
+                BtnText="파일 첨부하기"
                 placeholder="사진을 등록해주세요"
                 label="대표 섬네일"
                 infoMessage="파일은 1MB 이내로 해주세요"
                 status="normal"
                 getInputValue={getInputValue}
                 readOnly
+                value={fileName}
                 style={{ pointerEvents: "auto" }}
               />
             </InputContainer>
           </Flex>
           <Flex mgBtm="14px">
-            <DatePicker
-              label="시작일"
-              getSelectedDate={getSelectedDate}
-              //   selected={usageDate}
-            ></DatePicker>
-            <DatePicker label="종료일" getSelectedDate={getSelectedDate}></DatePicker>
+            <DatePicker label="시작일" getSelectedDate={getStartDate}></DatePicker>
+            <DatePicker label="종료일" getSelectedDate={getEndDate}></DatePicker>
           </Flex>
           <Flex mgBtm="14px">
             <InputContainer>
@@ -103,7 +155,14 @@ export function CampaignForm() {
 
       <ReactQuillEditor getEditorText={getEditorText} title={title} content={content}></ReactQuillEditor>
       <BtnContainer>
-        <Button variant="primary" size="medium" state="default" style={{ width: "320px" }}>
+        <Button
+          type="submit"
+          form="campaignForm"
+          variant="primary"
+          size="medium"
+          state="default"
+          style={{ width: "320px" }}
+        >
           등록하기
         </Button>
       </BtnContainer>

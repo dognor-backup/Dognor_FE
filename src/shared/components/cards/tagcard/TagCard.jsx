@@ -6,16 +6,7 @@ import useUserStore from "@/domains/auth/store/useUserStore";
 import VerticalDotsSelect from "../../VerticalDotsSelect";
 
 export default function TagCard({ handleDelete, handleEdit, campaign }) {
-  const {
-    camPaignSeq,
-    imgUrl,
-    title,
-    likeCnt,
-    likeYn,
-    keyword1,
-    keyword2,
-    keyword3,
-  } = campaign;
+  const { camPaignSeq, imgUrl, title, likeCnt, likeYn, keyword1, keyword2, keyword3 } = campaign;
 
   const { user } = useUserStore();
 
@@ -41,10 +32,7 @@ export default function TagCard({ handleDelete, handleEdit, campaign }) {
         <CardImage src={imgUrl} />
         {isAdmin ? (
           <ActionSelectWrapper>
-            <VerticalDotsSelect
-              handleEdit={handleEdit}
-              handleDelete={handleDelete}
-            />
+            <VerticalDotsSelect handleEdit={handleEdit} handleDelete={handleDelete} />
           </ActionSelectWrapper>
         ) : (
           ""
@@ -57,11 +45,7 @@ export default function TagCard({ handleDelete, handleEdit, campaign }) {
       <InfoContainer>
         <LikesWrapper>
           <LikeTextSpan>{like}</LikeTextSpan>
-          {isLiked ? (
-            <HeartFilled onClick={handleLike} />
-          ) : (
-            <Heart onClick={handleLike} />
-          )}
+          {isLiked ? <HeartFilled onClick={handleLike} /> : <Heart onClick={handleLike} />}
         </LikesWrapper>
       </InfoContainer>
     </TagCardLayout>

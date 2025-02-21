@@ -4,7 +4,15 @@ import { useGetUserId } from "@/domains/auth/hooks/useGetUserId";
 
 export function Cards() {
   const { userSeq } = useGetUserId();
-  const { data: campaign, error, isLoading } = useGetCampaigns({ userSeq, page: 1, size: 1 });
-  //   const campaign = useGetCampaigns();
-  //   return <TagCard key={campaign.camPaignSeq} campaign={campaign} />;
+  const { data: campaignList, error, isLoading } = useGetCampaigns({ userSeq: userSeq ?? 1, page: 1, size: 9 });
+  const campaign = campaignList?.data;
+  console.log(campaign);
+
+  return (
+    <>
+      {campaign?.map((list) => (
+        <TagCard key={list?.camPaignSeq} campaign={list} />
+      ))}
+    </>
+  );
 }

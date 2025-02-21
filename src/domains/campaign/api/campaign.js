@@ -1,4 +1,6 @@
-import AxiosInstance from "@/shared/utils/axiosInstance";
+import AxiosInstance, { getAccessTokenFromDB } from "@/shared/utils/axiosInstance";
+
+import axios from "axios";
 
 export const getCampaigns = async (data) => {
   const { userSeq, page, size } = data;
@@ -7,20 +9,7 @@ export const getCampaigns = async (data) => {
     if (response.data.code === 200) {
       return { success: true, data: response.data.data };
     }
-  } catch (error) {
-    if (error.response) {
-      const { status, data } = error.response;
-      if (status === 400) {
-        return {
-          success: false,
-          msg: data.msg || "Bad Request: 잘못된 요청입니다.",
-        };
-      } else if (status === 500) {
-        return { success: false, msg: "서버 오류가 발생했습니다." };
-      }
-    }
-    return { success: false, msg: "네트워크 오류. 연결 상태를 확인해주세요." };
-  }
+  } catch (error) {}
 };
 
 export const deleteCampaign = async (data) => {
@@ -42,9 +31,17 @@ export const likeCampaign = async (data) => {
   } catch (error) {}
 };
 
-export const saveCampaign = async (data) => {
+export const saveCampaign = async (formData) => {
   try {
-    const response = await AxiosInstance.post(`/campaign`, data);
+    const token = await getAccessTokenFromDB();
+    const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/campaign`, formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (response.data.code === 200) {
+      return { success: true, data: response.data };
+    }
   } catch (error) {}
 };
 
