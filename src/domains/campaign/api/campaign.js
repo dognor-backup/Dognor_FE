@@ -36,6 +36,9 @@ export const getCampaignDetail = async (data) => {
 export const likeCampaign = async (data) => {
   try {
     const response = await AxiosInstance.patch(`/campaign/like`, data);
+    if (response.data.code === 200) {
+      return { success: true, data: response.data };
+    }
   } catch (error) {}
 };
 

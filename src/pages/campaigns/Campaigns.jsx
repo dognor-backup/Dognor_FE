@@ -7,6 +7,8 @@ import TagCard from "@/shared/components/cards/tagcard/TagCard";
 import { useGetCampaigns } from "@/domains/campaign/hooks/useGetCampaigns";
 import { useGetUserId } from "@/domains/auth/hooks/useGetUserId";
 import { DnPagination } from "@/pages/community/components/DnPagination";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { likeCampaign } from "@/domains/campaign/api/campaign";
 
 export default function Campaigns() {
   const navigate = useNavigate();
@@ -14,11 +16,20 @@ export default function Campaigns() {
   const { userId, userRole, userSeq } = useGetUserId();
   const { data: campaignList, error, isLoading } = useGetCampaigns({ userSeq: userSeq ?? 1, page: 1, size: 9 });
   const campaign = campaignList?.data;
-  const userAdmin = userRole === "ADMIN";
-
+  const isAdmin = userRole === "ADMIN";
+  const queryClient = useQueryClient();
   const handleLinkToCampaignDetail = (camPaignSeq) => {
     navigate(`/campaign/${camPaignSeq}`, { state: { camPaignSeq } });
   };
+
+  const handleLikeCampaign = useMutation({
+    mutationFn: likeCampaign,
+    onSuccess: ({ success }) => {
+      if (success) {
+        queryClient.invalidateQueries({ queryKey: ["campaign"] });
+      }
+    },
+  });
   return (
     <>
       <Banner src={Bannner}></Banner>
@@ -46,6 +57,7 @@ export default function Campaigns() {
                   key={list.camPaignSeq}
                   campaign={list}
                   onClick={() => handleLinkToCampaignDetail(list.camPaignSeq)}
+                  handleLikeCampaign={handleLikeCampaign.mutate}
                 />
               ))}
             </CardWrapper>
@@ -54,7 +66,7 @@ export default function Campaigns() {
         )}
 
         <BtnContainer>
-          {userAdmin && (
+          {isAdmin && (
             <Button onClick={() => navigate("/campaigns/postnew")} variant="secondary" style={{ width: "320px" }}>
               글 작성하기
             </Button>
@@ -83,7 +95,6 @@ const Banner = styled.img`
 const CardWrapper = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(3, 1fr);
   gap: 24px;
   margin: 0 auto;
   margin-top: 48px;

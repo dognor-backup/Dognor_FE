@@ -13,13 +13,14 @@ import DelAlert from "@/shared/components/alert/DelAlert";
 
 export function CampaignDetail() {
   const [campaignDetail, setCampaignDetail] = useState({});
-  const { userSeq } = useGetUserId();
+  const { userSeq, userRole } = useGetUserId();
   const { isAlertOpen, openAlert } = useAlertStore();
   const location = useLocation();
   const list = location?.state;
   const postSeq = list?.camPaignSeq;
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const isAdmin = userRole === "ADMIN";
   const {
     camPaignSeq,
     detail,
@@ -96,10 +97,12 @@ export function CampaignDetail() {
             </PostInfo>
 
             <DotsContainer>
-              <VerticalDotsSelect
-                handleEdit={() => handleEditPosting(postSeq)}
-                handleDelete={() => openAlert("post")}
-              />
+              {isAdmin && (
+                <VerticalDotsSelect
+                  handleEdit={() => handleEditPosting(postSeq)}
+                  handleDelete={() => openAlert("post")}
+                />
+              )}
             </DotsContainer>
           </PostHeader>
           <ContentContainer>{parse(detail || "")}</ContentContainer>

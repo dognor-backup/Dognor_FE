@@ -4,16 +4,16 @@ import Heart from "../../../../assets/icons/secondary/Heart_Secondary.svg?react"
 import { useState } from "react";
 import useUserStore from "@/domains/auth/store/useUserStore";
 import VerticalDotsSelect from "../../VerticalDotsSelect";
+import { useGetUserId } from "@/domains/auth/hooks/useGetUserId";
 
-export default function TagCard({ handleDelete, handleEdit, campaign, ...props }) {
+export default function TagCard({ handleDelete, handleEdit, campaign, handleLikeCampaign, ...props }) {
   const { camPaignSeq, imgUrl, title, likeCnt, likeYn, keyword1, keyword2, keyword3 } = campaign;
 
   const { user } = useUserStore();
-
+  const { userSeq, userRole } = useGetUserId();
   const [isAdmin, setIsAdmin] = useState(false);
   const [like, setLike] = useState(likeCnt);
   const [isLiked, setIsLiked] = useState(likeYn);
-
   if (user.userData.role === "admin") setIsAdmin(true);
 
   const handleLike = () => {
@@ -23,7 +23,8 @@ export default function TagCard({ handleDelete, handleEdit, campaign, ...props }
     } else {
       setLike((prev) => prev + 1);
     }
-    setIsLiked(!isLiked);
+    setIsLiked((prev) => !prev);
+    handleLikeCampaign({ camPaignSeq, likeEvent: isLiked ? "unlike" : "like", userSeq });
   };
 
   return (
@@ -46,7 +47,7 @@ export default function TagCard({ handleDelete, handleEdit, campaign, ...props }
         <InfoContainer>
           <LikesWrapper onClick={(e) => e.stopPropagation()}>
             <LikeTextSpan>{like}</LikeTextSpan>
-            {isLiked ? <HeartFilled onClick={handleLike} /> : <Heart onClick={handleLike} />}
+            {isLiked || likeYn ? <HeartFilled onClick={handleLike} /> : <Heart onClick={handleLike} />}
           </LikesWrapper>
         </InfoContainer>
       </BtmContainer>
