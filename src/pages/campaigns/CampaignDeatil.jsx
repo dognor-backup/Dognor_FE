@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { PageTop, PageWrapper } from "@/shared/components/layout/PageTopTitle";
 import styled from "@emotion/styled";
 import VerticalDotsSelect from "../community/components/ToggleBtn";
@@ -5,22 +7,22 @@ import parse from "html-react-parser";
 import { Button } from "@/shared/components/buttons/Button";
 import { useLocation, useNavigate } from "react-router-dom";
 import { deleteCampaign, getCampaignDetail } from "@/domains/campaign/api/campaign";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
 import { useGetUserId } from "@/domains/auth/hooks/useGetUserId";
 import useAlertStore from "@/shared/hooks/useAlertStore";
 import DelAlert from "@/shared/components/alert/DelAlert";
 
 export function CampaignDetail() {
-  const [campaignDetail, setCampaignDetail] = useState({});
-  const { userSeq, userRole } = useGetUserId();
-  const { isAlertOpen, openAlert } = useAlertStore();
   const location = useLocation();
   const list = location?.state;
   const postSeq = list?.camPaignSeq;
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const [campaignDetail, setCampaignDetail] = useState({});
+  const { userSeq, userRole } = useGetUserId();
+  const { isAlertOpen, openAlert } = useAlertStore();
+
   const isAdmin = userRole === "ADMIN";
+
   const {
     camPaignSeq,
     detail,
@@ -56,13 +58,14 @@ export function CampaignDetail() {
     },
   });
 
+  const handleEditPosting = (camPaignSeq) => navigate(`/campaignedit/${camPaignSeq}`, { state: { campaignDetail } });
+
   useEffect(() => {
     if (postSeq && userSeq) handleGetPostDetail.mutate({ camPaignSeq: postSeq, userSeq: userSeq || 1 });
   }, [postSeq, userSeq]);
 
-  const handleConfirmDelete = () => {
-    deleteCampaignPost.mutate(camPaignSeq);
-  };
+  const handleConfirmDelete = () => deleteCampaignPost.mutate(camPaignSeq);
+
   return (
     <>
       {isAlertOpen && (
@@ -99,7 +102,7 @@ export function CampaignDetail() {
             <DotsContainer>
               {isAdmin && (
                 <VerticalDotsSelect
-                  handleEdit={() => handleEditPosting(postSeq)}
+                  handleEdit={() => handleEditPosting(camPaignSeq)}
                   handleDelete={() => openAlert("post")}
                 />
               )}

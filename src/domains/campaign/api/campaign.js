@@ -59,5 +59,8 @@ export const saveCampaign = async (formData) => {
 export const editCampaign = async (data) => {
   try {
     const response = await AxiosInstance.put(`/campaign`, data);
+    if (response.data.code === 200) {
+      return { success: true, data: response.data };
+    }
   } catch (error) {}
 };

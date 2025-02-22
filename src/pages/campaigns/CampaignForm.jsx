@@ -1,7 +1,7 @@
 import { Button } from "@/shared/components/buttons/Button";
 import ReactQuillEditor from "@/shared/components/Editor";
 import { PageTop, PageWrapper } from "@/shared/components/layout/PageTopTitle";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styled from "@emotion/styled";
 import { InputForm } from "@/shared/components/input/InputForm";
 import { InputBtn } from "@/shared/components/input/InputBtn";
@@ -10,34 +10,43 @@ import { SelectBox } from "@/shared/components/dropbox/SelectBox";
 import { useMutation } from "@tanstack/react-query";
 import { saveCampaign } from "@/domains/campaign/api/campaign";
 import { formatDate } from "./hooks/formatDate";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export function CampaignForm() {
-  const [isEditing, setIsEditing] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const prevPosting = location?.state?.campaignDetail;
+  const { detail, endDate, imgUrl, keyword1, keyword2, keyword3, strDate, title: prevTitle } = prevPosting || {};
+  const [isEditing, setIsEditing] = useState(prevPosting ? true : false);
   const fileInputRef = useRef();
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
+  const [title, setTitle] = useState(isEditing ? prevTitle : "");
+  useEffect(() => {
+    if (location?.state?.campaignDetail) {
+      setIsEditing(true);
+    }
+  }, []);
   const [post, setPost] = useState({
     title: "",
     detail: "",
     strDate: "",
     endDate: "",
-    keyword1: "",
-    keyword2: "",
-    keyword3: "",
+    keyword1: isEditing ? keyword1 : "",
+    keyword2: isEditing ? keyword2 : "",
+    keyword3: isEditing ? keyword3 : "",
   });
-  const navigate = useNavigate();
+
   const getEditorText = ({ title, content }) => {
     setPost((prev) => ({ ...prev, title, detail: content }));
   };
   const [fileName, setFileName] = useState("");
+
   const getInputValue = ({ name, value }) => {
     setPost((prev) => ({ ...prev, [name]: value }));
   };
 
   const campaign = ["캠페인"];
 
-  const handleOpenFile = (e) => {
+  const handleOpenFile = () => {
     if (fileInputRef.current) {
       fileInputRef.current.click();
     }
@@ -59,7 +68,6 @@ export function CampaignForm() {
   });
   const handleSubmit = (e) => {
     e.preventDefault();
-
     const formData = new FormData();
     formData.append("imgFile", fileInputRef.current.files[0]);
     for (const key in post) {
@@ -108,14 +116,14 @@ export function CampaignForm() {
                 status="normal"
                 getInputValue={getInputValue}
                 readOnly
-                value={fileName}
+                value={fileName || (isEditing ? imgUrl : "")}
                 style={{ pointerEvents: "auto" }}
               />
             </InputContainer>
           </Flex>
           <Flex mgBtm="14px">
-            <DatePicker label="시작일" getSelectedDate={getStartDate}></DatePicker>
-            <DatePicker label="종료일" getSelectedDate={getEndDate}></DatePicker>
+            <DatePicker label="시작일" getSelectedDate={getStartDate} selected={strDate}></DatePicker>
+            <DatePicker label="종료일" getSelectedDate={getEndDate} selected={endDate}></DatePicker>
           </Flex>
           <Flex mgBtm="14px">
             <InputContainer>
@@ -127,6 +135,8 @@ export function CampaignForm() {
                 status="normal"
                 getInputValue={getInputValue}
                 infoMessage="최소 1개의 키워드는 입력해주세요"
+                value={post.keyword1}
+                onChange={(e) => setPost((prev) => ({ ...prev, keyword1: e.target.value }))}
               />
             </InputContainer>
             <InputContainer>
@@ -137,6 +147,8 @@ export function CampaignForm() {
                 label="키워드2"
                 status="normal"
                 getInputValue={getInputValue}
+                value={post.keyword2}
+                onChange={(e) => setPost((prev) => ({ ...prev, keyword2: e.target.value }))}
               />
             </InputContainer>
             <InputContainer>
@@ -147,13 +159,15 @@ export function CampaignForm() {
                 label="키워드3"
                 status="normal"
                 getInputValue={getInputValue}
+                value={post.keyword3}
+                onChange={(e) => setPost((prev) => ({ ...prev, keyword3: e.target.value }))}
               />
             </InputContainer>
           </Flex>
         </CampaignContainer>
       </PageWrapper>
 
-      <ReactQuillEditor getEditorText={getEditorText} title={title} content={content}></ReactQuillEditor>
+      <ReactQuillEditor getEditorText={getEditorText} title={title} content={detail}></ReactQuillEditor>
       <BtnContainer>
         <Button
           type="submit"
