@@ -5,7 +5,7 @@ import { useState } from "react";
 import useUserStore from "@/domains/auth/store/useUserStore";
 import VerticalDotsSelect from "../../VerticalDotsSelect";
 
-export default function TagCard({ handleDelete, handleEdit, campaign }) {
+export default function TagCard({ handleDelete, handleEdit, campaign, ...props }) {
   const { camPaignSeq, imgUrl, title, likeCnt, likeYn, keyword1, keyword2, keyword3 } = campaign;
 
   const { user } = useUserStore();
@@ -27,7 +27,7 @@ export default function TagCard({ handleDelete, handleEdit, campaign }) {
   };
 
   return (
-    <TagCardLayout>
+    <TagCardLayout {...props}>
       <ImageWrapper>
         <CardImage src={imgUrl} />
         {isAdmin ? (
@@ -38,16 +38,18 @@ export default function TagCard({ handleDelete, handleEdit, campaign }) {
           ""
         )}
       </ImageWrapper>
-      <TextWrapper>
-        <KeywordText>{`#${keyword1} #${keyword2} #${keyword3}`}</KeywordText>
-        <TitleText>{title}</TitleText>
-      </TextWrapper>
-      <InfoContainer>
-        <LikesWrapper>
-          <LikeTextSpan>{like}</LikeTextSpan>
-          {isLiked ? <HeartFilled onClick={handleLike} /> : <Heart onClick={handleLike} />}
-        </LikesWrapper>
-      </InfoContainer>
+      <BtmContainer>
+        <TextWrapper>
+          <KeywordText>{`#${keyword1} #${keyword2} #${keyword3}`}</KeywordText>
+          <TitleText>{title}</TitleText>
+        </TextWrapper>
+        <InfoContainer>
+          <LikesWrapper onClick={(e) => e.stopPropagation()}>
+            <LikeTextSpan>{like}</LikeTextSpan>
+            {isLiked ? <HeartFilled onClick={handleLike} /> : <Heart onClick={handleLike} />}
+          </LikesWrapper>
+        </InfoContainer>
+      </BtmContainer>
     </TagCardLayout>
   );
 }
@@ -62,7 +64,7 @@ const TagCardLayout = styled.div`
   border-radius: 16px;
   width: 320px;
   height: 376px;
-  gap: 8px;
+  box-sizing: border-box;
 `;
 
 const ImageWrapper = styled.div`
@@ -114,7 +116,7 @@ const InfoContainer = styled.div`
 const LikesWrapper = styled.div`
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 4px;
   cursor: pointer;
 `;
 
@@ -129,6 +131,13 @@ const ActionSelectWrapper = styled.div`
 const LikeTextSpan = styled.span`
   color: ${({ theme }) => theme.colors.primary_purple};
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 400;
   line-height: 24px;
+`;
+const BtmContainer = styled.div`
+  padding: 8px 4px;
+  height: inherit;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
 `;

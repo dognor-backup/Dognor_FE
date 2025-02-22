@@ -13,9 +13,12 @@ export default function Campaigns() {
 
   const { userId, userRole, userSeq } = useGetUserId();
   const { data: campaignList, error, isLoading } = useGetCampaigns({ userSeq: userSeq ?? 1, page: 1, size: 9 });
-  // const campaign = campaignList?.data;
-  const campaign = [];
+  const campaign = campaignList?.data;
+  const userAdmin = userRole === "ADMIN";
 
+  const handleLinkToCampaignDetail = (camPaignSeq) => {
+    navigate(`/campaign/${camPaignSeq}`, { state: { camPaignSeq } });
+  };
   return (
     <>
       <Banner src={Bannner}></Banner>
@@ -28,7 +31,7 @@ export default function Campaigns() {
           </p>
         </PageTop>
 
-        {campaign.length === 0 ? (
+        {campaign?.length === 0 ? (
           <NoPromotion>
             <p>
               곧 새로운 이벤트와 프로모션으로 찾아뵙겠습니다. <br />
@@ -38,8 +41,12 @@ export default function Campaigns() {
         ) : (
           <>
             <CardWrapper>
-              {campaign.map((list) => (
-                <TagCard key={list.camPaignSeq} campaign={list} />
+              {campaign?.map((list) => (
+                <TagCard
+                  key={list.camPaignSeq}
+                  campaign={list}
+                  onClick={() => handleLinkToCampaignDetail(list.camPaignSeq)}
+                />
               ))}
             </CardWrapper>
             <DnPagination></DnPagination>
@@ -47,8 +54,13 @@ export default function Campaigns() {
         )}
 
         <BtnContainer>
-          <Button onClick={() => navigate("/campaigns/postnew")} variant="secondary" style={{ width: "320px" }}>
-            글 작성하기
+          {userAdmin && (
+            <Button onClick={() => navigate("/campaigns/postnew")} variant="secondary" style={{ width: "320px" }}>
+              글 작성하기
+            </Button>
+          )}
+          <Button onClick={() => navigate("/home")} variant="secondary" state="outline" style={{ width: "320px" }}>
+            홈으로 돌아가기
           </Button>
         </BtnContainer>
       </PageWrapper>
@@ -57,6 +69,8 @@ export default function Campaigns() {
 }
 const BtnContainer = styled.div`
   display: flex;
+  flex-direction: column;
+  gap: 8px;
   justify-content: center;
   margin-bottom: 100px;
   margin-top: 48px;
