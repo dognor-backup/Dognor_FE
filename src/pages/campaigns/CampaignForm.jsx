@@ -1,30 +1,38 @@
-import { Button } from "@/shared/components/buttons/Button";
-import ReactQuillEditor from "@/shared/components/Editor";
-import { PageTop, PageWrapper } from "@/shared/components/layout/PageTopTitle";
 import { useEffect, useRef, useState } from "react";
-import styled from "@emotion/styled";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import ReactQuillEditor from "@/shared/components/Editor";
+import { DatePicker } from "@/shared/components/DatePicker";
+import { Button } from "@/shared/components/buttons/Button";
+import { PageTop, PageWrapper } from "@/shared/components/layout/PageTopTitle";
 import { InputForm } from "@/shared/components/input/InputForm";
 import { InputBtn } from "@/shared/components/input/InputBtn";
-import { DatePicker } from "@/shared/components/DatePicker";
 import { SelectBox } from "@/shared/components/dropbox/SelectBox";
-import { useMutation } from "@tanstack/react-query";
-import { saveCampaign } from "@/domains/campaign/api/campaign";
+
 import { formatDate } from "./hooks/formatDate";
-import { useLocation, useNavigate } from "react-router-dom";
+import styled from "@emotion/styled";
+import { useCampaignMutations } from "./hooks/useCampaignMuations";
 
 export function CampaignForm() {
-  const navigate = useNavigate();
   const location = useLocation();
   const prevPosting = location?.state?.campaignDetail;
-  const { detail, endDate, imgUrl, keyword1, keyword2, keyword3, strDate, title: prevTitle } = prevPosting || {};
+  const {
+    camPaignSeq,
+    detail,
+    endDate,
+    imgUrl,
+    keyword1,
+    keyword2,
+    keyword3,
+    strDate,
+    title: prevTitle,
+  } = prevPosting || {};
+  const { updateCampaignMutation, editCampaignMutation } = useCampaignMutations();
   const [isEditing, setIsEditing] = useState(prevPosting ? true : false);
+  const [fileName, setFileName] = useState("");
   const fileInputRef = useRef();
-  const [title, setTitle] = useState(isEditing ? prevTitle : "");
-  useEffect(() => {
-    if (location?.state?.campaignDetail) {
-      setIsEditing(true);
-    }
-  }, []);
+  const campaign = ["캠페인"];
+
   const [post, setPost] = useState({
     title: "",
     detail: "",
@@ -35,37 +43,27 @@ export function CampaignForm() {
     keyword3: isEditing ? keyword3 : "",
   });
 
-  const getEditorText = ({ title, content }) => {
-    setPost((prev) => ({ ...prev, title, detail: content }));
-  };
-  const [fileName, setFileName] = useState("");
+  useEffect(() => {
+    if (location?.state?.campaignDetail) {
+      setIsEditing(true);
+    }
+  }, [isEditing]);
 
-  const getInputValue = ({ name, value }) => {
-    setPost((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const campaign = ["캠페인"];
+  const getEditorText = ({ title, content }) => setPost((prev) => ({ ...prev, title, detail: content }));
+  const getInputValue = ({ name, value }) => setPost((prev) => ({ ...prev, [name]: value }));
 
   const handleOpenFile = () => {
     if (fileInputRef.current) {
       fileInputRef.current.click();
     }
   };
+
   const handleFileChange = () => {
     if (fileInputRef.current?.files?.length > 0) {
       setFileName(fileInputRef.current.files[0].name);
     }
   };
-  const getValueFromSelect = () => {};
 
-  const handleUpdateCampaign = useMutation({
-    mutationFn: saveCampaign,
-    onSuccess: ({ success }) => {
-      if (success) {
-        navigate("/campaigns");
-      }
-    },
-  });
   const handleSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData();
@@ -75,7 +73,12 @@ export function CampaignForm() {
         formData.append(key, post[key]);
       }
     }
-    handleUpdateCampaign.mutate(formData);
+    if (isEditing) {
+      formData.append("camPaignSeq", Number(camPaignSeq));
+      editCampaignMutation.mutate(formData);
+    } else {
+      updateCampaignMutation.mutate(formData);
+    }
   };
 
   const getStartDate = (date) => {
@@ -86,6 +89,7 @@ export function CampaignForm() {
     const endDate = formatDate(date);
     setPost((prev) => ({ ...prev, endDate }));
   };
+  const getValueFromSelect = () => {};
 
   return (
     <form onSubmit={handleSubmit} id="campaignForm">
@@ -167,7 +171,7 @@ export function CampaignForm() {
         </CampaignContainer>
       </PageWrapper>
 
-      <ReactQuillEditor getEditorText={getEditorText} title={title} content={detail}></ReactQuillEditor>
+      <ReactQuillEditor getEditorText={getEditorText} title={prevTitle} content={detail}></ReactQuillEditor>
       <BtnContainer>
         <Button
           type="submit"

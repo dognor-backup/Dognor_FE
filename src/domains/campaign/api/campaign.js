@@ -1,5 +1,4 @@
 import AxiosInstance, { getAccessTokenFromDB } from "@/shared/utils/axiosInstance";
-
 import axios from "axios";
 
 export const getCampaigns = async (data) => {
@@ -56,9 +55,14 @@ export const saveCampaign = async (formData) => {
   } catch (error) {}
 };
 
-export const editCampaign = async (data) => {
+export const editCampaign = async (formData) => {
   try {
-    const response = await AxiosInstance.put(`/campaign`, data);
+    const token = await getAccessTokenFromDB();
+    const response = await axios.put(`${import.meta.env.VITE_API_BASE_URL}/campaign`, formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     if (response.data.code === 200) {
       return { success: true, data: response.data };
     }

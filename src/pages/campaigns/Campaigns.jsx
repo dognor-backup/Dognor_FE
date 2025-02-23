@@ -1,19 +1,19 @@
-import { Button } from "@/shared/components/buttons/Button";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import styled from "@emotion/styled";
-import { PageTop, PageWrapper } from "@/shared/components/layout/PageTopTitle";
-import Bannner from "/src/assets/images/Campaigns_01.png?react";
-import TagCard from "@/shared/components/cards/tagcard/TagCard";
 import { useGetCampaigns } from "@/domains/campaign/hooks/useGetCampaigns";
 import { useGetUserId } from "@/domains/auth/hooks/useGetUserId";
-import { DnPagination } from "@/pages/community/components/DnPagination";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { likeCampaign } from "@/domains/campaign/api/campaign";
+import { PageTop, PageWrapper } from "@/shared/components/layout/PageTopTitle";
+import { Button } from "@/shared/components/buttons/Button";
+import Bannner from "/src/assets/images/Campaigns_01.png?react";
+import TagCard from "@/shared/components/cards/tagcard/TagCard";
+import { DnPagination } from "@/pages/community/components/DnPagination";
+import { Spinner } from "@/shared/components/Spinner";
 
 export default function Campaigns() {
   const navigate = useNavigate();
-
-  const { userId, userRole, userSeq } = useGetUserId();
+  const { userRole, userSeq } = useGetUserId();
   const { data: campaignList, error, isLoading } = useGetCampaigns({ userSeq: userSeq ?? 1, page: 1, size: 9 });
   const campaign = campaignList?.data;
   const isAdmin = userRole === "ADMIN";
@@ -30,6 +30,9 @@ export default function Campaigns() {
       }
     },
   });
+  if (isLoading) {
+    <Spinner></Spinner>;
+  }
   return (
     <>
       <Banner src={Bannner}></Banner>
@@ -41,7 +44,6 @@ export default function Campaigns() {
             <br /> 그리고 다양한 소식을 전한는 공간입니다.
           </p>
         </PageTop>
-
         {campaign?.length === 0 ? (
           <NoPromotion>
             <p>
@@ -54,9 +56,9 @@ export default function Campaigns() {
             <CardWrapper>
               {campaign?.map((list) => (
                 <TagCard
-                  key={list.camPaignSeq}
+                  key={list?.camPaignSeq}
                   campaign={list}
-                  onClick={() => handleLinkToCampaignDetail(list.camPaignSeq)}
+                  onClick={() => handleLinkToCampaignDetail(list?.camPaignSeq)}
                   handleLikeCampaign={handleLikeCampaign.mutate}
                 />
               ))}
@@ -79,6 +81,7 @@ export default function Campaigns() {
     </>
   );
 }
+
 const BtnContainer = styled.div`
   display: flex;
   flex-direction: column;
