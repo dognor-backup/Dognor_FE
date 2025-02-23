@@ -7,7 +7,7 @@ import { CommunityTable } from "./CommunityTable";
 import { useGetPostList } from "@/domains/post/hooks/useGetPostList";
 import { Button } from "@/shared/components/buttons/Button";
 import { communityTitles } from "../data/communityData";
-import { useGetUserId } from "../../../domains/post/hooks/useGetUserId";
+import { useGetUserId } from "../../../domains/auth/hooks/useGetUserId";
 
 export function CommunityList() {
   const location = useLocation();

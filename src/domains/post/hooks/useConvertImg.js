@@ -14,8 +14,8 @@ export const useConvetImg = (quillObj, range) => {
       return response.data;
     },
     onSuccess: (data) => {
-      const { data: nestedDate, totalPage } = data;
-      quillObj?.insertEmbed(range.index, "image", `${nestedDate}`);
+      const { data: nestedData } = data;
+      quillObj?.insertEmbed(range.index, "image", `${nestedData}`);
     },
     onError: (error) => {
       console.error("File upload failed:", error);

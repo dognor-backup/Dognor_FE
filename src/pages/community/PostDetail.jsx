@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import parse from "html-react-parser";
 import { searchComments } from "@/domains/post/api/post";
 import { deleteCommentMutation, updateCommentMutation } from "../../domains/post/hooks/useComment";
-import { useGetUserId } from "../../domains/post/hooks/useGetUserId";
+import { useGetUserId } from "../../domains/auth/hooks/useGetUserId";
 import { useDeleteTargetPostMutation } from "@/domains/post/hooks/useDeletePost";
 import { PageTop, PageWrapper } from "@/shared/components/layout/PageTopTitle";
 import { Button } from "@/shared/components/buttons/Button";
