@@ -5,11 +5,13 @@ import { useNavigate } from "react-router-dom";
 export function useCampaignMutations() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const invalidateCampaignQuery = () => queryClient.invalidateQueries({ queryKey: ["campaign"] });
 
   const updateCampaignMutation = useMutation({
     mutationFn: saveCampaign,
     onSuccess: ({ success }) => {
       if (success) {
+        invalidateCampaignQuery();
         navigate("/campaigns");
       }
     },
@@ -17,10 +19,10 @@ export function useCampaignMutations() {
 
   const editCampaignMutation = useMutation({
     mutationFn: editCampaign,
-    onSuccess: ({ success, data }) => {
+    onSuccess: ({ success }) => {
       if (success) {
-        console.log(data);
-        navigate(`/campaign/${camPaignSeq}`);
+        invalidateCampaignQuery();
+        navigate(`/campaigns`);
       }
     },
   });
@@ -29,7 +31,7 @@ export function useCampaignMutations() {
     mutationFn: likeCampaign,
     onSuccess: ({ success }) => {
       if (success) {
-        queryClient.invalidateQueries({ queryKey: ["campaign"] });
+        invalidateCampaignQuery();
       }
     },
   });
@@ -38,7 +40,7 @@ export function useCampaignMutations() {
     mutationFn: deleteCampaign,
     onSuccess: ({ success }) => {
       if (success) {
-        queryClient.invalidateQueries({ queryKey: ["campaign"] });
+        invalidateCampaignQuery();
         navigate(-1);
       }
     },

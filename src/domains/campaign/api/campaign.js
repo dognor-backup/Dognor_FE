@@ -26,7 +26,6 @@ export const getCampaignDetail = async (data) => {
   try {
     const response = await AxiosInstance.get(`/campaign/${camPaignSeq}/${userSeq}`);
     if (response.data.code === 200) {
-      console.log(data);
       return { success: true, data: response.data.data };
     }
   } catch (error) {}

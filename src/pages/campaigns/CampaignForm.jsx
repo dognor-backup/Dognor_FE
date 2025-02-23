@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useMutation } from "@tanstack/react-query";
+import { useLocation } from "react-router-dom";
 import ReactQuillEditor from "@/shared/components/Editor";
 import { DatePicker } from "@/shared/components/DatePicker";
 import { Button } from "@/shared/components/buttons/Button";
