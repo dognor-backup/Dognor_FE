@@ -1,37 +1,26 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import styled from "@emotion/styled";
 import { useGetCampaigns } from "@/domains/campaign/hooks/useGetCampaigns";
+import { useCampaignMutations } from "./hooks/useCampaignMuations";
 import { useGetUserId } from "@/domains/auth/hooks/useGetUserId";
-import { likeCampaign } from "@/domains/campaign/api/campaign";
 import { PageTop, PageWrapper } from "@/shared/components/layout/PageTopTitle";
 import { Button } from "@/shared/components/buttons/Button";
-import Bannner from "/src/assets/images/Campaigns_01.png?react";
 import TagCard from "@/shared/components/cards/tagcard/TagCard";
 import { DnPagination } from "@/pages/community/components/DnPagination";
 import { Spinner } from "@/shared/components/Spinner";
+import Bannner from "/src/assets/images/Campaigns_01.png?react";
+import styled from "@emotion/styled";
 
 export default function Campaigns() {
   const navigate = useNavigate();
   const { userRole, userSeq } = useGetUserId();
-  const { data: campaignList, error, isLoading } = useGetCampaigns({ userSeq: userSeq ?? 1, page: 1, size: 9 });
+  const { data: campaignList, isLoading } = useGetCampaigns({ userSeq: userSeq ?? 1, page: 1, size: 9 });
   const campaign = campaignList?.data;
   const isAdmin = userRole === "ADMIN";
-  const queryClient = useQueryClient();
-  const handleLinkToCampaignDetail = (camPaignSeq) => {
-    navigate(`/campaign/${camPaignSeq}`, { state: { camPaignSeq } });
-  };
+  const { likeCampaignMutation } = useCampaignMutations();
+  const handleLinkToCampaignDetail = (camPaignSeq) => navigate(`/campaign/${camPaignSeq}`, { state: { camPaignSeq } });
 
-  const handleLikeCampaign = useMutation({
-    mutationFn: likeCampaign,
-    onSuccess: ({ success }) => {
-      if (success) {
-        queryClient.invalidateQueries({ queryKey: ["campaign"] });
-      }
-    },
-  });
   if (isLoading) {
-    <Spinner></Spinner>;
+    <Spinner />;
   }
   return (
     <>
@@ -59,14 +48,13 @@ export default function Campaigns() {
                   key={list?.camPaignSeq}
                   campaign={list}
                   onClick={() => handleLinkToCampaignDetail(list?.camPaignSeq)}
-                  handleLikeCampaign={handleLikeCampaign.mutate}
+                  likeCampaignMutation={likeCampaignMutation.mutate}
                 />
               ))}
             </CardWrapper>
             <DnPagination></DnPagination>
           </>
         )}
-
         <BtnContainer>
           {isAdmin && (
             <Button onClick={() => navigate("/campaigns/postnew")} variant="secondary" style={{ width: "320px" }}>

@@ -1,43 +1,28 @@
 import { useEffect, useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { PageTop, PageWrapper } from "@/shared/components/layout/PageTopTitle";
-import styled from "@emotion/styled";
-import VerticalDotsSelect from "../community/components/ToggleBtn";
-import parse from "html-react-parser";
-import { Button } from "@/shared/components/buttons/Button";
 import { useLocation, useNavigate } from "react-router-dom";
-import { deleteCampaign, getCampaignDetail } from "@/domains/campaign/api/campaign";
+import { useMutation } from "@tanstack/react-query";
+import parse from "html-react-parser";
+import { PageTop, PageWrapper } from "@/shared/components/layout/PageTopTitle";
+import VerticalDotsSelect from "../community/components/ToggleBtn";
+import { Button } from "@/shared/components/buttons/Button";
+import { useCampaignMutations } from "./hooks/useCampaignMuations";
+import { getCampaignDetail } from "@/domains/campaign/api/campaign";
 import { useGetUserId } from "@/domains/auth/hooks/useGetUserId";
 import useAlertStore from "@/shared/hooks/useAlertStore";
 import DelAlert from "@/shared/components/alert/DelAlert";
+import styled from "@emotion/styled";
 
 export function CampaignDetail() {
+  const navigate = useNavigate();
   const location = useLocation();
   const list = location?.state;
   const postSeq = list?.camPaignSeq;
-  const queryClient = useQueryClient();
-  const navigate = useNavigate();
-  const [campaignDetail, setCampaignDetail] = useState({});
+  const { deleteCampaignMutation } = useCampaignMutations();
   const { userSeq, userRole } = useGetUserId();
-  const { isAlertOpen, openAlert } = useAlertStore();
-
   const isAdmin = userRole === "ADMIN";
-
-  const {
-    camPaignSeq,
-    detail,
-    endDate,
-    imgUrl,
-    keyword1,
-    keyword2,
-    keyword3,
-    likeCnt,
-    writeDt,
-    likeYn,
-    strDate,
-    title,
-    writerName,
-  } = campaignDetail || {};
+  const { isAlertOpen, openAlert } = useAlertStore();
+  const [campaignDetail, setCampaignDetail] = useState({});
+  const { camPaignSeq, detail, endDate, likeCnt, writeDt, strDate, title, writerName } = campaignDetail || {};
 
   const handleGetPostDetail = useMutation({
     mutationFn: getCampaignDetail,
@@ -47,24 +32,12 @@ export function CampaignDetail() {
       }
     },
   });
-
-  const deleteCampaignPost = useMutation({
-    mutationFn: deleteCampaign,
-    onSuccess: ({ success }) => {
-      if (success) {
-        queryClient.invalidateQueries({ queryKey: ["campaign"] });
-        navigate(-1);
-      }
-    },
-  });
-
   const handleEditPosting = (camPaignSeq) => navigate(`/campaignedit/${camPaignSeq}`, { state: { campaignDetail } });
+  const handleConfirmDelete = () => deleteCampaignMutation.mutate(camPaignSeq);
 
   useEffect(() => {
-    if (postSeq && userSeq) handleGetPostDetail.mutate({ camPaignSeq: postSeq, userSeq: userSeq || 1 });
+    if (postSeq) handleGetPostDetail.mutate({ camPaignSeq: postSeq, userSeq: userSeq || 1 });
   }, [postSeq, userSeq]);
-
-  const handleConfirmDelete = () => deleteCampaignPost.mutate(camPaignSeq);
 
   return (
     <>
@@ -135,7 +108,6 @@ const PostTitle = styled.div`
   line-height: 28px;
   margin-bottom: 8px;
 `;
-
 const PostInfo = styled.p(
   ({ theme }) => `
   color: ${theme.colors.neutrals_02};
@@ -147,14 +119,10 @@ const PostInfo = styled.p(
 const Mg = styled.span`
   margin-left: 10px;
 `;
-const Mg20 = styled.span`
-  margin-right: 20px;
-`;
 const Flex = styled.div`
   display: flex;
   justify-content: space-between;
 `;
-
 const ContentContainer = styled.div(
   ({ theme }) => `
   text-align: left;
@@ -164,12 +132,10 @@ const ContentContainer = styled.div(
   margin-bottom: 48px;
 `
 );
-
 const BtnContainer = styled.div`
   margin-top: 80px;
   margin-bottom: 100px;
 `;
-
 const DotsContainer = styled.div`
   margin-top: 16px;
   position: absolute;

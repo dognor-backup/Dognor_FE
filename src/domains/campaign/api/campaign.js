@@ -33,6 +33,8 @@ export const getCampaignDetail = async (data) => {
 };
 
 export const likeCampaign = async (data) => {
+  const { userSeq } = data;
+  if (!userSeq) return;
   try {
     const response = await AxiosInstance.patch(`/campaign/like`, data);
     if (response.data.code === 200) {

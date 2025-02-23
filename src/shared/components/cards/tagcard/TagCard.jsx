@@ -6,7 +6,7 @@ import useUserStore from "@/domains/auth/store/useUserStore";
 import VerticalDotsSelect from "../../VerticalDotsSelect";
 import { useGetUserId } from "@/domains/auth/hooks/useGetUserId";
 
-export default function TagCard({ handleDelete, handleEdit, campaign, handleLikeCampaign, ...props }) {
+export default function TagCard({ handleDelete, handleEdit, campaign, likeCampaignMutation, ...props }) {
   const { camPaignSeq, imgUrl, title, likeCnt, likeYn, keyword1, keyword2, keyword3 } = campaign;
 
   const { user } = useUserStore();
@@ -24,7 +24,7 @@ export default function TagCard({ handleDelete, handleEdit, campaign, handleLike
       setLike((prev) => prev + 1);
     }
     setIsLiked((prev) => !prev);
-    handleLikeCampaign({ camPaignSeq, likeEvent: isLiked ? "unlike" : "like", userSeq });
+    likeCampaignMutation({ camPaignSeq, likeEvent: isLiked ? "unlike" : "like", userSeq });
   };
 
   return (
