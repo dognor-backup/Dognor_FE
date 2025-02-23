@@ -11,6 +11,7 @@ import { useGetUserId } from "@/domains/auth/hooks/useGetUserId";
 import useAlertStore from "@/shared/hooks/useAlertStore";
 import DelAlert from "@/shared/components/alert/DelAlert";
 import styled from "@emotion/styled";
+import { formatDate } from "./hooks/formatDate";
 
 export function CampaignDetail() {
   const navigate = useNavigate();
@@ -25,6 +26,8 @@ export function CampaignDetail() {
   const { camPaignSeq, detail, endDate, likeCnt, writeDt, strDate, title, writerName, keyword1, keyword2, keyword3 } =
     campaignDetail || {};
   console.log(campaignDetail);
+  const dateTime = writeDt;
+  const { formattedDate, formattedTime } = formatDate(dateTime);
   const handleGetPostDetail = useMutation({
     mutationFn: getCampaignDetail,
     onSuccess: ({ success, data }) => {
@@ -69,7 +72,9 @@ export function CampaignDetail() {
                 </p>
               </Flex>
               <p>
-                업데이트<Mg>{writeDt}</Mg>
+                업데이트
+                <Mg>{formattedDate}</Mg>
+                <span> {formattedTime}</span>
               </p>
               <p>
                 작성자<Mg>{writerName}</Mg>
