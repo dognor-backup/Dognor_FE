@@ -22,8 +22,9 @@ export function CampaignDetail() {
   const isAdmin = userRole === "ADMIN";
   const { isAlertOpen, openAlert } = useAlertStore();
   const [campaignDetail, setCampaignDetail] = useState({});
-  const { camPaignSeq, detail, endDate, likeCnt, writeDt, strDate, title, writerName } = campaignDetail || {};
-
+  const { camPaignSeq, detail, endDate, likeCnt, writeDt, strDate, title, writerName, keyword1, keyword2, keyword3 } =
+    campaignDetail || {};
+  console.log(campaignDetail);
   const handleGetPostDetail = useMutation({
     mutationFn: getCampaignDetail,
     onSuccess: ({ success, data }) => {
@@ -51,6 +52,9 @@ export function CampaignDetail() {
       <PageWrapper>
         <PageTop>
           <PostHeader>
+            <Keywords>
+              #{keyword1} #{keyword2} #{keyword3}
+            </Keywords>
             <PostTitle>{title}</PostTitle>
             <PostInfo>
               <Flex>
@@ -142,3 +146,14 @@ const DotsContainer = styled.div`
   right: 0;
   top: -36px;
 `;
+const Keywords = styled.span(
+  ({ theme }) => `
+  color: ${theme.colors.primary_blue};
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 24px;
+  text-align: left;
+  margin-bottom: 4px;
+  display: inline-block
+`
+);
