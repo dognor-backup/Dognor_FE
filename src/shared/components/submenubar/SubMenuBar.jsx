@@ -2,7 +2,13 @@ import styled from "@emotion/styled";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 
-export default function SubMenuBar({ subMenuList, useQueryParams = false }) {
+export default function SubMenuBar({
+  subMenuList,
+  useQueryParams = false,
+  queryParamKey = "myPosts",
+  activeCategory,
+  onCategoryChange,
+}) {
   const [activeSubMenu, setActiveSubMenu] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
@@ -13,19 +19,24 @@ export default function SubMenuBar({ subMenuList, useQueryParams = false }) {
     const currentPath = location.pathname.split("/").slice(0, 2).join("/");
 
     if (useQueryParams) {
-      setSearchParams({ myPosts: menu });
+      setSearchParams({ [queryParamKey]: menu });
+      if (onCategoryChange) {
+        onCategoryChange(menu);
+      }
     } else {
       navigate(`${currentPath}/${menu}`);
     }
   };
+
   const getInitialActiveMenu = () => {
     const currentPath = location.pathname.split("/").slice(2).join("/");
     return subMenuList.find((menu) => menu.path === currentPath)?.path || null;
   };
 
   useEffect(() => {
-    setActiveSubMenu(getInitialActiveMenu());
-  }, [location.pathname]);
+    const initialMenu = activeCategory || getInitialActiveMenu();
+    setActiveSubMenu(initialMenu);
+  }, [location.pathname, activeCategory]);
 
   return (
     <SubMenuBarLayout>
