@@ -1,32 +1,47 @@
-import { TableWrapper, StyledTable, TableHeader, TableRow, TableHead, TableBody, TableCell } from "./baseTable";
+import {
+  TableWrapper,
+  StyledTable,
+  TableHeader,
+  TableRow,
+  TableHead,
+  TableBody,
+  TableCell,
+  SmallTableCell,
+} from "./baseTable";
+import { formatDate } from "@/shared/utils/formatDate";
 
-export function CommentTable({ data = [], emptyMessage = "댓글이 없습니다." }) {
-  const headers = ["No.", "댓글 내용", "작성자", "작성일", "좋아요"];
-
+export function CommentTable({
+  data = [],
+  emptyMessage = "댓글/리뷰가 없습니다.",
+}) {
   return (
     <TableWrapper>
       <StyledTable>
         <TableHeader>
           <TableRow>
-            {headers.map((header, index) => (
-              <TableHead key={index}>{header}</TableHead>
-            ))}
+            <TableHead width={70}>No.</TableHead>
+            <TableHead width={354}>댓글/리뷰</TableHead>
+            <TableHead width={140}>구분</TableHead>
+            <TableHead width={140}>게시판</TableHead>
+            <TableHead width={120}>작성일</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {data.length > 0 ? (
             data.map((item, index) => (
-              <TableRow key={item.commentSeq || index}>
+              <TableRow key={item.seq || index}>
                 <TableCell>{index + 1}</TableCell>
                 <TableCell>{item.content}</TableCell>
-                <TableCell>{item.author || "익명"}</TableCell> 
-                <TableCell>{item.createdAt || "날짜 없음"}</TableCell> 
-                <TableCell>{item.likeCount ?? 0}</TableCell> 
+                <SmallTableCell>{item.division || "미정"}</SmallTableCell>
+                <SmallTableCell>{item.categoryName || "없음"}</SmallTableCell>
+                <SmallTableCell>
+                  {formatDate(item.writeDt) || "날짜 없음"}
+                </SmallTableCell>
               </TableRow>
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={headers.length} className="text-center">
+              <TableCell colSpan={5} className="text-center" height={"40px"}>
                 {emptyMessage}
               </TableCell>
             </TableRow>

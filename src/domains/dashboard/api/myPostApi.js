@@ -27,3 +27,42 @@ export const searchMyPost = async (params) => {
     throw error;
   }
 };
+
+export const deleteMyPosts = async (selectedPosts) => {
+  try {
+    const response = await AxiosInstance.post(
+      "/dashboard/delete-community",
+      selectedPosts
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("게시글 삭제 실패:", error.response?.data || error.message);
+    throw error;
+  }
+};
+
+export const searchMyCommentReview = async (params) => {
+  try {
+    const requestData = {
+      commentReviewSearchParam: {
+        page: params.page || 1,
+        size: params.size || 15,
+        commentReviewType: params.commentReviewType || "all"
+      },
+    };
+
+    const response = await AxiosInstance.post(
+      "/dashboard/search-comment-review",
+      requestData
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error(
+      "댓글/리뷰 검색 실패:",
+      error.response?.data || error.message
+    );
+    throw error;
+  }
+};

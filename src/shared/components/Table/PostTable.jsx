@@ -14,17 +14,9 @@ import SelectableCheckbox from "./SelectableCheckbox";
 export function PostTable({
   data = [],
   selectedPosts,
-  setSelectedPosts,
+  handleCheckboxChange,
   emptyMessage = "게시글이 없습니다.",
 }) {
-  const handleCheckboxChange = (postSeq) => {
-    setSelectedPosts((prev) =>
-      prev.includes(postSeq)
-        ? prev.filter((id) => id !== postSeq)
-        : [...prev, postSeq]
-    );
-  };
-
   return (
     <TableWrapper>
       <StyledTable>
@@ -43,12 +35,16 @@ export function PostTable({
         <TableBody>
           {data.length > 0 ? (
             data.map((item, index) => (
-              <TableRow key={item.writeDt || index}>
+              <TableRow key={item.postSeq || index}>
                 <SmallTableCell>
                   <SelectableCheckbox
-                    name={item.writeDt}
-                    checked={selectedPosts.includes(item.writeDt)}
-                    onChange={() => handleCheckboxChange(item.writeDt)}
+                    name={`post-${item.seq}`} // postSeq -> seq로 변경
+                    checked={selectedPosts.some(
+                      (post) => post.seq === item.seq
+                    )} // postSeq -> seq로 변경
+                    onChange={() =>
+                      handleCheckboxChange(item.seq, item.division)
+                    } // postSeq -> seq로 변경
                   />
                 </SmallTableCell>
                 <TableCell>{index + 1}</TableCell>

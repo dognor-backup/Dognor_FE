@@ -1,9 +1,10 @@
 import PatInfoCard from "@/domains/pat/components/PatInfoCard";
-import MyPosts from "@/domains/post/MyPosts";
+import MyPosts from "@/domains/dashboard/components/MyPosts";
 import UserInfoCard from "@/domains/user/components/UserInfoCard";
 import { useGetUserInfo } from "@/domains/user/hooks/useGetUserInfo";
 import { PageTop } from "@/shared/components/layout/PageTopTitle";
 import styled from "@emotion/styled";
+import MyCommentReview from "@/domains/dashboard/components/MyCommentReview";
 
 export default function IndividualUser() {
   const { data: userData } = useGetUserInfo();
@@ -18,6 +19,7 @@ export default function IndividualUser() {
       <UserInfoCard name={name} phone={phone} email={email} />
       <PatInfoCard />
       <MyPosts />
+      <MyCommentReview />
     </IndividualUserLayout>
   );
 }
@@ -29,5 +31,3 @@ const IndividualUserLayout = styled.div`
   padding: 0 36px;
   gap: 80px;
 `;
-
-
