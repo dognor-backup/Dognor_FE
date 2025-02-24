@@ -1,3 +1,4 @@
+import { formatDate } from "@/shared/utils/formatDate";
 import {
   TableWrapper,
   StyledTable,
@@ -8,10 +9,12 @@ import {
   TableCell,
   SmallTableCell,
 } from "./baseTable";
-import { formatDate } from "@/shared/utils/formatDate";
+import SelectableCheckbox from "./SelectableCheckbox";
 
 export function CommentTable({
   data = [],
+  selectedComments = [],
+  handleCheckboxChange,
   emptyMessage = "댓글/리뷰가 없습니다.",
 }) {
   return (
@@ -19,17 +22,28 @@ export function CommentTable({
       <StyledTable>
         <TableHeader>
           <TableRow>
+            <TableHead width={32}></TableHead>
             <TableHead width={70}>No.</TableHead>
-            <TableHead width={354}>댓글/리뷰</TableHead>
+            <TableHead width={434}>댓글/리뷰</TableHead>
             <TableHead width={140}>구분</TableHead>
             <TableHead width={140}>게시판</TableHead>
             <TableHead width={120}>작성일</TableHead>
+            <TableHead width={40}></TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {data.length > 0 ? (
             data.map((item, index) => (
               <TableRow key={item.seq || index}>
+                <SmallTableCell>
+                  <SelectableCheckbox
+                    name={`comment-${item.seq}`}
+                    checked={selectedComments.some(
+                      (comment) => comment.seq === item.seq
+                    )}
+                    onChange={() => handleCheckboxChange(item.seq)}
+                  />
+                </SmallTableCell>
                 <TableCell>{index + 1}</TableCell>
                 <TableCell>{item.content}</TableCell>
                 <SmallTableCell>{item.division || "미정"}</SmallTableCell>
@@ -41,7 +55,7 @@ export function CommentTable({
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={5} className="text-center" height={"40px"}>
+              <TableCell colSpan={6} className="text-center" height={"40px"}>
                 {emptyMessage}
               </TableCell>
             </TableRow>
