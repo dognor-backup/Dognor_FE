@@ -66,3 +66,17 @@ export const searchMyCommentReview = async (params) => {
     throw error;
   }
 };
+
+export const deleteMyCommentReview = async (selectedComments) => {
+  try {
+    const response = await AxiosInstance.post(
+      "/dashboard/delete-comment-review",
+      selectedComments
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("댓글/리뷰 삭제 실패:", error.response?.data || error.message);
+    throw error;
+  }
+};

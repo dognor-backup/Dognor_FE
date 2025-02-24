@@ -38,7 +38,7 @@ export default function MyPosts() {
   const [selectedPosts, setSelectedPosts] = useState([]);
   const [myPosts, setMyPosts] = useState([]);
   const [totalPage, setTotalPage] = useState(1);
-  const { openAlert, isAlertOpen } = useAlertStore();
+  const { openAlert, isAlertOpen, deleteType } = useAlertStore();
 
   const currentCategoryPath = searchParams.get("myPosts") || "all";
   const currentCategory =
@@ -80,9 +80,8 @@ export default function MyPosts() {
 
   const deleteMutation = useMutation({
     mutationFn: deleteMyPosts,
-    onSuccess: (response) => {
-      console.log("DELETE API 응답:", response);
-      fetchPosts(); // 삭제 성공 후 게시글 목록 새로고침
+    onSuccess: () => {
+      fetchPosts();
     },
     onError: (error) => {
       console.error("게시글 삭제 실패:", error);
@@ -149,11 +148,7 @@ export default function MyPosts() {
       alert("삭제할 게시글을 선택하세요.");
       return;
     }
-    console.log(
-      "삭제 요청할 데이터 구조:",
-      JSON.stringify(selectedPosts, null, 2)
-    );
-    openAlert("delete", selectedPosts);
+    openAlert("delete-post", selectedPosts);
   };
 
   const handlePageChange = (clickedPage) => {
@@ -241,14 +236,10 @@ export default function MyPosts() {
         getClickedPageNumber={handlePageChange}
       />
 
-      {isAlertOpen && (
+      {isAlertOpen && deleteType === "delete-post" && (
         <DelAlert
           isAlertOpen={isAlertOpen}
           func={() => {
-            console.log(
-              "DELETE API 요청 데이터:",
-              JSON.stringify(selectedPosts, null, 2)
-            );
             try {
               deleteMutation.mutate(selectedPosts);
             } catch (error) {
@@ -263,44 +254,45 @@ export default function MyPosts() {
   );
 }
 
+
 const MyPostsLayout = styled.div`
-  max-width: 1008px;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
+ max-width: 1008px;
+ width: 100%;
+ display: flex;
+ flex-direction: column;
 `;
 
 const MyPostsTitleText = styled.p`
-  font-weight: 700;
-  font-size: 32px;
-  line-height: 42px;
-  color: ${({ theme }) => theme.colors.neutrals_00};
+ font-weight: 700;
+ font-size: 32px;
+ line-height: 42px;
+ color: ${({ theme }) => theme.colors.neutrals_00};
 `;
 
 const MyPostsHeaderContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 32px;
+ display: flex;
+ flex-direction: column;
+ justify-content: center;
+ align-items: center;
+ gap: 32px;
 `;
 
 const TableContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+ display: flex;
+ flex-direction: column;
+ gap: 8px;
 `;
 
 const FilterBtnContainer = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  gap: 8px;
-  margin-top: 48px;
+ display: flex;
+ justify-content: flex-start;
+ gap: 8px;
+ margin-top: 48px;
 `;
 
 const DeleteActionContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ margin-bottom: 8px;
 `;

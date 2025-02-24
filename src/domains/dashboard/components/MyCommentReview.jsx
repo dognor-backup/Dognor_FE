@@ -11,6 +11,7 @@ import CheckboxSmall from "@/shared/components/checkbox/CheckboxSmall";
 import { useSearchMyCommentReview } from "../../dashboard/hooks/useSearchMyCommentReview";
 import { Spinner } from "@/shared/components/Spinner";
 import { useMutation } from "@tanstack/react-query";
+import { deleteMyCommentReview } from "../../dashboard/api/myPostApi";
 import useAlertStore from "@/shared/hooks/useAlertStore";
 import DelAlert from "@/shared/components/alert/DelAlert";
 import { CommentTable } from "@/shared/components/Table/CommentTable";
@@ -28,7 +29,7 @@ export default function MyCommentReview() {
   const [selectedComments, setSelectedComments] = useState([]);
   const [myComments, setMyComments] = useState([]);
   const [totalPage, setTotalPage] = useState(1);
-  const { openAlert, isAlertOpen } = useAlertStore();
+  const { openAlert, isAlertOpen, deleteType } = useAlertStore();
 
   const currentCategoryPath = searchParams.get("myComments") || "all";
   const currentCategory =
@@ -54,8 +55,6 @@ export default function MyCommentReview() {
             setMyComments(response.data);
             setSelectedComments([]);
             setTotalPage(response.totalPage);
-          } else {
-            console.error("댓글/리뷰 검색 실패: 데이터 없음");
           }
         },
         onError: (error) => {
@@ -64,6 +63,16 @@ export default function MyCommentReview() {
       }
     );
   };
+
+  const deleteMutation = useMutation({
+    mutationFn: deleteMyCommentReview,
+    onSuccess: () => {
+      fetchComments();
+    },
+    onError: (error) => {
+      console.error("댓글/리뷰 삭제 실패:", error);
+    },
+  });
 
   useEffect(() => {
     if (userSeq) {
@@ -87,7 +96,13 @@ export default function MyCommentReview() {
       if (isSelected) {
         return prev.filter((comment) => comment.seq !== seq);
       } else {
-        return [...prev, { seq }];
+        return [
+          ...prev,
+          {
+            seq,
+            type: currentCategory === "all" ? "comment" : currentCategory,
+          },
+        ];
       }
     });
   };
@@ -99,6 +114,7 @@ export default function MyCommentReview() {
       setSelectedComments(
         myComments.map((item) => ({
           seq: item.seq,
+          type: currentCategory === "all" ? "comment" : currentCategory,
         }))
       );
     }
@@ -123,7 +139,7 @@ export default function MyCommentReview() {
       alert("삭제할 댓글/리뷰를 선택하세요.");
       return;
     }
-    openAlert("delete", selectedComments);
+    openAlert("delete-comment", selectedComments);
   };
 
   const handlePageChange = (clickedPage) => {
@@ -152,7 +168,7 @@ export default function MyCommentReview() {
         <SubMenuBar
           subMenuList={subMenuList}
           useQueryParams={true}
-          queryParamKey="myComments" 
+          queryParamKey="myComments"
           activeCategory={currentCategoryPath}
           onCategoryChange={handleCategoryChange}
         />
@@ -212,12 +228,12 @@ export default function MyCommentReview() {
         getClickedPageNumber={handlePageChange}
       />
 
-      {isAlertOpen && (
+      {isAlertOpen && deleteType === "delete-comment" && (
         <DelAlert
           isAlertOpen={isAlertOpen}
           func={() => {
             try {
-              fetchComments();
+              deleteMutation.mutate(selectedComments);
             } catch (error) {
               console.error("삭제 중 오류 발생:", error);
             }
@@ -235,6 +251,7 @@ const MyCommentReviewLayout = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
+  margin-bottom: 100px;
 `;
 
 const MyCommentReviewTitleText = styled.p`
