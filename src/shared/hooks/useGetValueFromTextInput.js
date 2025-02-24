@@ -6,6 +6,6 @@ const useGetValueFromTextInput = () => {
   const getInputValue = ({ name, value }) => {
     setInputValues((prev) => ({ ...prev, [name]: value }));
   };
-  return { inputValues, getInputValue };
+  return { inputValues, getInputValue, setInputValues };
 };
 export default useGetValueFromTextInput;
