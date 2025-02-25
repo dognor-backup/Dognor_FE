@@ -6,8 +6,8 @@ import useUserStore from "@/domains/auth/store/useUserStore";
 import VerticalDotsSelect from "../../VerticalDotsSelect";
 import { useGetUserId } from "@/domains/auth/hooks/useGetUserId";
 
-export default function TagCard({ handleDelete, handleEdit, campaign, likeCampaignMutation, ...props }) {
-  const { camPaignSeq, imgUrl, title, likeCnt, likeYn, keyword1, keyword2, keyword3 } = campaign;
+export default function TagCard({ handleDelete, handleEdit, campaign, likeCampaignMutation, useHome, ...props }) {
+  const { camPaignSeq, imgUrl, title, likeCnt, likeYn, keyword1, keyword2, keyword3 } = campaign || {};
 
   const { user } = useUserStore();
   const { userSeq, userRole } = useGetUserId();
@@ -47,7 +47,7 @@ export default function TagCard({ handleDelete, handleEdit, campaign, likeCampai
         <InfoContainer>
           <LikesWrapper onClick={(e) => e.stopPropagation()}>
             <LikeTextSpan>{like}</LikeTextSpan>
-            {isLiked || likeYn ? <HeartFilled onClick={handleLike} /> : <Heart onClick={handleLike} />}
+            {isLiked || likeYn || useHome ? <HeartFilled onClick={handleLike} /> : <Heart onClick={handleLike} />}
           </LikesWrapper>
         </InfoContainer>
       </BtmContainer>
@@ -92,6 +92,7 @@ const TextWrapper = styled.div`
   -webkit-box-orient: vertical;
   text-overflow: ellipsis;
   padding: 0 4px 8px 4px;
+  text-align: left;
   gap: 8px;
 `;
 
