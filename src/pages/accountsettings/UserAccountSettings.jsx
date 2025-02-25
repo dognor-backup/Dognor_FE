@@ -15,9 +15,12 @@ import { useVerifyEmail } from "@/domains/auth/hooks/useSignup";
 import { useEmailCheckStore } from "@/domains/auth/store/useSignupStore";
 import { validateEmail } from "@/shared/utils/validation";
 import { useGetUserInfo } from "@/domains/user/hooks/useGetUserInfo";
+import useModalStore from "@/shared/hooks/useModalStore";
+import WithdrawModal from "@/shared/components/modals/WithdrawModal";
 
 const UserAccountSettings = () => {
   const navigate = useNavigate();
+  const { openModal } = useModalStore();
   const { data: userInfoData } = useGetUserInfo();
   const { inputValues, getInputValue } = useGetValueFromTextInput();
   const { emailCode } = useEmailCheckStore();
@@ -302,9 +305,16 @@ const UserAccountSettings = () => {
             정보 수정하기
           </Button>
           <WithdrawalButtonContainer>
-            <Button variant="normal" size="small" state="default" type="button">
+            <Button
+              variant="normal"
+              size="small"
+              state="default"
+              type="button"
+              onClick={() => openModal("WithdrawModal")}
+            >
               회원 탈퇴
             </Button>
+            <WithdrawModal />
           </WithdrawalButtonContainer>
         </AccountButtonWrapper>
       </form>
