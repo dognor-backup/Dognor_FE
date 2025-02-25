@@ -30,7 +30,7 @@ const LabelChk = styled.label(({ theme, checked, weight, size }) => ({
   color: theme.colors.neutrals_01,
 
   "&::before": {
-    content: "",
+    content: "''",
     display: "inline-block",
     marginRight: "8px",
     width: "24px",
@@ -38,7 +38,7 @@ const LabelChk = styled.label(({ theme, checked, weight, size }) => ({
     border: `1px solid ${theme.colors.neutrals_01}`,
     backgroundColor: checked ? theme.colors.neutrals_01 : theme.colors.neutrals_08,
     borderRadius: "4px",
-    backgroundImage: "url('/assets/icons/Check_W.svg')",
+    backgroundImage: "url('/src/assets/icons/Check_W.svg')",
     backgroundSize: "15px",
     backgroundRepeat: "no-repeat",
     backgroundPosition: "center",
