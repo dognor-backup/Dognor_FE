@@ -1,11 +1,18 @@
 import styled from "@emotion/styled";
 
+//배너수만큼 circleBtn 자동 생성
 export function TopBanner() {
   return (
     <MainBanner>
       <BannerBtnLeft />
       <BannerImg />
       <BannerBtnRight />
+      <BannerBtns>
+        <CircleBtn isActive />
+        <CircleBtn />
+        <CircleBtn />
+        <CircleBtn />
+      </BannerBtns>
     </MainBanner>
   );
 }
@@ -18,6 +25,22 @@ const MainBanner = styled.div`
   align-items: center;
   justify-content: center;
 `;
+const BannerBtns = styled.div`
+  position: absolute;
+  bottom: 24px;
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+`;
+const CircleBtn = styled.button(
+  ({ isActive, theme }) => `
+  width:12px;
+  height: 12px;
+  background-color:${isActive ? "#4A3AFF" : theme.colors.neutrals_08};
+  border-radius: 50%;
+  border: 1px solid ${theme.colors.neutrals_05}
+`
+);
 const BannerImg = styled.img`
   height: 480px;
   max-height: 480px;

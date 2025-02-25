@@ -3,24 +3,29 @@ import { DatePicker } from "@/shared/components/DatePicker";
 import { InputBtn } from "@/shared/components/input/InputBtn";
 import { InputForm } from "@/shared/components/input/InputForm";
 import styled from "@emotion/styled";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 
 export function BannerSettingCard({ img }) {
+  const [fileName, setFileName] = useState({ web: "", mobile: "" });
   const fileInputRef = useRef();
   const BannerImg = img;
   const getInputValue = ({ name, value }) => {
     console.log(name, value);
   };
-  const handleOpenFile = () => {
+  const handleOpenFile = (e) => {
+    console.log("tt", fileInputRef.current);
+
     if (fileInputRef.current) {
       fileInputRef.current.click();
     }
   };
-  const handleFileChange = () => {
-    // if (fileInputRef.current?.files?.length > 0) {
-    //   setFileName(fileInputRef.current.files[0].name);
-    // }
+  const handleFileChange = (e) => {
+    console.log(e.target);
+    /*  if (fileInputRef.current?.files?.length > 0) {
+      setFileName(fileInputRef.current.files[0].name);
+    } */
   };
+
   /* {
   "webImgFile": "string",
   "mobileImgFile": "string",
@@ -29,17 +34,17 @@ export function BannerSettingCard({ img }) {
   "endDate": "2024-12-12",
   "memo": "text"
 } */
-  console.log("ss", img);
+
   return (
     <InputWrapper>
       <BannerImg />
 
       <InputContainer>
         <Flex>
-          <File type="file" id="fileInput" ref={fileInputRef} onChange={handleFileChange} />
+          <File type="file" id="webFile" ref={fileInputRef} onChange={handleFileChange} />
           <InputBtn
-            id="title"
-            name="title"
+            id="web"
+            name="web"
             placeholder="사진을 등록해주세요"
             label="이미지 첨부(Web)"
             status="normal"
@@ -49,8 +54,7 @@ export function BannerSettingCard({ img }) {
             readOnly
             onClick={handleOpenFile}
             className="w100"
-
-            //   value={titleValue}
+            value={fileName.web}
             //   onChange={(e) => setTitleValue(e.target.value)}
           />
 
@@ -66,17 +70,20 @@ export function BannerSettingCard({ img }) {
           </Right>
         </Flex>
         <Flex className="mgTop20">
+          <File type="file" id="mobileFile" ref={fileInputRef} onChange={handleFileChange} />
           <InputBtn
-            id="title"
-            name="title"
+            id="mobile"
+            name="mobile"
             placeholder="사진을 등록해주세요"
-            label="이미지 첨부(Web)"
+            label="이미지 첨부(Mobile)"
             status="normal"
             BtnText="파일 첨부하기"
             getInputValue={getInputValue}
-            infoMessage="1920*480 비율, 파일은 1MB 이내로 해주세요"
+            infoMessage="800*370 비율, 파일은 1MB 이내로 해주세요"
+            onClick={handleOpenFile}
             className="w100"
-            //   value={titleValue}
+            readOnly
+            value={fileName.mobile}
             //   onChange={(e) => setTitleValue(e.target.value)}
           />
           <Right>
@@ -85,13 +92,14 @@ export function BannerSettingCard({ img }) {
         </Flex>
         <Flex className="mgTop20">
           <InputForm
-            id="title"
-            name="title"
-            placeholder="링크를 입력해주세요"
-            label="링크"
+            id="memo"
+            name="memo"
+            placeholder="설명을 작성해주세요"
+            label="배너설명"
             status="normal"
             getInputValue={getInputValue}
             className="w100"
+            max-length="500"
           />
           <Right>
             <DatePicker label="종료일" />
