@@ -9,16 +9,7 @@ import { useNavigate } from "react-router-dom";
 import VerticalDotsSelect from "../../VerticalDotsSelect";
 
 export default function PostCard({ story, handleDelete, handleEdit }) {
-  const {
-    donationStorySeq,
-    cardImgUrl,
-    likeCnt,
-    likeYn,
-    content,
-    name,
-    profileImgUrl,
-    firstSaveUser,
-  } = story;
+  const { donationStorySeq, cardImgUrl, likeCnt, likeYn, content, name, profileImgUrl, firstSaveUser } = story || {};
   const { user } = useUserStore();
   const [like, setLike] = useState(likeCnt);
   const [isLiked, setIsLiked] = useState(likeYn);
@@ -70,10 +61,7 @@ export default function PostCard({ story, handleDelete, handleEdit }) {
         <CardImage src={cardImgUrl} />
         {isAuthor ? (
           <ActionSelectWrapper>
-            <VerticalDotsSelect
-              handleEdit={handleEdit}
-              handleDelete={handleDelete}
-            />
+            <VerticalDotsSelect handleEdit={handleEdit} handleDelete={handleDelete} />
           </ActionSelectWrapper>
         ) : (
           ""
@@ -82,20 +70,11 @@ export default function PostCard({ story, handleDelete, handleEdit }) {
       <TextWrapper>{content}</TextWrapper>
       <InfoContainer>
         <ProfileWrapper>
-          {profileImgUrl ? (
-            <ProfileImage src={profileImgUrl} />
-          ) : (
-            <DefaultProfile />
-          )}
+          {profileImgUrl ? <ProfileImage src={profileImgUrl} /> : <DefaultProfile />}
           {name}
         </ProfileWrapper>
         <LikesWrapper>
-          {like}{" "}
-          {isLiked ? (
-            <HeartFilled onClick={handleLike} />
-          ) : (
-            <Heart onClick={handleLike} />
-          )}
+          {like} {isLiked ? <HeartFilled onClick={handleLike} /> : <Heart onClick={handleLike} />}
         </LikesWrapper>
       </InfoContainer>
     </PostCardLayout>
@@ -143,6 +122,7 @@ const TextWrapper = styled.div`
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   text-overflow: ellipsis;
+  text-align: left;
 `;
 
 const InfoContainer = styled.div`

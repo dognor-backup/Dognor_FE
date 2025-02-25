@@ -25,7 +25,6 @@ export function CampaignDetail() {
   const [campaignDetail, setCampaignDetail] = useState({});
   const { camPaignSeq, detail, endDate, likeCnt, writeDt, strDate, title, writerName, keyword1, keyword2, keyword3 } =
     campaignDetail || {};
-  console.log(campaignDetail);
   const dateTime = writeDt;
   const { formattedDate, formattedTime } = formatDate(dateTime);
   const handleGetPostDetail = useMutation({

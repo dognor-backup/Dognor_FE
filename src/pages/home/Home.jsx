@@ -1,9 +1,11 @@
 import styled from "@emotion/styled";
 import { LinkCard, TextCard, WideCard } from "./components/LinkCard";
 import { Tag } from "./components/Tag";
-import { Banner } from "./components/Banner";
+import { TopBanner } from "./components/TopBanner";
 import TagCardsHome from "./components/TagCardHome";
 import { useNavigate } from "react-router-dom";
+import PostCardsHome from "./components/PostCardHome";
+import { SecondBanner } from "./components/Banners";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -12,23 +14,13 @@ export default function Home() {
     e.preventDefault();
     navigate(`/${path}`);
   };
+
   return (
     <>
       <MainWrapper>
-        <Banner />
+        <TopBanner />
+        <SecondBanner />
         <MainContainer>
-          <NthBanner background="/src/assets/images/home_dog_new_live.svg" height="552px" width="870px">
-            <TextContainer>
-              <BannerTitle>
-                DOG NEW LIFE 에서
-                <br /> 반려견 헌혈문화를 만들어요
-              </BannerTitle>
-              <BannerText>
-                강아지는 헌혈을 혼자 할 수 없어요.
-                <br /> 보호자과 의료진의 도움이 필요합니다.
-              </BannerText>
-            </TextContainer>
-          </NthBanner>
           <CardContainer grid={3} height="358px">
             <TextCard
               color="#F64D4D"
@@ -131,7 +123,9 @@ export default function Home() {
               여러분도 같이해요
             </Text>
             <LongBtn>더 많은 헌혈 동료들 만나보기</LongBtn>
-            <CardContainer grid={3} padding={"btm"}></CardContainer>
+            <CardContainer grid={3} padding={"btm"}>
+              <PostCardsHome onClick={(e) => handleClickCard(e, "showcase")} />
+            </CardContainer>
           </div>
           <WideCard
             background="/src/assets/images/card03.svg"
@@ -183,26 +177,7 @@ const NthBanner = styled.div(
   z-index: 0;
 `
 );
-const BannerTitle = styled.strong`
-  font-weight: 700;
-  font-size: 28px;
-  line-height: 42px;
 
-  margin-bottom: 16px;
-  display: inline-block;
-  color: #170f49;
-`;
-const BannerText = styled.p`
-  font-size: 400;
-  line-height: 24px;
-`;
-const TextContainer = styled.div`
-  width: 338px;
-  text-align: center;
-  position: absolute;
-  right: -100px;
-  top: 30%;
-`;
 const CardContainer = styled.div(
   ({ grid, height, padding }) => `
   display: grid;

@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 
 export function LinkCard({ background, title, btnText, color, btnColor }) {
   return (
-    <Card background={background} border size>
+    <Card background={background} border>
       <CardTitle color={color}>{title}</CardTitle>
       <CardBtn btnColor={btnColor}>{btnText}</CardBtn>
     </Card>
@@ -27,6 +27,7 @@ export function WideCard({ background, title, btnText, color, btnColor }) {
     </CardLong>
   );
 }
+
 const Card = styled.div(
   ({ background, color, border }) => `
   background: url(${background});
@@ -84,11 +85,7 @@ background-color: ${
       : theme.colors.primary_purple
   };
 font-size: 16px;
-color:${
-    btnColor === "white"
-      ? theme.colors.primary_purple
-      : theme.colors.neutrals_08
-  };
+color:${btnColor === "white" ? theme.colors.primary_purple : theme.colors.neutrals_08};
 font-weight: 700;
 padding: 10px 16px;
 border-radius: 300px;

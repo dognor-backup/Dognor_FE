@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 
-export function Banner() {
+export function TopBanner() {
   return (
     <MainBanner>
       <BannerBtnLeft />
