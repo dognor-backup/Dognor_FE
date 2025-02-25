@@ -1,13 +1,13 @@
-import { PageTop } from "@/shared/components/layout/PageTopTitle";
+import { PageTop, PageWrapper } from "@/shared/components/layout/PageTopTitle";
 import { SettingBanner } from "./SettingBanner";
 
 export function BoardContent({ title }) {
   return (
-    <div>
+    <PageWrapper>
       <PageTop>
         <h2>{title}</h2>
       </PageTop>
       <SettingBanner />
-    </div>
+    </PageWrapper>
   );
 }

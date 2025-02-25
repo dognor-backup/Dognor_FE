@@ -194,4 +194,7 @@ export const GlobalStyles = css`
     display: flex;
     justify-content: center;
   }
+  .w100 {
+    width: 100%;
+  }
 `;
