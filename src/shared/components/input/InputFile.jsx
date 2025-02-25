@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
-import { Flex, Input, Label, Info, Layout } from "./inputStyle";
+import { Flex, Input, Label, Info } from "./inputStyle";
 import { Button } from "../buttons/Button";
+import styled from "@emotion/styled";
 
 export const InputFile = ({
   labelText = "사진을 등록해주세요",
@@ -11,18 +12,18 @@ export const InputFile = ({
   placeholder = "파일을 선택해주세요",
 }) => {
   const fileInputRef = useRef(null);
-  const [fileName, setFileName] = useState(""); 
+  const [fileName, setFileName] = useState("");
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      setFileName(file.name); 
-      if (onFileChange) onFileChange(file); 
+      setFileName(file.name);
+      if (onFileChange) onFileChange(file);
     }
   };
 
   const handleButtonClick = () => {
-    fileInputRef.current.click(); 
+    fileInputRef.current.click();
   };
 
   return (
@@ -35,7 +36,7 @@ export const InputFile = ({
           name="file-upload-text"
           placeholder={placeholder}
           readOnly
-          value={fileName} 
+          value={fileName}
           onClick={handleButtonClick}
           style={{ cursor: "pointer" }}
         />
@@ -55,3 +56,9 @@ export const InputFile = ({
     </Layout>
   );
 };
+
+const Layout = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+`;

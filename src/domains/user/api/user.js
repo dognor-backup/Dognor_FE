@@ -51,3 +51,44 @@ export const checkUser = async (credentials) => {
     return { success: false, msg: "네트워크 오류. 연결 상태를 확인해주세요." };
   }
 };
+
+export const updateUserInfo = async (userInfo) => {
+  try {
+    const response = await AxiosInstance.put("/user/info", userInfo);
+    if (response.data.code === 200) {
+      return { 
+        success: true, 
+        data: response.data.data,
+        msg: "회원정보가 성공적으로 수정되었습니다."
+      };
+    }
+    return {
+      success: false,
+      msg: response.data.msg || "회원정보 수정에 실패했습니다."
+    };
+  } catch (error) {
+    if (error.response) {
+      const { status } = error.response;
+      if (status === 400) {
+        return { 
+          success: false, 
+          msg: "잘못된 요청입니다. 입력 정보를 확인해주세요."
+        };
+      } else if (status === 401) {
+        return { 
+          success: false, 
+          msg: "인증되지 않은 요청입니다."
+        };
+      } else if (status === 500) {
+        return { 
+          success: false, 
+          msg: "서버 오류가 발생했습니다."
+        };
+      }
+    }
+    return { 
+      success: false, 
+      msg: "네트워크 오류. 연결 상태를 확인해주세요."
+    };
+  }
+};

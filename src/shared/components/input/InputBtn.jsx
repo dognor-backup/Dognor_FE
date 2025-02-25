@@ -1,5 +1,4 @@
-import { Button } from "../buttons/Button";
-import { Flex, Input, Label, Info } from "./inputStyle";
+import { Flex, Input, Button, Label, Info } from "./inputStyle";
 
 // const { inputValues, getInputValue } = useGetValueFromTextInput();
 
@@ -10,7 +9,7 @@ import { Flex, Input, Label, Info } from "./inputStyle";
         placeholder="placeHolder"
         label="Email"
         infoMessage="Enter your email address"
-        variant="normal"
+        status="normal"
         getInputValue={getInputValue}
       /> */
 
@@ -21,28 +20,33 @@ export const InputBtn = ({
   label,
   BtnText,
   infoMessage,
-  variant,
+  status,
   getInputValue,
-  type,
+  handleClick,
+  className,
+  ...props
 }) => {
   const handleInputValue = (e) => {
     const { name, value } = e.target;
     getInputValue({ name, value });
   };
   return (
-    <>
+    <div className={className}>
       <Label htmlFor={id}>{label}</Label>
       <Flex>
         <Input
-          type={type || "text"}
+          type="text"
           name={name}
           id={id}
           placeholder={placeholder}
           onChange={handleInputValue}
+          {...props}
         />
-        <Button variant={variant || "noraml"}>{BtnText}</Button>
+        <Button status={status} onClick={handleClick} {...props} type="button">
+          {BtnText}
+        </Button>
       </Flex>
       <Info status={status}>{infoMessage}</Info>
-    </>
+    </div>
   );
 };
