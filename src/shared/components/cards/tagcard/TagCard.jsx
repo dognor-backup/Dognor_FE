@@ -24,6 +24,7 @@ export default function TagCard({ handleDelete, handleEdit, campaign, likeCampai
       setLike((prev) => prev + 1);
     }
     setIsLiked((prev) => !prev);
+    if (!likeCampaignMutation) return;
     likeCampaignMutation({ camPaignSeq, likeEvent: isLiked ? "unlike" : "like", userSeq });
   };
 

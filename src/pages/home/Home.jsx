@@ -3,8 +3,15 @@ import { LinkCard, TextCard, WideCard } from "./components/LinkCard";
 import { Tag } from "./components/Tag";
 import { Banner } from "./components/Banner";
 import TagCardsHome from "./components/TagCardHome";
+import { useNavigate } from "react-router-dom";
 
 export default function Home() {
+  const navigate = useNavigate();
+  const handleClickCard = (e, path) => {
+    e.stopPropagation();
+    e.preventDefault();
+    navigate(`/${path}`);
+  };
   return (
     <>
       <MainWrapper>
@@ -145,7 +152,7 @@ export default function Home() {
             <Text bold>다양한 캠페인을 진행하고 있습니다</Text>
             <LongBtn>캠페인 더보기</LongBtn>
             <CardContainer grid={3} padding={"btm"}>
-              <TagCardsHome />
+              <TagCardsHome onClick={(e) => handleClickCard(e, "campaigns")} />
             </CardContainer>
           </div>
         </MainContainer>
