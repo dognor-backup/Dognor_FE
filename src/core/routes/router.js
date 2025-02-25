@@ -58,7 +58,10 @@ const router = createBrowserRouter([
       {
         path: "dashboard",
         Component: Dashboard,
-        children: [{ path: ":menu", Component: BoardContent }],
+        children: [
+          { index: true, Component: BoardContent },
+          { path: ":menu", Component: BoardContent },
+        ],
       },
       { path: "postnew", Component: PostForm },
       { path: "postdetail/:id", Component: PostDetail },
