@@ -54,10 +54,9 @@ const UserAccountSettings = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("suvmit");
 
     const userInfoToUpdate = {
-      userId: userInfoData.userId,
+      userId: userInfoData.data.userId,
       name: inputValues.name || userInfoData.data.name,
       phone: inputValues.phone || userInfoData.data.phone,
       email: inputValues.email || userInfoData.data.email,

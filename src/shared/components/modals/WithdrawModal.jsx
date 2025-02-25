@@ -4,9 +4,13 @@ import { Button } from "../buttons/Button";
 import useModalStore from "@/shared/hooks/useModalStore";
 import { InputForm } from "@/shared/components/input/InputForm";
 import CheckboxSmall from "@/shared/components/checkbox/CheckboxSmall";
+import useUserStore from "@/domains/auth/store/useUserStore";
+import { useWithdrawUser } from "@/domains/user/hooks/useWithdrawUser";
 
 const WithdrawModal = () => {
   const { closeModal, modalname: activemodalname } = useModalStore();
+  const { user } = useUserStore();
+  const { mutate: withdraw, isLoading } = useWithdrawUser();
   const [password, setPassword] = useState("");
   const [agreements, setAgreements] = useState({
     agreement1: false,
@@ -22,7 +26,27 @@ const WithdrawModal = () => {
   };
 
   const isFormValid =
-    agreements.agreement1 && agreements.agreement2 && agreements.agreement3 && password;
+    agreements.agreement1 &&
+    agreements.agreement2 &&
+    agreements.agreement3 &&
+    password;
+
+  const handleWithdraw = () => {
+    if (!isFormValid) return;
+
+    withdraw(
+      { userId: user?.userData?.userId, pw: password },
+      {
+        onSuccess: () => {
+          alert("회원 탈퇴가 완료되었습니다.");
+          closeModal();
+        },
+        onError: (error) => {
+          alert(error.response?.data?.message || "탈퇴 요청에 실패했습니다.");
+        },
+      }
+    );
+  };
 
   return (
     <WithdrawModalDimmed isModalOpen={isModalOpen} onClick={() => closeModal()}>
@@ -69,9 +93,14 @@ const WithdrawModal = () => {
             </WithdrawInputWrapper>
           </WithdrawModalBody>
           <WithdrawModalFooter>
-            <Button style={{ width: "100%" }} type="button" disabled={!isFormValid}>
+            <WithdrawButton
+              variant="danger"
+              size="medium"
+              state={isFormValid ? "default" : "disabled"}
+              onClick={handleWithdraw}
+            >
               탈퇴하기
-            </Button>
+            </WithdrawButton>
           </WithdrawModalFooter>
         </WithdrawModalContent>
       </WithdrawModalContainer>
@@ -81,7 +110,6 @@ const WithdrawModal = () => {
 
 export default WithdrawModal;
 
-// ✅ 스타일 그대로 유지
 const WithdrawModalDimmed = styled.div(
   ({ isModalOpen }) => `
   background-color: rgba(81, 79, 110, 0.3);
@@ -166,10 +194,13 @@ const WithdrawCheckboxWrapper = styled.div`
 
 const WithdrawInputWrapper = styled.div`
   width: 100%;
-  max-width: 320px;
 `;
 
 const WithdrawModalFooter = styled.div`
   width: 100%;
   margin-top: auto;
+`;
+
+const WithdrawButton = styled(Button)`
+  width: 100%;
 `;
