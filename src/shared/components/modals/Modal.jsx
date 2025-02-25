@@ -2,10 +2,9 @@ import styled from "@emotion/styled";
 import { Button } from "../buttons/Button";
 import useModalStore from "@/shared/hooks/useModalStore";
 
-
-const Modal = ({ children, BtnText, title, size, isModalOpen}) => {
+const Modal = ({ children, BtnText, title, size, isModalOpen }) => {
   const { closeModal } = useModalStore();
-  const handleModalClick =(e)=>e.stopPropagation()
+  const handleModalClick = (e) => e.stopPropagation();
 
   return (
     <>

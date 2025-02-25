@@ -14,6 +14,13 @@ import App from "@/App";
 import { Agreement } from "@/pages/signup/Agreement";
 import { SignUpComplete } from "@/pages/signup/SignUpComplete";
 
+import { PostForm } from "@/pages/community/PostForm";
+import { CommunityList } from "@/pages/community/components/CommunityList";
+import { CommunityLink } from "@/pages/community/components/ComminityLink";
+import { PostDetail } from "@/pages/community/PostDetail";
+import { CampaignForm } from "@/pages/campaigns/CampaignForm";
+import { CampaignDetail } from "@/pages/campaigns/CampaignDeatil";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -30,37 +37,29 @@ const router = createBrowserRouter([
       {
         path: "campaigns",
         Component: Campaigns,
-        children: [
-          { path: ":id", Component: Home },
-          { path: "edit/:id", Component: Home },
-          { path: "new", Component: Home },
-        ],
       },
-
+      { path: "campaigns/postnew", Component: CampaignForm },
+      { path: "campaign/:id", Component: CampaignDetail },
+      { path: "campaignedit/:id", Component: CampaignForm },
       {
         path: "mypage",
         Component: MyPage,
         children: [{ path: "accountsettings", Component: Home }],
       },
-
       {
         path: "community",
         Component: Community,
         children: [
-          { path: "noticedetail/:id", Component: Home },
-          {
-            path: "communitylist/:categoryid",
-            Component: Home,
-            children: [{ path: "postdetail/:id", Component: Home }],
-          },
-          { path: "postedit/:id", Component: Home },
-          { path: "postnew", Component: Home },
+          { index: true, Component: CommunityLink },
+          { path: ":menu", Component: CommunityList },
         ],
       },
-      { path: "dashboard", Component: Home },
+      { path: "postnew", Component: PostForm },
+      { path: "postdetail/:id", Component: PostDetail },
+      { path: "postedit/:id", Component: PostForm },
     ],
   },
-
+  { path: "dashboard", Component: Home },
   { path: "findaccount", Component: FindAccount },
   { path: "guidepage", Component: Home },
   { path: "changepassword", Component: Home },

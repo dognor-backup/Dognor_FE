@@ -1,19 +1,13 @@
-import { useMutation } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { getCampaigns } from "../api/campaign";
 
-
-export const useGetCampaigns = (setCampaignList) => {
-  return useMutation({
-    mutationFn: getCampaigns,
-    onSuccess: ({ success, data }) => {
-      if (success) {
-        setCampaignList(data); 
-      } else {
-        console.log("Error: API 요청에 실패했습니다.");
-      }
-    },
-    onError: (error) => {
-      console.error("Error 발생:", error);
+export const useGetCampaigns = (postdata) => {
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["campaign", postdata],
+    queryFn: async () => {
+      const response = await getCampaigns(postdata);
+      return response;
     },
   });
+  return { data, isLoading, isError };
 };

@@ -100,8 +100,12 @@ export const IconBtn = styled.button(
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
+      cursor: state !== "disabled ? pointer :not-allowed",
       "&:hover": {
         ...(state !== "disabled" && variants[variant].hover(theme)),
+        "& svg": {
+          filter: "brightness(0) invert(1)",
+        },
       },
     };
   }

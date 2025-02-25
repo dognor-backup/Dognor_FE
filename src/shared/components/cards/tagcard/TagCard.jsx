@@ -4,25 +4,16 @@ import Heart from "../../../../assets/icons/secondary/Heart_Secondary.svg?react"
 import { useState } from "react";
 import useUserStore from "@/domains/auth/store/useUserStore";
 import VerticalDotsSelect from "../../VerticalDotsSelect";
+import { useGetUserId } from "@/domains/auth/hooks/useGetUserId";
 
-export default function TagCard({ handleDelete, handleEdit, campaign }) {
-  const {
-    camPaignSeq,
-    imgUrl,
-    title,
-    likeCnt,
-    likeYn,
-    keyword1,
-    keyword2,
-    keyword3,
-  } = campaign;
+export default function TagCard({ handleDelete, handleEdit, campaign, likeCampaignMutation, ...props }) {
+  const { camPaignSeq, imgUrl, title, likeCnt, likeYn, keyword1, keyword2, keyword3 } = campaign;
 
   const { user } = useUserStore();
-
+  const { userSeq, userRole } = useGetUserId();
   const [isAdmin, setIsAdmin] = useState(false);
   const [like, setLike] = useState(likeCnt);
   const [isLiked, setIsLiked] = useState(likeYn);
-
   if (user.userData.role === "admin") setIsAdmin(true);
 
   const handleLike = () => {
@@ -32,38 +23,34 @@ export default function TagCard({ handleDelete, handleEdit, campaign }) {
     } else {
       setLike((prev) => prev + 1);
     }
-    setIsLiked(!isLiked);
+    setIsLiked((prev) => !prev);
+    likeCampaignMutation({ camPaignSeq, likeEvent: isLiked ? "unlike" : "like", userSeq });
   };
 
   return (
-    <TagCardLayout>
+    <TagCardLayout {...props}>
       <ImageWrapper>
         <CardImage src={imgUrl} />
         {isAdmin ? (
           <ActionSelectWrapper>
-            <VerticalDotsSelect
-              handleEdit={handleEdit}
-              handleDelete={handleDelete}
-            />
+            <VerticalDotsSelect handleEdit={handleEdit} handleDelete={handleDelete} />
           </ActionSelectWrapper>
         ) : (
           ""
         )}
       </ImageWrapper>
-      <TextWrapper>
-        <KeywordText>{`#${keyword1} #${keyword2} #${keyword3}`}</KeywordText>
-        <TitleText>{title}</TitleText>
-      </TextWrapper>
-      <InfoContainer>
-        <LikesWrapper>
-          <LikeTextSpan>{like}</LikeTextSpan>
-          {isLiked ? (
-            <HeartFilled onClick={handleLike} />
-          ) : (
-            <Heart onClick={handleLike} />
-          )}
-        </LikesWrapper>
-      </InfoContainer>
+      <BtmContainer>
+        <TextWrapper>
+          <KeywordText>{`#${keyword1} #${keyword2} #${keyword3}`}</KeywordText>
+          <TitleText>{title}</TitleText>
+        </TextWrapper>
+        <InfoContainer>
+          <LikesWrapper onClick={(e) => e.stopPropagation()}>
+            <LikeTextSpan>{like}</LikeTextSpan>
+            {isLiked || likeYn ? <HeartFilled onClick={handleLike} /> : <Heart onClick={handleLike} />}
+          </LikesWrapper>
+        </InfoContainer>
+      </BtmContainer>
     </TagCardLayout>
   );
 }
@@ -78,7 +65,7 @@ const TagCardLayout = styled.div`
   border-radius: 16px;
   width: 320px;
   height: 376px;
-  gap: 8px;
+  box-sizing: border-box;
 `;
 
 const ImageWrapper = styled.div`
@@ -130,7 +117,7 @@ const InfoContainer = styled.div`
 const LikesWrapper = styled.div`
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 4px;
   cursor: pointer;
 `;
 
@@ -145,6 +132,13 @@ const ActionSelectWrapper = styled.div`
 const LikeTextSpan = styled.span`
   color: ${({ theme }) => theme.colors.primary_purple};
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 400;
   line-height: 24px;
+`;
+const BtmContainer = styled.div`
+  padding: 8px 4px;
+  height: inherit;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
 `;

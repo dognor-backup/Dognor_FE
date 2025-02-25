@@ -1,8 +1,11 @@
 import styled from "@emotion/styled";
+import { useIsFetching } from "@tanstack/react-query";
 
-const Spinner = () => {
+export function Spinner() {
+  const isFetching = useIsFetching();
+  const display = isFetching ? "flex" : "none";
   return (
-    <LoadingWrapper>
+    <LoadingWrapper display={display}>
       <LoadingContainer>
         {[...Array(5)].map((_, i) => (
           <SpinItem key={i} delay={`${i * 0.5}s`} />
@@ -10,20 +13,22 @@ const Spinner = () => {
       </LoadingContainer>
     </LoadingWrapper>
   );
-};
-export default Spinner;
+}
 
-const LoadingWrapper = styled.div`
+const LoadingWrapper = styled.div(
+  ({ display }) => `
   position: fixed;
   top: 0;
   bottom: 0;
   left: 0;
   right: 0;
-  display: flex;
+  display: ${display};
   align-items: center;
   justify-content: center;
   z-index: 10;
-`;
+  overflow: hidden;
+`
+);
 const LoadingContainer = styled.div`
   width: 320px;
   display: flex;

@@ -72,7 +72,7 @@ const TopNavHeaderLayout = styled.div`
   box-sizing: border-box;
   background: ${({ theme }) => theme.colors.neutrals_08};
   position: relative;
-  z-index: 1;
+  z-index: 5;
 `;
 
 const AuthButtonsContainer = styled.div`

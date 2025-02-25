@@ -4,10 +4,11 @@ export const Flex = styled.div`
   display: flex;
   margin-top: 10px;
 `;
+
 export const Input = styled.input(
   ({ theme }) => `
   width: 100%;
-  height: 42px;
+  height: 40px;
   font-size: 14px;
   background-color: ${theme.colors.neutrals_08};
   font-family: "SpoqaHanSansNeo", "Arial", "sans-serif";

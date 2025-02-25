@@ -8,6 +8,7 @@ import { Global, ThemeProvider } from "@emotion/react";
 import { theme } from "./shared/styles/theme.js";
 import { GlobalStyles } from "./shared/styles/global.js";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -31,6 +32,7 @@ createRoot(document.getElementById("root")).render(
           <App />
         </RouterProvider>
       </ThemeProvider>
+      <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   </StrictMode>
 );

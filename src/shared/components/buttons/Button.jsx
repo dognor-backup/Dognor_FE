@@ -119,6 +119,8 @@ export const Button = styled.button(
       ...variantStyles,
       borderRadius: "6px",
       fontWeight: 700,
+      cursor: "pointer",
+      whiteSpace: "nowrap",
       "&:hover": {
         ...(state !== "disabled" && variants[variant].hover(theme)),
       },
