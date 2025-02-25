@@ -26,6 +26,8 @@ export const InputForm = ({
   getInputValue,
   value,
   onChange,
+  className,
+  ...props
 }) => {
   const handleInputValue = (e) => {
     const { name, value } = e.target;
@@ -39,7 +41,7 @@ export const InputForm = ({
   };
 
   return (
-    <>
+    <div className={className}>
       <Label htmlFor={id}>{label}</Label>
       <Flex>
         <Input
@@ -49,9 +51,10 @@ export const InputForm = ({
           placeholder={placeholder}
           onChange={handleInputValue}
           value={value}
+          {...props}
         />
       </Flex>
       <Info status={status}>{infoMessage}</Info>
-    </>
+    </div>
   );
 };
