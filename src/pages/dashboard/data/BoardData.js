@@ -11,7 +11,7 @@ export const BOARD_TITLES = [
     label: "공지사항",
   },
   {
-    path: "campaigns",
+    path: "campaign",
     title: "캠페인 관리",
     label: "캠페인",
   },

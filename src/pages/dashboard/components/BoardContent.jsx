@@ -1,24 +1,40 @@
 import { useParams } from "react-router-dom";
 import { SettingBanner } from "./SettingBanner";
 import styled from "@emotion/styled";
+import { Management } from "./Management";
+import { User } from "./User";
+import { Notice } from "./Notice";
+import { Campaign } from "./Campaign";
+import { Code } from "./Code";
+import { Error } from "./Error";
 
 export function BoardContent({ title }) {
   const { menu } = useParams();
-  console.log("메뉴", menu);
-  // const ContentComponent = () =>{
-  //    switch (menu) {
-  //      case "":
-  //        return <NoticeManagement />;
-  //      case "user":
-  //        return <UserManagement />;
-  //      default:
-  //        return <DefaultPage />;
-  //    }
-  // }
+
+  const ContentComponent = () => {
+    switch (menu) {
+      case undefined:
+        return <Management />;
+      case "user":
+        return <User />;
+      case "notice":
+        return <Notice />;
+      case "campaign":
+        return <Campaign />;
+      case "banner":
+        return <SettingBanner />;
+      case "code":
+        return <Code />;
+      case "error":
+        return <Error />;
+      default:
+        return <Management />;
+    }
+  };
   return (
     <Content>
       <DsTitle>{title}</DsTitle>
-      <SettingBanner />
+      <ContentComponent />
     </Content>
   );
 }
