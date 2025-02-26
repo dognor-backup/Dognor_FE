@@ -17,6 +17,7 @@ import { validateEmail } from "@/shared/utils/validation";
 import { useGetUserInfo } from "@/domains/user/hooks/useGetUserInfo";
 import useModalStore from "@/shared/hooks/useModalStore";
 import WithdrawModal from "@/shared/components/modals/WithdrawModal";
+import { maskUserId } from "@/shared/utils/dataMasking";
 
 const UserAccountSettings = () => {
   const navigate = useNavigate();
@@ -189,7 +190,7 @@ const UserAccountSettings = () => {
           <InputForm
             id="userId"
             name="userId"
-            placeholder={userInfoData.data.userId}
+            placeholder={maskUserId(userInfoData.data.userId)}
             label="아이디"
             infoMessage=""
             status="normal"
