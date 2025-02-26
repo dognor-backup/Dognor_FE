@@ -10,11 +10,9 @@ import { Error } from "./Error";
 
 export function BoardContent({ title }) {
   const { menu } = useParams();
-
+  console.log("me", menu);
   const ContentComponent = () => {
     switch (menu) {
-      case undefined:
-        return <Management />;
       case "user":
         return <User />;
       case "notice":

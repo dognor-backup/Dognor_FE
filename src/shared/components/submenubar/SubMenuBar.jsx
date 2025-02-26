@@ -17,8 +17,8 @@ export default function SubMenuBar({ subMenuList }) {
     }
   };
   const getInitialActiveMenu = () => {
-    const currentPath = location.pathname.split("/").slice(2).join("/");
-    return subMenuList.find((menu) => menu.path === currentPath)?.path || null;
+    const currentPath = location.pathname.split("/").slice(2).join("/") || "";
+    return subMenuList.find((menu) => menu.path === currentPath)?.path || null || "";
   };
 
   useEffect(() => {
