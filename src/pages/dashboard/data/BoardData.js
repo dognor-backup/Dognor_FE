@@ -1,27 +1,32 @@
 export const BOARD_TITLES = [
   { path: "", title: "통합관리 메뉴", label: "관리현황" },
   {
-    path: "free",
+    path: "user",
     title: "회원관리",
     label: "회원관리",
   },
   {
-    path: "review",
+    path: "notice",
     title: "공지사항 관리",
     label: "공지사항",
   },
   {
-    path: "question",
+    path: "campaigns",
     title: "캠페인 관리",
     label: "캠페인",
   },
   {
-    path: "thanks",
+    path: "banner",
+    title: "배너 설정",
+    label: "배너설정",
+  },
+  {
+    path: "code",
     title: "공통코드 설정",
     label: "공통코드",
   },
   {
-    path: "needbloods",
+    path: "error",
     title: "에러",
     label: "에러 내역",
   },

@@ -10,7 +10,11 @@ export default function SubMenuBar({ subMenuList }) {
   const handleSubMenuClick = (menu) => {
     setActiveSubMenu(menu);
     const currentPath = location.pathname.split("/").slice(0, 2).join("/");
-    navigate(`${currentPath}/${menu}`);
+    if (menu === "") {
+      navigate(`${currentPath}`);
+    } else {
+      navigate(`${currentPath}/${menu}`);
+    }
   };
   const getInitialActiveMenu = () => {
     const currentPath = location.pathname.split("/").slice(2).join("/");
