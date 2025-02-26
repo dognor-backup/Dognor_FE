@@ -1,7 +1,22 @@
+import { getBannerList } from "@/pages/dashboard/api/dashboard";
 import styled from "@emotion/styled";
+import { useQuery } from "@tanstack/react-query";
 
 //배너수만큼 circleBtn 자동 생성
 export function TopBanner() {
+  const {
+    data: bannerList,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["banner"],
+    queryFn: async () => {
+      const response = await getBannerList();
+      return response;
+    },
+  });
+  console.log(bannerList);
+
   return (
     <MainBanner>
       <BannerBtnLeft />

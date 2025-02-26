@@ -2,49 +2,58 @@ import { Button } from "@/shared/components/buttons/Button";
 import { DatePicker } from "@/shared/components/DatePicker";
 import { InputBtn } from "@/shared/components/input/InputBtn";
 import { InputForm } from "@/shared/components/input/InputForm";
+import { formatDate } from "@/shared/utils/formatDate";
 import styled from "@emotion/styled";
 import { useRef, useState } from "react";
 
-export function BannerSettingCard({ img }) {
-  const [fileName, setFileName] = useState({ web: "", mobile: "" });
-  const fileInputRef = useRef();
+export function BannerSettingCard({ img, setBannerData }) {
+  const [fileName, setFileName] = useState({ webImgFile: "", mobileImgFile: "" });
+  const webFileInput = useRef();
+  const mobileFileInput = useRef();
   const BannerImg = img;
-  const getInputValue = ({ name, value }) => {
-    console.log(name, value);
-  };
-  const handleOpenFile = (e) => {
-    console.log("tt", fileInputRef.current);
 
-    if (fileInputRef.current) {
-      fileInputRef.current.click();
+  const getInputValue = ({ name, value }) => {
+    setBannerData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleOpenFile = (type) => {
+    if (type === "webImgFile" && webFileInput.current) {
+      return webFileInput.current.click();
+    }
+    if (type === "mobileImgFile" && mobileFileInput.current) {
+      return mobileFileInput.current.click();
     }
   };
-  const handleFileChange = (e) => {
-    console.log(e.target);
-    /*  if (fileInputRef.current?.files?.length > 0) {
-      setFileName(fileInputRef.current.files[0].name);
-    } */
+
+  const handleFileChange = (e, type) => {
+    const file = e.target.files[0];
+    if (file) {
+      setFileName((prev) => ({ ...prev, [type]: file.name }));
+      setBannerData((prev) => ({ ...prev, [type]: file }));
+    }
   };
 
-  /* {
-  "webImgFile": "string",
-  "mobileImgFile": "string",
-  "link": "https://domain.com",
-  "strDate": "2024-12-12",
-  "endDate": "2024-12-12",
-  "memo": "text"
-} */
+  const getStrDate = (date) => {
+    const { formattedDate } = formatDate(date);
+    const strDate = formattedDate;
+    setBannerData((prev) => ({ ...prev, strDate }));
+  };
+
+  const getEndDate = (date) => {
+    const { formattedDate } = formatDate(date);
+    const endDate = formattedDate;
+    setBannerData((prev) => ({ ...prev, endDate }));
+  };
 
   return (
     <InputWrapper>
       <BannerImg />
-
       <InputContainer>
         <Flex>
-          <File type="file" id="webFile" ref={fileInputRef} onChange={handleFileChange} />
+          <File type="file" id="webFile" ref={webFileInput} onChange={(e) => handleFileChange(e, "webImgFile")} />
           <InputBtn
-            id="web"
-            name="web"
+            id="webImgFile"
+            name="webImgFile"
             placeholder="사진을 등록해주세요"
             label="이미지 첨부(Web)"
             status="normal"
@@ -52,16 +61,16 @@ export function BannerSettingCard({ img }) {
             getInputValue={getInputValue}
             infoMessage="1920*480 비율, 파일은 1MB 이내로 해주세요"
             readOnly
-            onClick={handleOpenFile}
+            onClick={() => handleOpenFile("webImgFile")}
             className="w100"
-            value={fileName.web}
+            value={fileName.webImgFile}
             //   onChange={(e) => setTitleValue(e.target.value)}
           />
 
           <Right>
             <InputForm
-              id="title"
-              name="title"
+              id="link"
+              name="link"
               placeholder="링크를 입력해주세요"
               label="링크"
               status="normal"
@@ -70,24 +79,29 @@ export function BannerSettingCard({ img }) {
           </Right>
         </Flex>
         <Flex className="mgTop20">
-          <File type="file" id="mobileFile" ref={fileInputRef} onChange={handleFileChange} />
+          <File
+            type="file"
+            id="mobileFile"
+            ref={mobileFileInput}
+            onChange={(e) => handleFileChange(e, "mobileImgFile")}
+          />
           <InputBtn
-            id="mobile"
-            name="mobile"
+            id="mobileImgFile"
+            name="mobileImgFile"
             placeholder="사진을 등록해주세요"
             label="이미지 첨부(Mobile)"
             status="normal"
             BtnText="파일 첨부하기"
             getInputValue={getInputValue}
             infoMessage="800*370 비율, 파일은 1MB 이내로 해주세요"
-            onClick={handleOpenFile}
+            onClick={() => handleOpenFile("mobileImgFile")}
             className="w100"
             readOnly
-            value={fileName.mobile}
+            value={fileName.mobileImgFile}
             //   onChange={(e) => setTitleValue(e.target.value)}
           />
           <Right>
-            <DatePicker label="시작일" />
+            <DatePicker label="시작일" getSelectedDate={getStrDate} />
           </Right>
         </Flex>
         <Flex className="mgTop20">
@@ -102,12 +116,12 @@ export function BannerSettingCard({ img }) {
             max-length="500"
           />
           <Right>
-            <DatePicker label="종료일" />
+            <DatePicker label="종료일" getSelectedDate={getEndDate} />
           </Right>
         </Flex>
       </InputContainer>
       <BtnsContainer>
-        <Button variant="normal" size="small" state="outline">
+        <Button variant="normal" size="small" state="outline" type="submit" form="bannerForm">
           저장
         </Button>
         <Button variant="normal" size="small" state="outline">
@@ -125,10 +139,13 @@ const InputWrapper = styled.article(
   border: 1px solid ${theme.colors.neutrals_04};
   padding: 16px;
   border-radius:16px;
-  margin-bottom: 24px;
   justify-content: space-between;
   width: 100%;
   gap: 16px;
+
+  &:not(:last-child) {
+    margin-bottom: 24px;
+  }
 `
 );
 const Flex = styled.div`
@@ -137,6 +154,7 @@ const Flex = styled.div`
 `;
 const Right = styled.div`
   width: 240px;
+  max-width: 240px;
 `;
 
 const InputContainer = styled.div`

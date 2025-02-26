@@ -11,7 +11,7 @@ import { useGetUserId } from "@/domains/auth/hooks/useGetUserId";
 import useAlertStore from "@/shared/hooks/useAlertStore";
 import DelAlert from "@/shared/components/alert/DelAlert";
 import styled from "@emotion/styled";
-import { formatDate } from "./hooks/formatDate";
+import { formatDate } from "../../shared/utils/formatDate";
 
 export function CampaignDetail() {
   const navigate = useNavigate();

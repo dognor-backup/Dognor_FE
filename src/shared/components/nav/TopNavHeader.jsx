@@ -5,10 +5,12 @@ import { Button } from "../buttons/Button";
 import MenuIcon from "../../../assets/icons/black/hamburger_menu.svg?react";
 import useUserStore from "@/domains/auth/store/useUserStore";
 import { clearUserFromDB } from "@/domains/auth/utils/indexedDB";
+import { useGetUserId } from "@/domains/auth/hooks/useGetUserId";
 
 export default function TopNavHeader({ activeMenuLink, setIsMenuOpen }) {
   const { user, resetUser } = useUserStore();
-
+  const { userRole } = useGetUserId();
+  const isAdmin = userRole === "ADMIN";
   const isLogin = !!user.userData?.userId;
   const navigate = useNavigate();
 
@@ -26,6 +28,12 @@ export default function TopNavHeader({ activeMenuLink, setIsMenuOpen }) {
     await clearUserFromDB();
     navigate("/home");
   };
+  const handleMove = () => {
+    if (isAdmin) {
+      navigate("/dashboard");
+    }
+  };
+
   return (
     <TopNavHeaderLayout>
       <Link to="/home">
@@ -41,7 +49,7 @@ export default function TopNavHeader({ activeMenuLink, setIsMenuOpen }) {
           ) : (
             <TextBtn onClick={handleLogout}>로그아웃</TextBtn>
           )}
-          <Button variant="normal" size="medium" state="outline">
+          <Button variant="normal" size="medium" state="outline" onClick={handleMove}>
             마이페이지
           </Button>
         </AuthButtonsContainer>

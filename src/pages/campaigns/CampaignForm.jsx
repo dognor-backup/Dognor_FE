@@ -8,7 +8,7 @@ import { PageTop, PageWrapper } from "@/shared/components/layout/PageTopTitle";
 import { InputForm } from "@/shared/components/input/InputForm";
 import { InputBtn } from "@/shared/components/input/InputBtn";
 import { SelectBox } from "@/shared/components/dropbox/SelectBox";
-import { formatDate } from "./hooks/formatDate";
+import { formatDate } from "../../shared/utils/formatDate";
 import styled from "@emotion/styled";
 
 export function CampaignForm() {
