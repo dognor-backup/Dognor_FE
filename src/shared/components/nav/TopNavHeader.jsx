@@ -41,7 +41,12 @@ export default function TopNavHeader({ activeMenuLink, setIsMenuOpen }) {
           ) : (
             <TextBtn onClick={handleLogout}>로그아웃</TextBtn>
           )}
-          <Button variant="normal" size="medium" state="outline">
+          <Button
+            onClick={() => navigate("/mypage/")}
+            variant="normal"
+            size="medium"
+            state="outline"
+          >
             마이페이지
           </Button>
         </AuthButtonsContainer>
@@ -55,7 +60,12 @@ export default function TopNavHeader({ activeMenuLink, setIsMenuOpen }) {
             <TextBtn onClick={() => navigate("/signup")}>회원가입</TextBtn>
           )}
 
-          <Button variant="primary" size="medium" state="default" onClick={handleLogin}>
+          <Button
+            variant="primary"
+            size="medium"
+            state="default"
+            onClick={handleLogin}
+          >
             로그인
           </Button>
         </AuthButtonsContainer>

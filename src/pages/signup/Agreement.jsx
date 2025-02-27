@@ -24,7 +24,14 @@ export function Agreement() {
         ))}
       </ContentContainer>
       <AlignCenter>
-        <Button variant="primary" size="medium" state="default" style={{ width: "320px" }} onClick={handleCloseWindow}>
+        <Button
+          variant="primary"
+          size="medium"
+          state="default"
+          style={{ width: "320px" }}
+          type="button"
+          onClick={handleCloseWindow}
+        >
           이전 페이지로 되돌아가기
         </Button>
       </AlignCenter>
