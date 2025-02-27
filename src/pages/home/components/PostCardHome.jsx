@@ -1,10 +1,9 @@
-import PostCard from "@/shared/components/cards/postcard/PostCard";
-import { useSearchDonationStories } from "@/domains/donationstory/hooks/useSearchDonationStories";
 import { useEffect, useState } from "react";
 import { useGetUserId } from "@/domains/auth/hooks/useGetUserId";
+import { useSearchDonationStories } from "@/domains/donationstory/hooks/useSearchDonationStories";
+import PostCard from "@/shared/components/cards/postcard/PostCard";
 import { MOCK_DATA } from "../data/defaultData";
 
-//헌혈견
 export default function PostCardsHome() {
   const [showcaseList, setShowcaseList] = useState([]);
   const { userSeq } = useGetUserId();
@@ -28,8 +27,8 @@ export default function PostCardsHome() {
 
   return (
     <>
-      {confirmList?.map((showcase) => (
-        <PostCard story={showcase}></PostCard>
+      {confirmList?.map((showcase, idx) => (
+        <PostCard story={showcase} key={idx}></PostCard>
       ))}
     </>
   );

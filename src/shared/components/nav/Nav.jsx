@@ -26,6 +26,5 @@ const NavLayout = styled.div`
   min-width: 1080px;
   position: fixed;
   top: 0;
-
-  z-index: 5;
+  z-index: 3;
 `;

@@ -80,11 +80,13 @@ export function CampaignForm() {
   };
 
   const getStartDate = (date) => {
-    const strDate = formatDate(date);
+    const { formattedDate } = formatDate(date);
+    const strDate = formattedDate;
     setPost((prev) => ({ ...prev, strDate }));
   };
   const getEndDate = (date) => {
-    const endDate = formatDate(date);
+    const { formattedDate } = formatDate(date);
+    const endDate = formattedDate;
     setPost((prev) => ({ ...prev, endDate }));
   };
   const getValueFromSelect = () => {};
