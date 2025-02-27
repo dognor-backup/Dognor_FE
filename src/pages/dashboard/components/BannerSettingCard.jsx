@@ -6,12 +6,12 @@ import { formatDate } from "@/shared/utils/formatDate";
 import styled from "@emotion/styled";
 import { useRef, useState } from "react";
 
-export function BannerSettingCard({ img, setBannerData }) {
+export function BannerSettingCard({ img, setBannerData, deleteBannerMutation, prevBanners: banners }) {
   const [fileName, setFileName] = useState({ webImgFile: "", mobileImgFile: "" });
   const webFileInput = useRef();
   const mobileFileInput = useRef();
   const BannerImg = img;
-
+  const [prevBanners, setPrevBanners] = useState(banners);
   const getInputValue = ({ name, value }) => {
     setBannerData((prev) => ({ ...prev, [name]: value }));
   };
@@ -43,6 +43,11 @@ export function BannerSettingCard({ img, setBannerData }) {
     const { formattedDate } = formatDate(date);
     const endDt = formattedDate;
     setBannerData((prev) => ({ ...prev, endDt }));
+  };
+
+  const handleDeleteBanner = () => {
+    console.log("삭제");
+    deleteBannerMutation.mutate();
   };
 
   return (
@@ -124,7 +129,7 @@ export function BannerSettingCard({ img, setBannerData }) {
         <Button variant="normal" size="small" state="outline" type="submit" form="bannerForm">
           저장
         </Button>
-        <Button variant="normal" size="small" state="outline">
+        <Button variant="normal" size="small" state="outline" onClick={handleDeleteBanner}>
           삭제
         </Button>
       </BtnsContainer>

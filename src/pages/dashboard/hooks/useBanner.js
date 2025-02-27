@@ -1,8 +1,10 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getAccessTokenFromDB } from "@/shared/utils/axiosInstance";
 import axios from "axios";
+import { deleteBanner, getBannerList } from "../api/dashboard";
 
 export function useBannerMutations() {
+  const queryClient = useQueryClient();
   const saveBannerMutation = useMutation({
     mutationFn: async (formData) => {
       try {
@@ -16,15 +18,28 @@ export function useBannerMutations() {
           return { success: true, data: response.data };
         }
       } catch (error) {
-        console.error;
+        console.error(error);
       }
     },
+    onSuccess: ({ success, data }) => {
+      if (success) {
+        queryClient.invalidateQueries({ queryKey: ["banner"] });
+      }
+    },
+  });
+
+  const getBannerQuery = useQuery({
+    queryKey: ["banner"],
+    queryFn: getBannerList,
+  });
+
+  const deleteBannerMutation = useMutation({
+    mutationFn: deleteBanner,
     onSuccess: ({ success, data }) => {
       if (success) {
         console.log(data);
       }
     },
   });
-
-  return { saveBannerMutation };
+  return { saveBannerMutation, deleteBannerMutation, getBannerQuery };
 }

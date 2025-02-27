@@ -16,7 +16,7 @@ export const getBannerList = async () => {
 
 export const deleteBanner = async (bannerSeq) => {
   try {
-    const response = await AxiosInstance.get(`/dashboard/banner/${bannerSeq}`);
+    const response = await AxiosInstance.delete(`/dashboard/banner/${bannerSeq}`);
     if (response.data.code === 200) {
       return { success: true, data: response.data.data };
     }

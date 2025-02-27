@@ -1,26 +1,20 @@
-import { getBannerList } from "@/pages/dashboard/api/dashboard";
 import styled from "@emotion/styled";
-import { useQuery } from "@tanstack/react-query";
+import { useBannerMutations } from "@/pages/dashboard/hooks/useBanner";
 
 //배너수만큼 circleBtn 자동 생성
 export function TopBanner() {
-  const {
-    data: bannerList,
-    isLoading,
-    isError,
-  } = useQuery({
-    queryKey: ["banner"],
-    queryFn: getBannerList,
-  });
-  const bannerImages = bannerList?.data.slice(-4);
-  console.log(bannerImages);
+  const { getBannerQuery } = useBannerMutations();
+  const { data: bannerList, isLoading, isError } = getBannerQuery;
+  console.log(bannerList);
+  // const bannerImages = bannerList?.data.slice(-4);
+
   return (
     <MainBanner>
       <BannerBtnLeft />
-      {bannerImages?.map((banner, index) => {
+      {/* {bannerImages?.map((banner, index) => {
         const { bannerSeq, strDt, endDt, link, memo, mobileImgUrl, webImgUrl } = banner;
         return <BannerImg key={index} src={webImgUrl} />;
-      })}
+      })} */}
       <BannerBtnRight />
       <BannerBtns>
         <CircleBtn isActive />
@@ -56,13 +50,13 @@ const CircleBtn = styled.button(
   border: 1px solid ${theme.colors.neutrals_05}
 `
 );
-const BannerImg = styled.iframe`
+const BannerImg = styled.img`
   height: 480px;
   max-height: 480px;
   width: 100%;
   position: absolute;
   top: 0;
-  object-fit: contain;
+  object-fit: cover;
 `;
 
 const BannerBtnLeft = styled.button`
