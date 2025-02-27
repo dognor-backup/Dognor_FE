@@ -71,8 +71,9 @@ const CardText = styled.p(
   font-size: 14px;
   color: ${theme.colors.neutrals_08};
   line-height: 20px;
-    margin-top : 40px;
-  font-weight: 700
+  margin-top : 40px;
+  font-weight: 700;
+  white-space: pre-line;
 `
 );
 const CardBtn = styled.button(

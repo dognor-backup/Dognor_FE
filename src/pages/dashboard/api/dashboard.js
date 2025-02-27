@@ -2,7 +2,7 @@ import AxiosInstance from "@/shared/utils/axiosInstance";
 
 export const getBannerList = async () => {
   try {
-    const response = await AxiosInstance.get("/dashboard/banner");
+    const response = await AxiosInstance.get("/dashboard/search/banners");
     if (response.data.code === 200) {
       return { success: true, data: response.data.data };
     }

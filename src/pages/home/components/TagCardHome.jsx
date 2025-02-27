@@ -1,8 +1,8 @@
 import { useGetUserId } from "@/domains/auth/hooks/useGetUserId";
 import { useGetCampaigns } from "@/domains/campaign/hooks/useGetCampaigns";
 import TagCard from "@/shared/components/cards/tagcard/TagCard";
+import { getRandomCard } from "../hooks/getRandomCard";
 
-//캠페인
 export default function TagCardsHome({ ...props }) {
   const { userSeq } = useGetUserId();
   const { data: campaignArray } = useGetCampaigns(
@@ -11,12 +11,7 @@ export default function TagCardsHome({ ...props }) {
   );
   const campaignListsAll = campaignArray?.data ?? [];
   const arrLength = campaignListsAll?.length;
-  const getRamdomCard = (len, arr) => {
-    if (len < 3) return arr;
-    const randomIndex = Math.floor(Math.random() * (len - 2));
-    return arr.slice(randomIndex, randomIndex + 3);
-  };
-  const campaignLists = getRamdomCard(arrLength, campaignListsAll);
+  const campaignLists = getRandomCard(arrLength, campaignListsAll);
 
   return (
     <>

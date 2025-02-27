@@ -6,7 +6,8 @@ import TagCardsHome from "./components/TagCardHome";
 import { useNavigate } from "react-router-dom";
 import PostCardsHome from "./components/PostCardHome";
 import { SecondBanner } from "./components/Banners";
-
+import { cardData } from "./data/cardData";
+import { formatText } from "@/shared/utils/formatText";
 export default function Home() {
   const navigate = useNavigate();
   const handleClickCard = (e, path) => {
@@ -22,40 +23,18 @@ export default function Home() {
         <SecondBanner />
         <MainContainer>
           <CardContainer grid={3} height="358px">
-            <TextCard
-              color="#F64D4D"
-              title="1년에 1~2회를 권장"
-              text={
-                <>
-                  수의학적으로는 <br />
-                  3개월에 1회씩 진행해도 무방 <br />
-                  <br />
-                  헌혈시기를 건강검진 시기와 <br />
-                  맞춰 보시면 일석이조의 효과
-                </>
-              }
-            />
-            <LinkCard
-              background="/src/assets/images/card01.svg"
-              title={
-                <>
-                  대형견이라면,
-                  <br />
-                  헌혈에 동참하기
-                </>
-              }
-              btnText="우리집 근처 병원 찾기"
-            />
-            <LinkCard
-              background="/src/assets/images/card02.svg"
-              title={
-                <>
-                  헌혈한 우리 반려견들
-                  <br /> 칭찬해주세요 :)
-                </>
-              }
-              btnText="반려견들 칭찬하기"
-            />
+            {cardData.map((card, index) =>
+              card.type === "text" ? (
+                <TextCard key={index} color={card.color} title={formatText(card.title)} text={formatText(card.text)} />
+              ) : (
+                <LinkCard
+                  key={index}
+                  background={card.background}
+                  title={formatText(card.title)}
+                  btnText={card.btnText}
+                />
+              )
+            )}
           </CardContainer>
           <SubTitle>공혈견의 문제와 필요성</SubTitle>
           <SubText>
