@@ -46,9 +46,7 @@ const UserAccountSettings = () => {
         ...prev,
         agreement4: userInfoData.data.agreement4 === 1,
         agreement5: userInfoData.data.agreement5 === 1,
-        agreementAll:
-          userInfoData.data.agreement4 === 1 &&
-          userInfoData.data.agreement5 === 1,
+        agreementAll: userInfoData.data.agreement4 === 1 && userInfoData.data.agreement5 === 1,
       }));
     }
   }, [userInfoData]);
@@ -138,8 +136,7 @@ const UserAccountSettings = () => {
           [name]: checked,
         };
 
-        updatedState.agreementAll =
-          updatedState.agreement4 && updatedState.agreement5;
+        updatedState.agreementAll = updatedState.agreement4 && updatedState.agreement5;
 
         return updatedState;
       });
@@ -147,7 +144,8 @@ const UserAccountSettings = () => {
   };
 
   const openAgreementPage = () => {
-    navigate("/agreement");
+    const newWindow = window.open("/agreement", "_blank");
+    newWindow ? newWindow.focus() : alert("새 창을 열 수 없습니다. 팝업 차단 설정을 확인해주세요.");
   };
 
   if (!userInfoData.success) {
@@ -230,12 +228,7 @@ const UserAccountSettings = () => {
           </InputGroup>
 
           <PasswordResetContainer>
-            <Button
-              variant="primary"
-              size="medium"
-              state="outline"
-              type="button"
-            >
+            <Button variant="primary" size="medium" state="outline" type="button">
               비밀번호 재설정하기
             </Button>
           </PasswordResetContainer>
@@ -254,8 +247,7 @@ const UserAccountSettings = () => {
             checked={checkbox.agreementAll}
           />
           <AgreeInfo>
-            실명 인증된 아이디로 가입, 위치기반서비스 이용약관(선택),
-            이벤트・혜택 정보 수신(선택) 동의를 포함합니다.
+            실명 인증된 아이디로 가입, 위치기반서비스 이용약관(선택), 이벤트・혜택 정보 수신(선택) 동의를 포함합니다.
           </AgreeInfo>
 
           <FullWidthLineContainer>
@@ -278,13 +270,7 @@ const UserAccountSettings = () => {
           />
 
           <Center>
-            <Button
-              variant="normal"
-              size="medium"
-              state="default"
-              onClick={openAgreementPage}
-              type="button"
-            >
+            <Button variant="normal" size="medium" state="default" onClick={openAgreementPage} type="button">
               정보 수집 동의서 설명 읽기
             </Button>
           </Center>
