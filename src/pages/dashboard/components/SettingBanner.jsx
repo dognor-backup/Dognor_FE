@@ -24,7 +24,7 @@ export function SettingBanner() {
     if (bannerList) {
       setPrevBanners(bannerList?.data);
     }
-    console.log(prevBanners);
+    console.log("리스트", bannerList);
   }, [prevBanners]);
 
   const handleSubmit = (e) => {

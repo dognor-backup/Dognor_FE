@@ -1,26 +1,54 @@
-import styled from "@emotion/styled";
 import { useBannerMutations } from "@/pages/dashboard/hooks/useBanner";
+import { useEffect, useState } from "react";
+import styled from "@emotion/styled";
 
-//배너수만큼 circleBtn 자동 생성
 export function TopBanner() {
   const { getBannerQuery } = useBannerMutations();
   const { data: bannerList, isLoading, isError } = getBannerQuery;
-  console.log(bannerList);
-  // const bannerImages = bannerList?.data.slice(-4);
+  const [prevBanners, setPrevBanners] = useState([]);
+  const [currentBanner, setCurrentBanner] = useState(0);
+  let len = prevBanners?.length || 0;
+
+  useEffect(() => {
+    if (bannerList) {
+      setPrevBanners(bannerList?.data);
+    }
+  }, [prevBanners]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      handleCurrentBanner("next");
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [prevBanners]);
+
+  const handleCurrentBanner = (btnType) => {
+    switch (btnType) {
+      case "prev":
+        setCurrentBanner((prev) => (prev - 1 + len) % len);
+        break;
+      case "next":
+        setCurrentBanner((prev) => (prev + 1) % len);
+        break;
+      case "dot":
+        setCurrentBanner(index);
+        break;
+      default:
+        break;
+    }
+  };
 
   return (
     <MainBanner>
-      <BannerBtnLeft />
-      {/* {bannerImages?.map((banner, index) => {
-        const { bannerSeq, strDt, endDt, link, memo, mobileImgUrl, webImgUrl } = banner;
-        return <BannerImg key={index} src={webImgUrl} />;
-      })} */}
-      <BannerBtnRight />
+      <BannerBtnLeft onClick={() => handleCurrentBanner("prev")} />
+      {prevBanners?.map((banner, index) => (
+        <BannerImg key={index} src={banner.webImgUrl} className={currentBanner === index ? "active" : ""} />
+      ))}
+      <BannerBtnRight onClick={() => handleCurrentBanner("next")} />
       <BannerBtns>
-        <CircleBtn isActive />
-        <CircleBtn />
-        <CircleBtn />
-        <CircleBtn />
+        {Array.from({ length: len || 0 }).map((_, index) => (
+          <CircleBtn key={index} isActive={currentBanner === index} onClick={() => handleCurrentBanner("dot")} />
+        ))}
       </BannerBtns>
     </MainBanner>
   );
@@ -50,6 +78,7 @@ const CircleBtn = styled.button(
   border: 1px solid ${theme.colors.neutrals_05}
 `
 );
+//현재번째 이미지만 보이기
 const BannerImg = styled.img`
   height: 480px;
   max-height: 480px;
@@ -57,8 +86,12 @@ const BannerImg = styled.img`
   position: absolute;
   top: 0;
   object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+  &.active {
+    opacity: 1;
+  }
 `;
-
 const BannerBtnLeft = styled.button`
   height: 432px;
   width: 90px;

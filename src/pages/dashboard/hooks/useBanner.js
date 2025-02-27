@@ -15,7 +15,8 @@ export function useBannerMutations() {
           },
         });
         if (response.data.code === 200) {
-          return { success: true, data: response.data };
+          console.log("저장", response.data);
+          return { success: true, data: response.data.data };
         }
       } catch (error) {
         console.error(error);
@@ -23,6 +24,7 @@ export function useBannerMutations() {
     },
     onSuccess: ({ success, data }) => {
       if (success) {
+        console.log(data);
         queryClient.invalidateQueries({ queryKey: ["banner"] });
       }
     },
@@ -31,6 +33,8 @@ export function useBannerMutations() {
   const getBannerQuery = useQuery({
     queryKey: ["banner"],
     queryFn: getBannerList,
+    staleTime: 1000 * 60 * 5,
+    cacheTime: 1000 * 60 * 10,
   });
 
   const deleteBannerMutation = useMutation({
