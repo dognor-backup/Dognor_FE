@@ -8,25 +8,24 @@ import { useBannerMutations } from "../hooks/useBanner";
 const bannersNumImg = [Banner1, Banner2, Banner3, Banner4];
 
 export function SettingBanner() {
-  const { saveBannerMutation } = useBannerMutations();
   const [bannerData, setBannerData] = useState({
     webImgFile: "",
     mobileImgFile: "",
     link: "",
-    strDate: "",
-    endDate: "",
+    strDt: "",
+    endDt: "",
     memo: "",
   });
-
+  const { saveBannerMutation } = useBannerMutations();
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(bannerData);
     const formData = new FormData();
     for (const key in bannerData) {
       if (bannerData[key]) {
         formData.append(key, bannerData[key]);
       }
     }
+    console.log([...formData.entries()]);
     saveBannerMutation.mutate(formData);
   };
 

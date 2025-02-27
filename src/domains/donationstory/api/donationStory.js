@@ -3,9 +3,7 @@ import AxiosInstance from "@/shared/utils/axiosInstance";
 export const searchDonationStories = async (searchParam) => {
   try {
     const response = await AxiosInstance.post("/donation-stories/search", searchParam);
-
     if (response.data.code === 200) {
-      console.log(response.data);
       return { success: true, data: response.data.data };
     }
   } catch (error) {

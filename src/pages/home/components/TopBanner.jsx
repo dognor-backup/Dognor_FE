@@ -10,17 +10,17 @@ export function TopBanner() {
     isError,
   } = useQuery({
     queryKey: ["banner"],
-    queryFn: async () => {
-      const response = await getBannerList();
-      return response;
-    },
+    queryFn: getBannerList,
   });
-  console.log(bannerList);
-
+  const bannerImages = bannerList?.data.slice(-4);
+  console.log(bannerImages);
   return (
     <MainBanner>
       <BannerBtnLeft />
-      <BannerImg />
+      {bannerImages?.map((banner, index) => {
+        const { bannerSeq, strDt, endDt, link, memo, mobileImgUrl, webImgUrl } = banner;
+        return <BannerImg key={index} src={webImgUrl} />;
+      })}
       <BannerBtnRight />
       <BannerBtns>
         <CircleBtn isActive />
@@ -56,16 +56,15 @@ const CircleBtn = styled.button(
   border: 1px solid ${theme.colors.neutrals_05}
 `
 );
-const BannerImg = styled.img`
+const BannerImg = styled.iframe`
   height: 480px;
   max-height: 480px;
-  background-image: url("/src/assets/images/banner1.svg");
-  background-position: center;
-  background-size: cover;
   width: 100%;
   position: absolute;
   top: 0;
+  object-fit: contain;
 `;
+
 const BannerBtnLeft = styled.button`
   height: 432px;
   width: 90px;

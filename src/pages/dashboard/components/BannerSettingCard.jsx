@@ -35,14 +35,14 @@ export function BannerSettingCard({ img, setBannerData }) {
 
   const getStrDate = (date) => {
     const { formattedDate } = formatDate(date);
-    const strDate = formattedDate;
-    setBannerData((prev) => ({ ...prev, strDate }));
+    const strDt = formattedDate;
+    setBannerData((prev) => ({ ...prev, strDt }));
   };
 
   const getEndDate = (date) => {
     const { formattedDate } = formatDate(date);
-    const endDate = formattedDate;
-    setBannerData((prev) => ({ ...prev, endDate }));
+    const endDt = formattedDate;
+    setBannerData((prev) => ({ ...prev, endDt }));
   };
 
   return (

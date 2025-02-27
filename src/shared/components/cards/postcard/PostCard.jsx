@@ -51,9 +51,6 @@ export default function PostCard({ story, handleDelete, handleEdit }) {
     );
     setIsLiked(!isLiked);
   };
-  useEffect(() => {
-    console.log(isLiked);
-  }, [isLiked]);
 
   return (
     <PostCardLayout>
