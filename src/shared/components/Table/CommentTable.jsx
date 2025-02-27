@@ -10,11 +10,14 @@ import {
   SmallTableCell,
 } from "./baseTable";
 import SelectableCheckbox from "./SelectableCheckbox";
+import VerticalDotsSelect from "@/shared/components/VerticalDotsSelect";
 
 export function CommentTable({
   data = [],
   selectedComments = [],
   handleCheckboxChange,
+  handleEdit,
+  handleDelete,
   emptyMessage = "댓글/리뷰가 없습니다.",
 }) {
   return (
@@ -51,11 +54,12 @@ export function CommentTable({
                 <SmallTableCell>
                   {formatDate(item.writeDt) || "날짜 없음"}
                 </SmallTableCell>
+                <SmallTableCell></SmallTableCell>
               </TableRow>
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={6} className="text-center" height={"40px"}>
+              <TableCell colSpan={7} className="text-center" height={"40px"}>
                 {emptyMessage}
               </TableCell>
             </TableRow>

@@ -10,11 +10,14 @@ import {
   SmallTableCell,
 } from "./baseTable";
 import SelectableCheckbox from "./SelectableCheckbox";
+import VerticalDotsSelect from "@/shared/components/VerticalDotsSelect";
 
 export function PostTable({
   data = [],
   selectedPosts,
   handleCheckboxChange,
+  handleEdit,
+  handleDelete,
   emptyMessage = "게시글이 없습니다.",
 }) {
   return (
@@ -38,13 +41,13 @@ export function PostTable({
               <TableRow key={item.postSeq || index}>
                 <SmallTableCell>
                   <SelectableCheckbox
-                    name={`post-${item.seq}`} // postSeq -> seq로 변경
+                    name={`post-${item.seq}`}
                     checked={selectedPosts.some(
                       (post) => post.seq === item.seq
-                    )} // postSeq -> seq로 변경
+                    )}
                     onChange={() =>
                       handleCheckboxChange(item.seq, item.division)
-                    } // postSeq -> seq로 변경
+                    }
                   />
                 </SmallTableCell>
                 <TableCell>{index + 1}</TableCell>
@@ -55,6 +58,7 @@ export function PostTable({
                   {formatDate(item.writeDt) || "날짜 없음"}
                 </SmallTableCell>
                 <SmallTableCell>{item.hitCnt ?? 0}</SmallTableCell>
+                <SmallTableCell></SmallTableCell>
               </TableRow>
             ))
           ) : (

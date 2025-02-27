@@ -208,7 +208,7 @@ const UserAccountSettings = () => {
               infoMessage={errors.email}
               status={errors.email ? "error" : "normal"}
               getInputValue={getInputValue}
-              onClick={(e) => {
+              handleClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
                 handleRequestEmailCode();
@@ -224,7 +224,7 @@ const UserAccountSettings = () => {
                 infoMessage={errors.code}
                 status={!isEmailVerified && errors.code ? "error" : "normal"}
                 getInputValue={getInputValue}
-                onClick={handleConfirmEmailCode}
+                handleClick={handleConfirmEmailCode}
               />
             </InputBtnContainer>
           </InputGroup>
@@ -283,6 +283,7 @@ const UserAccountSettings = () => {
               size="medium"
               state="default"
               onClick={openAgreementPage}
+              type="button"
             >
               정보 수집 동의서 설명 읽기
             </Button>

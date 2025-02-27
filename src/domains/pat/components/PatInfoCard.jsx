@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styled from "@emotion/styled";
 import { useGetPatInfo } from "../hooks/useGetPatInfo";
+import { deletePatInfo } from "../api/pat";
 import AddPatInfoCard from "./AddPatInfoCard";
 import useUserStore from "@/domains/auth/store/useUserStore";
 import { calculateAge } from "@/shared/utils/calculateAge";
@@ -8,30 +9,125 @@ import { IconBtn } from "@/shared/components/buttons/IconBtn";
 import PlusIcon from "../../../assets/icons/white/plus_w.svg?react";
 import BlackPlus from "../../../assets/icons/black/plus.svg?react";
 import useModalStore from "@/shared/hooks/useModalStore";
-import { DnPagination } from "@/shared/components/DnPagination";
+import useAlertStore from "@/shared/hooks/useAlertStore";
 import LineBoundary from "../../../assets/icons/line/Line1008-mypage.svg?react";
 import { Spinner } from "@/shared/components/Spinner";
+import { DnPagination } from "@/shared/components/DnPagination";
+import { useQueryClient } from "@tanstack/react-query";
+import VerticalDotsSelect from "@/shared/components/VerticalDotsSelect";
+import DelAlert from "@/shared/components/alert/DelAlert";
+import EditPatInfoCard from "./EditPatInfoCard";
 
 export default function PatInfoCard() {
-  const { isModalOpen, openModal } = useModalStore();
+  const { openModal } = useModalStore();
+  const { openAlert, isAlertOpen, deleteType, deleteTargetSeq } =
+    useAlertStore();
   const [page, setPage] = useState(1);
   const size = 4;
   const { user } = useUserStore();
   const userSeq = user?.userData?.userSeq;
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [selectedPet, setSelectedPet] = useState(null);
 
-  const { data, isLoading, error } = useGetPatInfo(userSeq, page, size);
-  const totalPages = Math.ceil(data?.totalCount / size) || 1;
+  const queryClient = useQueryClient();
 
-  if (isLoading) return <Spinner />;
-  if (error) return <div>에러</div>;
+  const { data, isLoading, error, refetch } = useGetPatInfo(
+    userSeq,
+    page,
+    size
+  );
+  const totalPages = data?.totalPage || 1;
+
+  useEffect(() => {
+    if (userSeq) {
+      refetch();
+    }
+  }, [userSeq, page, refetch]);
+
+  const handlePageChange = (newPage) => {
+    if (newPage === "prev") {
+      if (page > 1) {
+        setPage(page - 1);
+      }
+    } else if (newPage === "next") {
+      if (page < totalPages) {
+        setPage(page + 1);
+      }
+    } else {
+      setPage(Number(newPage));
+    }
+  };
+
+  const handleEdit = (patId) => {
+    const petList = data?.data || [];
+    const pet = petList.find((p) => p.patSeq === patId);
+    if (pet) {
+      setSelectedPet(pet);
+      openModal("editDogInfo");
+    }
+  };
+
+  const handleDelete = (patId) => {
+    openAlert("pat", patId);
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteTargetSeq || deleteType !== "pat") return;
+
+    setIsDeleting(true);
+    try {
+      const response = await deletePatInfo(deleteTargetSeq);
+
+      if (response.success) {
+        queryClient.invalidateQueries(["patInfo"]);
+
+        const petList = data?.data || [];
+        if (petList.length <= 1 && page > 1) {
+          setPage(page - 1);
+        } else {
+          refetch();
+        }
+      } else {
+        alert(response.msg || "삭제 중 오류가 발생했습니다.");
+      }
+    } catch (error) {
+      alert("삭제 중 오류가 발생했습니다.");
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  if (isLoading || isDeleting) {
+    return (
+      <div>
+        <Spinner />
+        {!userSeq && (
+          <div style={{ textAlign: "center", marginTop: "20px" }}>
+            사용자 정보를 불러오는 중...
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div>
+        <div>데이터 로딩 중 오류가 발생했습니다.</div>
+        <button onClick={() => refetch()}>다시 시도</button>
+      </div>
+    );
+  }
+
+  const petList = data?.data || [];
 
   return (
     <PatInfoLayout>
       <PatInfoHeaderTextContainer>
         <PatInfoHeaderTitleText>반려견 정보</PatInfoHeaderTitleText>
         <PatInfoHeaderSubText>
-          {data?.data?.data.length >= 1
-            ? `${data.data.data.length}마리의 반려견과 함께하고 있습니다`
+          {petList.length >= 1
+            ? `${petList.length}마리의 반려견과 함께하고 있습니다`
             : "아직 함께 하는 반려견이 없습니다"}
         </PatInfoHeaderSubText>
       </PatInfoHeaderTextContainer>
@@ -42,10 +138,10 @@ export default function PatInfoCard() {
           </IconBtn>
         </IconBtnContainer>
         <AddPatInfoCard />
-        {data?.data?.data.length >= 1 ? (
+        {petList.length >= 1 ? (
           <PatInfoCardLayout>
-            {data.data.data.map((pat, index) => (
-              <PatInfoCardWrapper key={index}>
+            {petList.map((pat) => (
+              <PatInfoCardWrapper key={pat.patSeq}>
                 <PatProfileImg src={pat.imgUrl} />
                 <PatInfoWrapper>
                   <PatNameText>{pat.name}</PatNameText>
@@ -63,6 +159,12 @@ export default function PatInfoCard() {
                     )}
                   </PatInfoContainer>
                 </PatInfoWrapper>
+                <DotsSelectWrapper>
+                  <VerticalDotsSelect
+                    handleEdit={() => handleEdit(pat.patSeq)}
+                    handleDelete={() => handleDelete(pat.patSeq)}
+                  />
+                </DotsSelectWrapper>
               </PatInfoCardWrapper>
             ))}
           </PatInfoCardLayout>
@@ -73,16 +175,19 @@ export default function PatInfoCard() {
           </AddDogBtn>
         )}
         <PagenationContainer>
-          <DnPagination
-            currentPage={page}
-            totalPages={totalPages}
-            onPageChange={setPage}
+          <DnPagination 
+            totalPage={totalPages} 
+            getClickedPageNumber={handlePageChange} 
           />
         </PagenationContainer>
         <LineBoundaryContainer>
           <LineBoundary />
         </LineBoundaryContainer>
       </PatInfoContentLayout>
+      {selectedPet && <EditPatInfoCard petData={selectedPet} />}
+      <DelAlert isAlertOpen={isAlertOpen} func={confirmDelete}>
+        삭제하시겠습니까?
+      </DelAlert>
     </PatInfoLayout>
   );
 }
@@ -128,6 +233,7 @@ const PatInfoCardLayout = styled.div`
 `;
 
 const PatInfoCardWrapper = styled.div`
+  position: relative;
   display: flex;
   width: 360px;
   height: 180px;
@@ -135,6 +241,12 @@ const PatInfoCardWrapper = styled.div`
   padding: 16px;
   gap: 16px;
   box-shadow: 4px 4px 16px 0px rgba(0, 0, 0, 0.25);
+`;
+
+const DotsSelectWrapper = styled.div`
+  position: absolute;
+  top: 8px;
+  right: 8px;
 `;
 
 const PatProfileImg = styled.img`
