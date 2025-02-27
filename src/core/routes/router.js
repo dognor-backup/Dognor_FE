@@ -12,12 +12,15 @@ import FindAccount from "@/pages/findaccount/FindAccount";
 import SignUp from "@/pages/signup/SignUp";
 import App from "@/App";
 import AccountSettings from "@/pages/accountsettings/AccountSettings";
-import IndividualUser from "@/pages/mypage/IndividualUser";
+import { Agreement } from "@/pages/signup/Agreement";
+import { SignUpComplete } from "@/pages/signup/SignUpComplete";
 
 import { PostForm } from "@/pages/community/PostForm";
 import { CommunityList } from "@/pages/community/components/CommunityList";
 import { CommunityLink } from "@/pages/community/components/ComminityLink";
 import { PostDetail } from "@/pages/community/PostDetail";
+import { CampaignForm } from "@/pages/campaigns/CampaignForm";
+import { CampaignDetail } from "@/pages/campaigns/CampaignDeatil";
 
 const router = createBrowserRouter([
   {
@@ -35,13 +38,10 @@ const router = createBrowserRouter([
       {
         path: "campaigns",
         Component: Campaigns,
-        children: [
-          { path: ":id", Component: Home },
-          { path: "edit/:id", Component: Home },
-          { path: "new", Component: Home },
-        ],
       },
-
+      { path: "campaigns/postnew", Component: CampaignForm },
+      { path: "campaign/:id", Component: CampaignDetail },
+      { path: "campaignedit/:id", Component: CampaignForm },
       {
         path: "mypage",
         Component: MyPage,
@@ -68,9 +68,9 @@ const router = createBrowserRouter([
   { path: "guidepage", Component: Home },
   { path: "changepassword", Component: Home },
 
-  { path: "welcome", Component: Home },
-  { path: "이용약관", Component: Home },
-  { path: "*", Component: Home }, // 모든 경로에 대해 에러 처리
+  { path: "welcome", Component: SignUpComplete },
+  { path: "agreement", Component: Agreement },
+  { path: "*", Component: Home },
 ]);
 
 export default router;

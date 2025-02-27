@@ -1,10 +1,18 @@
 import { Outlet } from "react-router-dom";
 import Footer from "./shared/components/footer/Footer";
 import Nav from "./shared/components/nav/Nav";
-import useRestoreUser from "./domains/auth/hooks/useRestoreUser";
+import { useEffect } from "react";
+import useUserStore from "./domains/auth/store/useUserStore";
 
 function App() {
-  useRestoreUser();
+  const { user, setUser } = useUserStore();
+
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+      setUser({ token });
+    }
+  }, []);
 
   return (
     <>

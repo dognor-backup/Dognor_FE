@@ -1,22 +1,9 @@
 import { useEffect, useState } from "react";
 import HospitalInfo from "./HospitalInfo";
 import useGetValueFromTextInput from "@/shared/hooks/useGetValueFromTextInput";
-import {
-  validateId,
-  validatePassword,
-  validatePhoneNumber,
-  validateEmail,
-} from "@/shared/utils/validation";
-import {
-  useCheckDuplicate,
-  useUserRegist,
-  useVerifyEmail,
-} from "@/domains/auth/hooks/useSignup";
-import {
-  useEmailCheckStore,
-  useIdCheckStore,
-  useSignupStore,
-} from "../../domains/auth/store/useSignupStore";
+import { validateId, validatePassword, validatePhoneNumber, validateEmail } from "@/shared/utils/validation";
+import { useCheckDuplicate, useUserRegist, useVerifyEmail } from "@/domains/auth/hooks/useSignup";
+import { useEmailCheckStore, useIdCheckStore, useSignupStore } from "@/domains/auth/store/useSignupStore";
 import styled from "@emotion/styled";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -58,8 +45,7 @@ const SignUp = () => {
   const emailVerificationMutation = useVerifyEmail(setErrors);
   const { checkedId } = useIdCheckStore();
   const { emailCode } = useEmailCheckStore();
-  const { agreement1, agreement2, agreement3, agreement4, agreement5 } =
-    checkbox;
+  const { agreement1, agreement2, agreement3, agreement4, agreement5 } = checkbox;
   let isRequiredChecked = agreement1 && agreement2 && agreement3;
   const signupMutation = useUserRegist();
 
@@ -67,12 +53,8 @@ const SignUp = () => {
     const defaultPw = pw || "";
     const defaultCheckPw = checkpw || "";
     const pwErrors = {};
-    defaultPw.length > 0 && !validatePassword(pw)
-      ? (errors.pw = "다시 확인해주세요")
-      : (errors.pw = "");
-    defaultPw.length > 0 &&
-    defaultCheckPw.length > 0 &&
-    defaultPw !== defaultCheckPw
+    defaultPw.length > 0 && !validatePassword(pw) ? (errors.pw = "다시 확인해주세요") : (errors.pw = "");
+    defaultPw.length > 0 && defaultCheckPw.length > 0 && defaultPw !== defaultCheckPw
       ? (errors.checkpw = "다시 확인해주세요")
       : (errors.checkpw = "");
     setErrors((prev) => ({
@@ -202,11 +184,7 @@ const SignUp = () => {
         signupMutation.mutate(userInfo);
         break;
       case "HOSPITAL":
-        isRequiredChecked =
-          agreement1 &&
-          agreement2 &&
-          agreement3 &&
-          hospitalData.agreementHospital;
+        isRequiredChecked = agreement1 && agreement2 && agreement3 && hospitalData.agreementHospital;
         if (!isRequiredChecked) {
           return setErrors((prev) => ({
             ...prev,
@@ -254,9 +232,7 @@ const SignUp = () => {
   };
   const openAgreementPage = () => {
     const newWindow = window.open("/agreement", "_blank");
-    newWindow
-      ? newWindow.focus()
-      : alert("새 창을 열 수 없습니다. 팝업 차단 설정을 확인해주세요.");
+    newWindow ? newWindow.focus() : alert("새 창을 열 수 없습니다. 팝업 차단 설정을 확인해주세요.");
   };
   const getValueFromHospital = (data) => setHospitalData(data);
 
@@ -269,11 +245,7 @@ const SignUp = () => {
           <span>회원 가입을 위해 필요한 정보를 입력해주세요.</span>
         </PageTop>
         <FormSection>회원구분</FormSection>
-        <RadioGroup
-          defaultValue="USER"
-          className="radioFlex"
-          onValueChange={(value) => setMemberType(value)}
-        >
+        <RadioGroup defaultValue="USER" className="radioFlex" onValueChange={(value) => setMemberType(value)}>
           <div className="flex items-center space-x-2 ">
             <RadioGroupItem value="USER" id="USER" />
             <Label htmlFor="USER">일반회원</Label>
@@ -288,10 +260,7 @@ const SignUp = () => {
           <Info>
             <p>* 동물병원 당, 한개의 아이디를 생성 할 수 있습니다</p>
             <p>* 동물병원 대표원장/대표자 님께서 가입을 부탁드립니다. </p>
-            <p>
-              * 의료관계자 가입일 경우, 정보 확인 후 7일 이내로 가입 절차가
-              진행됩니다
-            </p>
+            <p>* 의료관계자 가입일 경우, 정보 확인 후 7일 이내로 가입 절차가 진행됩니다</p>
           </Info>
         ) : (
           ""
@@ -326,11 +295,7 @@ const SignUp = () => {
             BtnText="중복조회"
             placeholder="아이디를 입력해주세요"
             label="아이디"
-            infoMessage={
-              errors.userId === ""
-                ? "5~20자의 영문 소문자, 숫자 만 사용"
-                : errors.userId
-            }
+            infoMessage={errors.userId === "" ? "5~20자의 영문 소문자, 숫자 만 사용" : errors.userId}
             status={checkedId.data && "error"}
             getInputValue={getInputValue}
             onClick={handleCheckIdDuplicate}
@@ -341,11 +306,7 @@ const SignUp = () => {
             name="pw"
             placeholder="비밀번호를 입력해주세요"
             label="비밀번호"
-            infoMessage={
-              errors.pw
-                ? errors.pw
-                : "8~16자의 영 소문자, 숫자, 특수문자 만 사용"
-            }
+            infoMessage={errors.pw ? errors.pw : "8~16자의 영 소문자, 숫자, 특수문자 만 사용"}
             status={errors.pw && "error"}
             getInputValue={getInputValue}
           />
@@ -409,8 +370,7 @@ const SignUp = () => {
               checked={checkbox.agreementAll}
             />
             <AgreeInfo>
-              실명 인증된 아이디로 가입, 위치기반서비스 이용약관(선택),
-              이벤트・혜택 정보 수신(선택) 동의를 포함합니다.
+              실명 인증된 아이디로 가입, 위치기반서비스 이용약관(선택), 이벤트・혜택 정보 수신(선택) 동의를 포함합니다.
             </AgreeInfo>
           </CheckboxContainer>
           <Checkbox
@@ -450,25 +410,16 @@ const SignUp = () => {
           />
         </CheckBoxWrapper>
         {!isRequiredChecked && <Error>{errors.agreement}</Error>}
-        {memberType === "HOSPITAL" &&
-          !hospitalData?.agreementHospital &&
-          !errors.isnull && <Error>{errors.agreement}</Error>}
+        {memberType === "HOSPITAL" && !hospitalData?.agreementHospital && !errors.isnull && (
+          <Error>{errors.agreement}</Error>
+        )}
         {isRequiredChecked && errors.isnull && <Error>{errors.isnull}</Error>}
         <div className="center">
           <BtnContainer>
-            <Button
-              style={{ width: "320px", marginBottom: "100px" }}
-              form="signupForm"
-            >
-              {memberType === "HOSPITAL"
-                ? "의료관계자 가입요청"
-                : "회원 가입하기"}
+            <Button style={{ width: "320px", marginBottom: "100px" }} form="signupForm">
+              {memberType === "HOSPITAL" ? "의료관계자 가입요청" : "회원 가입하기"}
             </Button>
-            {memberType === "HOSPITAL" && (
-              <InfoBlue>
-                *추가 확인이 필요할 시 안내 메일이 발송됩니다.
-              </InfoBlue>
-            )}
+            {memberType === "HOSPITAL" && <InfoBlue>*추가 확인이 필요할 시 안내 메일이 발송됩니다.</InfoBlue>}
           </BtnContainer>
         </div>
       </PageWrapper>

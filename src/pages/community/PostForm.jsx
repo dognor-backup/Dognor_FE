@@ -9,7 +9,7 @@ import Checkbox from "@/shared/components/checkbox/Checkbox";
 import { Button } from "@/shared/components/buttons/Button";
 import { PageTop } from "@/shared/components/layout/PageTopTitle";
 import { SelectBox } from "./components/SelectBox";
-import { useGetUserId } from "../../domains/post/hooks/useGetUserId";
+import { useGetUserId } from "../../domains/auth/hooks/useGetUserId";
 import { useLocation } from "react-router-dom";
 
 export function PostForm() {

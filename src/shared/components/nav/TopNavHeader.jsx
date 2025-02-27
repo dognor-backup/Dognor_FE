@@ -57,7 +57,7 @@ export default function TopNavHeader({ activeMenuLink, setIsMenuOpen }) {
               <MenuIcon />
             </ToggleBtn>
           ) : (
-            <TextBtn>회원가입</TextBtn>
+            <TextBtn onClick={() => navigate("/signup")}>회원가입</TextBtn>
           )}
 
           <Button

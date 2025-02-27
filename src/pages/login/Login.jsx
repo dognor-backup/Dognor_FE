@@ -75,7 +75,6 @@ export default function Login() {
           <LoginOptionsContainer>
             <Checkbox
               name="rememberMe"
-              size="medium"
               label="로그인 유지"
               checked={rememberMe}
               onChange={() => setRememberMe((prev) => !prev)}

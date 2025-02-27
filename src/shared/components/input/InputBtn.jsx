@@ -34,14 +34,7 @@ export const InputBtn = ({
     <div className={className}>
       <Label htmlFor={id}>{label}</Label>
       <Flex>
-        <Input
-          type="text"
-          name={name}
-          id={id}
-          placeholder={placeholder}
-          onChange={handleInputValue}
-          {...props}
-        />
+        <Input type="text" name={name} id={id} placeholder={placeholder} onChange={handleInputValue} {...props} />
         <Button status={status} onClick={handleClick} {...props} type="button">
           {BtnText}
         </Button>

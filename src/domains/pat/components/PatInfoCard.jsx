@@ -20,8 +20,7 @@ import EditPatInfoCard from "./EditPatInfoCard";
 
 export default function PatInfoCard() {
   const { openModal } = useModalStore();
-  const { openAlert, isAlertOpen, deleteType, deleteTargetSeq } =
-    useAlertStore();
+  const { openAlert, isAlertOpen, deleteType, deleteTargetSeq } = useAlertStore();
   const [page, setPage] = useState(1);
   const size = 4;
   const { user } = useUserStore();
@@ -31,11 +30,7 @@ export default function PatInfoCard() {
 
   const queryClient = useQueryClient();
 
-  const { data, isLoading, error, refetch } = useGetPatInfo(
-    userSeq,
-    page,
-    size
-  );
+  const { data, isLoading, error, refetch } = useGetPatInfo(userSeq, page, size);
   const totalPages = data?.totalPage || 1;
 
   useEffect(() => {
@@ -80,8 +75,8 @@ export default function PatInfoCard() {
 
       if (response.success) {
         queryClient.invalidateQueries(["patInfo"]);
-
         const petList = data?.data || [];
+        console.log(petList);
         if (petList.length <= 1 && page > 1) {
           setPage(page - 1);
         } else {
@@ -101,11 +96,7 @@ export default function PatInfoCard() {
     return (
       <div>
         <Spinner />
-        {!userSeq && (
-          <div style={{ textAlign: "center", marginTop: "20px" }}>
-            사용자 정보를 불러오는 중...
-          </div>
-        )}
+        {!userSeq && <div style={{ textAlign: "center", marginTop: "20px" }}>사용자 정보를 불러오는 중...</div>}
       </div>
     );
   }
@@ -146,9 +137,7 @@ export default function PatInfoCard() {
                 <PatInfoWrapper>
                   <PatNameText>{pat.name}</PatNameText>
                   <PatInfoContainer>
-                    <PatInfoText>
-                      나이: {calculateAge(pat.birthday)}
-                    </PatInfoText>
+                    <PatInfoText>나이: {calculateAge(pat.birthday)}</PatInfoText>
                     <PatInfoText>분류: {pat.breedName}</PatInfoText>
                     <PatInfoText>몸무게: {pat.weight} Kg</PatInfoText>
                     <PatInfoText>혈액형: {pat.bloodTypeName}</PatInfoText>
@@ -175,10 +164,7 @@ export default function PatInfoCard() {
           </AddDogBtn>
         )}
         <PagenationContainer>
-          <DnPagination 
-            totalPage={totalPages} 
-            getClickedPageNumber={handlePageChange} 
-          />
+          <DnPagination totalPage={totalPages} getClickedPageNumber={handlePageChange} />
         </PagenationContainer>
         <LineBoundaryContainer>
           <LineBoundary />

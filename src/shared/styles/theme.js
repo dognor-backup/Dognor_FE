@@ -47,6 +47,6 @@ export const theme = {
   fonts: {},
   shadow: "4px 4px 16px rgba(0, 0, 0, 0.3)",
   styles: {
-    radius: "8px",
+    radius: "6px",
   },
 };
