@@ -1,7 +1,7 @@
 import { useGetUserId } from "@/domains/auth/hooks/useGetUserId";
 import { useGetCampaigns } from "@/domains/campaign/hooks/useGetCampaigns";
 import TagCard from "@/shared/components/cards/tagcard/TagCard";
-import { getRandomCard } from "../hooks/getRandomCard";
+import { getRandomCard } from "../../../shared/utils/getRandomCard";
 
 export default function TagCardsHome({ ...props }) {
   const { userSeq } = useGetUserId();

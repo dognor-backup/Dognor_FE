@@ -1,19 +1,18 @@
-import styled from "@emotion/styled";
+import { useNavigate } from "react-router-dom";
 import { LinkCard, TextCard, WideCard } from "./components/LinkCard";
 import { Tag } from "./components/Tag";
 import { TopBanner } from "./components/TopBanner";
 import TagCardsHome from "./components/TagCardHome";
-import { useNavigate } from "react-router-dom";
 import PostCardsHome from "./components/PostCardHome";
 import { SecondBanner } from "./components/Banners";
-import { cardData, TagText, cardData2 } from "./data/cardData";
 import { formatText } from "@/shared/utils/formatText";
+import { cardData, TagText, cardData2 } from "./data/cardData";
+import styled from "@emotion/styled";
+
 export default function Home() {
   const navigate = useNavigate();
   const handleClickCard = (e, path) => {
-    console.log(path);
     e.stopPropagation();
-    e.preventDefault();
     navigate(`/${path}`);
   };
 
@@ -114,6 +113,7 @@ export default function Home() {
             }
             onClick={(e) => handleClickCard(e, "donationinfo")}
           ></WideCard>
+
           <div>
             <SubTitle>“헌혈하개”에서 만나볼 수 있는 캠페인</SubTitle>
             <Text bold>다양한 캠페인을 진행하고 있습니다</Text>
@@ -136,7 +136,6 @@ const MainContainer = styled.div`
   margin: 0 auto;
   text-align: center;
 `;
-
 const NthBanner = styled.div(
   ({ background, height }) =>
     `
@@ -162,19 +161,19 @@ const CardContainer = styled.div(
 );
 const SubTitle = styled.h2(
   ({ theme }) => `
-color: ${theme.colors.neutrals_00};
-font-size: 32px;
-font-weight: 700;
-margin-top: 100px;
+  color: ${theme.colors.neutrals_00};
+  font-size: 32px;
+  font-weight: 700;
+  margin-top: 100px;
 `
 );
 const SubText = styled.h2(
   ({ theme }) => `
-color: ${theme.colors.neutrals_00};
-font-size: 24px;
-font-weight: 700;
-margin-top: 48px;
-margin-bottom: 32px;
+  color: ${theme.colors.neutrals_00};
+  font-size: 24px;
+  font-weight: 700;
+  margin-top: 48px;
+  margin-bottom: 32px;
 `
 );
 
@@ -202,8 +201,8 @@ const Text = styled.p(
 );
 const Border = styled.div(
   ({ theme }) => `
-border-top: 1px dashed ${theme.colors.neutrals_04};
-border-bottom: 1px dashed ${theme.colors.neutrals_04}`
+  border-top: 1px dashed ${theme.colors.neutrals_04};
+  border-bottom: 1px dashed ${theme.colors.neutrals_04}`
 );
 const LongBtn = styled.button(
   ({ theme }) => `

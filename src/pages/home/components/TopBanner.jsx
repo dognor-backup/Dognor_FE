@@ -1,10 +1,10 @@
-import { useBannerMutations } from "@/pages/dashboard/hooks/useBanner";
 import { useEffect, useState } from "react";
+import { useBannerMutations } from "@/pages/dashboard/hooks/useBanner";
 import styled from "@emotion/styled";
 
 export function TopBanner() {
   const { getBannerQuery } = useBannerMutations();
-  const { data: bannerList, isLoading, isError } = getBannerQuery;
+  const { data: bannerList } = getBannerQuery;
   const [prevBanners, setPrevBanners] = useState([]);
   const [currentBanner, setCurrentBanner] = useState(0);
   let len = prevBanners?.length || 0;
