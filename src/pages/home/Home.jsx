@@ -6,11 +6,12 @@ import TagCardsHome from "./components/TagCardHome";
 import { useNavigate } from "react-router-dom";
 import PostCardsHome from "./components/PostCardHome";
 import { SecondBanner } from "./components/Banners";
-import { cardData } from "./data/cardData";
+import { cardData, TagText, cardData2 } from "./data/cardData";
 import { formatText } from "@/shared/utils/formatText";
 export default function Home() {
   const navigate = useNavigate();
   const handleClickCard = (e, path) => {
+    console.log(path);
     e.stopPropagation();
     e.preventDefault();
     navigate(`/${path}`);
@@ -23,7 +24,7 @@ export default function Home() {
         <SecondBanner />
         <MainContainer>
           <CardContainer grid={3} height="358px">
-            {cardData.map((card, index) =>
+            {cardData?.map((card, index) =>
               card.type === "text" ? (
                 <TextCard key={index} color={card.color} title={formatText(card.title)} text={formatText(card.text)} />
               ) : (
@@ -41,20 +42,22 @@ export default function Home() {
             1. 수혈 전용으로 길러지는 강아지, <span style={{ color: "#F64D4D" }}>“공혈견”</span>을 알고있나요?
           </SubText>
           <HashTagImg />
+
           <HashTagContainer>
-            <Tag color="red">비윤리적 문제</Tag>
-            <Tag color="red">혈액을 얼마나 뽑는지는 모름</Tag>
-            <Tag color="red">철창에 갇혀 피 뽑히다 생을 마감</Tag>
-            <Tag color="red">재고가 없을 때 공혈견에게 의존할 수밖에 없는 상황이 생기는 딜레마</Tag>
-            <Tag color="red">건강하지 못한 혈액</Tag>
-            <Tag color="red">약 300여마리의 공혈견들이 비위생적이고 열악한 환경 속에서 고통스럽게 살고 있는 현황</Tag>
+            <Tag color="red">{TagText[0]}</Tag>
+            <Tag color="red">{TagText[1]}</Tag>
+            <Tag color="red">{TagText[2]}</Tag>
+            <Tag color="red">{TagText[3]}</Tag>
+            <Tag color="red">{TagText[4]}</Tag>
+            <Tag color="red">{TagText[5]}</Tag>
           </HashTagContainer>
+
           <Border>
             <SubText>2. 왜? 공혈견을 찾는 이유는?</SubText>
             <HashTagContainer>
-              <Tag>비윤리적 문제</Tag>
-              <Tag>혈액을 얼마나 뽑는지는 모름</Tag>
-              <Tag>철창에 갇혀 피 뽑히다 생을 마감</Tag>
+              <Tag>{TagText[0]}</Tag>
+              <Tag>{TagText[1]}</Tag>
+              <Tag>{TagText[2]}</Tag>
               <Text>
                 반려견도 외과 수술, 교통사고, 출산 중 대량 출혈, 빈혈 등의 문제가 발생했을 때 긴급 수혈이 필요, 그러나
                 사람과 달리 강아지들은 공적인 혈액 은행이 없고 장기 보존이 불가능 하기 때문에 수혈용 혈액을 안정적으로
@@ -62,6 +65,7 @@ export default function Home() {
               </Text>
             </HashTagContainer>
           </Border>
+
           <SubText>3. 우리 반려견이 헌혈을 함께 해준다면?</SubText>
           <NthBanner
             background="/src/assets/images/home_dog_return.svg"
@@ -70,38 +74,25 @@ export default function Home() {
           ></NthBanner>
 
           <CardContainer grid={2} height="288px">
-            <LinkCard
-              background="/src/assets/images/card04.svg"
-              btnColor="white"
-              title={
-                <>
-                  #반려견 #헌혈&병원
-                  <br />
-                  #다양한 소통의 공간
-                </>
-              }
-              btnText="이야기 나누어요"
-            />
-            <LinkCard
-              background="/src/assets/images/card05.svg"
-              title={
-                <>
-                  혈액이 필요합니다
-                  <br />
-                  도움과 관심이 필요합니다
-                </>
-              }
-              btnText="도와주러가기"
-              color="#4A3AFF"
-            />
+            {cardData2?.map((card, index) => (
+              <LinkCard
+                key={index}
+                background={card.background}
+                title={formatText(card.title)}
+                btnText={card.btnText}
+                color={card.color}
+                btnColor={card.btnColor}
+              />
+            ))}
           </CardContainer>
+
           <div>
             <SubTitle>우리들의 헌혈 동료들</SubTitle>
             <Text bold>
               우리 반려견들이 다른 친구들을 살리는 멋진일을 하고 있어요 <br />
               여러분도 같이해요
             </Text>
-            <LongBtn>더 많은 헌혈 동료들 만나보기</LongBtn>
+            <LongBtn onClick={() => navigate("/showcase")}>더 많은 헌혈 동료들 만나보기</LongBtn>
             <CardContainer grid={3} padding={"btm"}>
               <PostCardsHome onClick={(e) => handleClickCard(e, "showcase")} />
             </CardContainer>
@@ -123,7 +114,7 @@ export default function Home() {
           <div>
             <SubTitle>“헌혈하개”에서 만나볼 수 있는 캠페인</SubTitle>
             <Text bold>다양한 캠페인을 진행하고 있습니다</Text>
-            <LongBtn>캠페인 더보기</LongBtn>
+            <LongBtn onClick={() => navigate("/campaigns")}>캠페인 더보기</LongBtn>
             <CardContainer grid={3} padding={"btm"}>
               <TagCardsHome onClick={(e) => handleClickCard(e, "campaigns")} />
             </CardContainer>

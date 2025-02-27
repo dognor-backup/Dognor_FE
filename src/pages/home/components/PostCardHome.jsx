@@ -5,7 +5,7 @@ import { useSearchDonationStories } from "@/domains/donationstory/hooks/useSearc
 import PostCard from "@/shared/components/cards/postcard/PostCard";
 import { MOCK_DATA } from "../data/defaultData";
 
-export default function PostCardsHome() {
+export default function PostCardsHome({ ...props }) {
   const [showcaseList, setShowcaseList] = useState([]);
   const { userSeq } = useGetUserId();
   const data = {
@@ -28,7 +28,9 @@ export default function PostCardsHome() {
   return (
     <>
       {confirmList?.map((showcase, idx) => (
-        <PostCard story={showcase} key={idx}></PostCard>
+        <span key={idx} {...props}>
+          <PostCard story={showcase} useHome={true}></PostCard>
+        </span>
       ))}
     </>
   );

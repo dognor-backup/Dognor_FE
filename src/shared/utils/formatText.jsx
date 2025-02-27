@@ -1,8 +1,10 @@
+import React from "react";
+
 export function formatText(text) {
-  text.split("\n").map((line, index) => (
-    <span key={index}>
+  return text.split("\n").map((line, index) => (
+    <React.Fragment key={index}>
       {line}
       <br />
-    </span>
+    </React.Fragment>
   ));
 }

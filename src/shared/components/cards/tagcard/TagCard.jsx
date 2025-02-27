@@ -17,6 +17,7 @@ export default function TagCard({ handleDelete, handleEdit, campaign, likeCampai
   if (user.userData.role === "admin") setIsAdmin(true);
 
   const handleLike = () => {
+    if (useHome) return;
     if (isLiked) {
       if (like === 0) return;
       setLike((prev) => prev - 1);

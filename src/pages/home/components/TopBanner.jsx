@@ -21,7 +21,7 @@ export function TopBanner() {
     }, 5000);
     return () => clearInterval(interval);
   }, [prevBanners]);
-  console.log(prevBanners);
+
   const handleCurrentBanner = (btnType) => {
     switch (btnType) {
       case "prev":

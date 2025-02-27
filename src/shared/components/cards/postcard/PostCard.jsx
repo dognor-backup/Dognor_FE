@@ -8,7 +8,7 @@ import { useLikeDonationStory } from "@/domains/donationstory/hooks/useLikeDonat
 import { useNavigate } from "react-router-dom";
 import VerticalDotsSelect from "../../VerticalDotsSelect";
 
-export default function PostCard({ story, handleDelete, handleEdit }) {
+export default function PostCard({ story, handleDelete, handleEdit, useHome }) {
   const { donationStorySeq, cardImgUrl, likeCnt, likeYn, content, name, profileImgUrl, firstSaveUser } = story || {};
   const { user } = useUserStore();
   const [like, setLike] = useState(likeCnt);
@@ -19,6 +19,7 @@ export default function PostCard({ story, handleDelete, handleEdit }) {
   const navigate = useNavigate();
 
   useEffect(() => {
+    if (useHome) return;
     if (!userId) {
       setIsAuthor(false);
     } else {
