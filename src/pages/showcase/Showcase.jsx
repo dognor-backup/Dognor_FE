@@ -2,8 +2,16 @@ import { Button } from "@/shared/components/buttons/Button";
 import { PageTop } from "@/shared/layout/PageTopTitle";
 import styled from "@emotion/styled";
 import ShowcaseSection from "./ShowcaseSection";
+import useModalStore from "@/shared/hooks/useModalStore";
+import DonationStoryModal from "./DonationStoryModal";
 
 export default function Showcase() {
+  const { openModal } = useModalStore();
+
+  const handleOpenDonationStoryModal = () => {
+    openModal("donationStory");
+  };
+
   return (
     <ShowcaseLayout>
       <PageTop>
@@ -18,10 +26,12 @@ export default function Showcase() {
         size="medium"
         state="default"
         style={{ width: "320px" }}
+        onClick={handleOpenDonationStoryModal}
       >
         헌혈 이야기 작성하기
       </Button>
       <ShowcaseSection />
+      <DonationStoryModal />
     </ShowcaseLayout>
   );
 }
