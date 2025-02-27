@@ -1,25 +1,25 @@
 import styled from "@emotion/styled";
 
-export function LinkCard({ background, title, btnText, color, btnColor }) {
+export function LinkCard({ background, title, btnText, color, btnColor, ...props }) {
   return (
-    <Card background={background} border>
+    <Card background={background} border {...props}>
       <CardTitle color={color}>{title}</CardTitle>
       <CardBtn btnColor={btnColor}>{btnText}</CardBtn>
     </Card>
   );
 }
 
-export function TextCard({ color, title, text }) {
+export function TextCard({ color, title, text, ...props }) {
   return (
-    <Card color={color}>
+    <Card color={color} {...props}>
       <CardTitle>{title}</CardTitle>
       <CardText>{text}</CardText>
     </Card>
   );
 }
-export function WideCard({ background, title, btnText, color, btnColor }) {
+export function WideCard({ background, title, btnText, color, btnColor, ...props }) {
   return (
-    <CardLong background={background}>
+    <CardLong background={background} {...props}>
       <CardTitle color={color}>{title}</CardTitle>
       <CardBtn btnColor={btnColor} noBtm>
         {btnText}

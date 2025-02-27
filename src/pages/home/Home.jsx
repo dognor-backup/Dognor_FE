@@ -33,6 +33,7 @@ export default function Home() {
                   background={card.background}
                   title={formatText(card.title)}
                   btnText={card.btnText}
+                  onClick={(e) => handleClickCard(e, card.link)}
                 />
               )
             )}
@@ -82,6 +83,7 @@ export default function Home() {
                 btnText={card.btnText}
                 color={card.color}
                 btnColor={card.btnColor}
+                onClick={(e) => handleClickCard(e, card.link)}
               />
             ))}
           </CardContainer>
@@ -110,6 +112,7 @@ export default function Home() {
                 #조건과 방법
               </>
             }
+            onClick={(e) => handleClickCard(e, "donationinfo")}
           ></WideCard>
           <div>
             <SubTitle>“헌혈하개”에서 만나볼 수 있는 캠페인</SubTitle>
