@@ -13,7 +13,7 @@ export function TopBanner() {
     if (bannerList) {
       setPrevBanners(bannerList?.data);
     }
-  }, [prevBanners]);
+  }, [bannerList]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -78,7 +78,7 @@ const CircleBtn = styled.button(
   border: 1px solid ${theme.colors.neutrals_05}
 `
 );
-//현재번째 이미지만 보이기
+
 const BannerImg = styled.img`
   height: 480px;
   max-height: 480px;

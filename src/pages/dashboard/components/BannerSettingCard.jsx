@@ -55,7 +55,13 @@ export function BannerSettingCard({ img, setBannerData, deleteBannerMutation, pr
       <BannerImg />
       <InputContainer>
         <Flex>
-          <File type="file" id="webFile" ref={webFileInput} onChange={(e) => handleFileChange(e, "webImgFile")} />
+          <File
+            type="file"
+            id="webFile"
+            ref={webFileInput}
+            accept="image/*,.png,.jpg,.jpeg,.gif"
+            onChange={(e) => handleFileChange(e, "webImgFile")}
+          />
           <InputBtn
             id="webImgFile"
             name="webImgFile"
