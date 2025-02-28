@@ -11,6 +11,7 @@ import Login from "@/pages/login/Login";
 import FindAccount from "@/pages/findaccount/FindAccount";
 import SignUp from "@/pages/signup/SignUp";
 import App from "@/App";
+import AccountSettings from "@/pages/accountsettings/AccountSettings";
 import { Agreement } from "@/pages/signup/Agreement";
 import { SignUpComplete } from "@/pages/signup/SignUpComplete";
 import { PostForm } from "@/pages/community/PostForm";
@@ -45,7 +46,10 @@ const router = createBrowserRouter([
       {
         path: "mypage",
         Component: MyPage,
-        children: [{ path: "accountsettings", Component: Home }],
+      },
+      {
+        path: "accountsettings",
+        Component: AccountSettings,
       },
       {
         path: "community",
@@ -75,7 +79,7 @@ const router = createBrowserRouter([
 
   { path: "welcome", Component: SignUpComplete },
   { path: "agreement", Component: Agreement },
-  { path: "*", Component: Home }, // 모든 경로에 대해 에러 처리
+  { path: "*", Component: Home },
 ]);
 
 export default router;

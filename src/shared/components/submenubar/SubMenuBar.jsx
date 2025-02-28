@@ -1,29 +1,42 @@
 import styled from "@emotion/styled";
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 
-export default function SubMenuBar({ subMenuList }) {
+export default function SubMenuBar({
+  subMenuList,
+  useQueryParams = false,
+  queryParamKey = "myPosts",
+  activeCategory,
+  onCategoryChange,
+}) {
   const [activeSubMenu, setActiveSubMenu] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const handleSubMenuClick = (menu) => {
     setActiveSubMenu(menu);
     const currentPath = location.pathname.split("/").slice(0, 2).join("/");
-    if (menu === "") {
-      navigate(`${currentPath}`);
+
+    if (useQueryParams) {
+      setSearchParams({ [queryParamKey]: menu });
+      if (onCategoryChange) {
+        onCategoryChange(menu);
+      }
     } else {
-      navigate(`${currentPath}/${menu}`);
+      menu === "" ? navigate(`${currentPath}`) : navigate(`${currentPath}/${menu}`);
     }
   };
+
   const getInitialActiveMenu = () => {
     const currentPath = location.pathname.split("/").slice(2).join("/") || "";
     return subMenuList.find((menu) => menu.path === currentPath)?.path || null || "";
   };
 
   useEffect(() => {
-    setActiveSubMenu(getInitialActiveMenu());
-  }, [location.pathname]);
+    const initialMenu = activeCategory || getInitialActiveMenu();
+    setActiveSubMenu(initialMenu);
+  }, [location.pathname, activeCategory]);
 
   return (
     <SubMenuBarLayout>
@@ -32,9 +45,7 @@ export default function SubMenuBar({ subMenuList }) {
           key={menu.path}
           data-label={menu.label}
           isActive={activeSubMenu === menu.path}
-          onClick={() => {
-            handleSubMenuClick(menu.path);
-          }}
+          onClick={() => handleSubMenuClick(menu.path)}
           color={menu.color}
         >
           {menu.label}

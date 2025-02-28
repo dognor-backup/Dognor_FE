@@ -31,6 +31,8 @@ export default function TopNavHeader({ activeMenuLink, setIsMenuOpen }) {
   const handleMove = () => {
     if (isAdmin) {
       navigate("/dashboard");
+    } else {
+      navigate("/mypage/");
     }
   };
 
@@ -49,6 +51,7 @@ export default function TopNavHeader({ activeMenuLink, setIsMenuOpen }) {
           ) : (
             <TextBtn onClick={handleLogout}>로그아웃</TextBtn>
           )}
+
           <Button variant="normal" size="medium" state="outline" onClick={handleMove}>
             마이페이지
           </Button>

@@ -2,24 +2,44 @@ import styled from "@emotion/styled";
 import { Button } from "../buttons/Button";
 import useModalStore from "@/shared/hooks/useModalStore";
 
-const Modal = ({ children, BtnText, title, size, isModalOpen }) => {
-  const { closeModal } = useModalStore();
+const Modal = ({
+  children,
+  BtnText,
+  title,
+  size,
+  formName,
+  onSubmit,
+  modalname,
+  onClose,
+  ...props
+}) => {
+  const { closeModal, modalname: activemodalname } = useModalStore();
   const handleModalClick = (e) => e.stopPropagation();
+  const isModalOpen = activemodalname === modalname;
 
   return (
     <>
-      <ModalDimmed isModalOpen={isModalOpen} onClick={closeModal}>
-        <ModalContainer size={size} isModalOpen={isModalOpen} onClick={handleModalClick}>
+      <ModalDimmed
+        isModalOpen={isModalOpen}
+        onClick={() => closeModal(onClose)}
+      >
+        <ModalContainer
+          size={size}
+          isModalOpen={isModalOpen}
+          onClick={handleModalClick}
+        >
           <ModalContent>
             <ModalHeader>
-              <CloseBtn onClick={closeModal} />
+              <CloseBtn onClick={() => closeModal(onClose)} />
             </ModalHeader>
             <ModalBody>
-              <ModalTitle>{title}</ModalTitle>
+              <form id={formName} onSubmit={onSubmit} {...props}>
+                <ModalTitle>{title}</ModalTitle>
+              </form>
               {children}
             </ModalBody>
             <ModalFooter>
-              <Button style={{ width: "100%" }} onClick={closeModal}>
+              <Button style={{ width: "100%" }} type="submit" form={formName}>
                 {BtnText}
               </Button>
             </ModalFooter>

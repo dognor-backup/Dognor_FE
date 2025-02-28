@@ -6,7 +6,9 @@ const useAlertStore = create((set) => ({
   deleteType: null,
   deleteTargetSeq: null,
   //action
-  openAlert: (type, seq) => set({ isAlertOpen: true, deleteType: type, deleteTargetSeq: seq }),
-  closeAlert: () => set({ isAlertOpen: false, deleteType: null }),
+  openAlert: (type, seq) =>
+    set({ isAlertOpen: true, deleteType: type, deleteTargetSeq: seq }),
+  closeAlert: () =>
+    set({ isAlertOpen: false, deleteType: null, deleteTargetSeq: null }),
 }));
 export default useAlertStore;
