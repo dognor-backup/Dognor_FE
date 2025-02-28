@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import useModalStore from "@/shared/hooks/useModalStore";
 import Modal from "@/shared/components/modals/Modal";
-import AddProfileBtnImg from "../../assets/icons/default/image.svg?react";
+import AddProfileBtnImg from "../../../assets/icons/default/image.svg?react";
 import useGetValueFromTextInput from "@/shared/hooks/useGetValueFromTextInput";
 import { InputFile } from "@/shared/components/input/InputFile";
 import { SelectBox } from "@/shared/components/SelectBox";

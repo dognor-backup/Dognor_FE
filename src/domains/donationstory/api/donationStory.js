@@ -120,3 +120,51 @@ export const saveDonationStory = async (data) => {
     return { success: false, msg: "네트워크 오류. 연결 상태를 확인해주세요." };
   }
 };
+
+export const getHonorDogs = async (page = 1, size = 10) => {
+  try {
+    const response = await AxiosInstance.get(
+      `/donation-story/honor-dogs/${page}/${size}`
+    );
+
+    if (response.data.code === 200) {
+      return { 
+        success: true, 
+        data: response.data.data,
+        totalPage: response.data.totalPage || 1 
+      };
+    }
+    
+    return { 
+      success: false, 
+      data: [], 
+      totalPage: 1,
+      msg: "명예의 전당 강아지 목록을 불러오는데 실패했습니다." 
+    };
+  } catch (error) {
+    if (error.response) {
+      const { status, data } = error.response;
+      if (status === 400) {
+        return {
+          success: false,
+          data: [],
+          totalPage: 1,
+          msg: data.msg || "Bad Request: 잘못된 요청입니다.",
+        };
+      } else if (status === 500) {
+        return { 
+          success: false, 
+          data: [], 
+          totalPage: 1,
+          msg: "서버 오류가 발생했습니다." 
+        };
+      }
+    }
+    return { 
+      success: false, 
+      data: [], 
+      totalPage: 1,
+      msg: "네트워크 오류. 연결 상태를 확인해주세요." 
+    };
+  }
+};

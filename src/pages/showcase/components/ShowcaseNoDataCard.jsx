@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
-import PrimaryDogFoot from "../../assets/icons/primary/dog_foot_primary.svg?react";
-import SecondaryDogFoot from "../../assets/icons/secondary/dog_foot_secondary.svg?react";
-import RedDogFoot from "../../assets/icons/red/dog_foot_r.svg?react";
+import PrimaryDogFoot from "../../../assets/icons/primary/dog_foot_primary.svg?react";
+import SecondaryDogFoot from "../../../assets/icons/secondary/dog_foot_secondary.svg?react";
+import RedDogFoot from "../../../assets/icons/red/dog_foot_r.svg?react";
 
 const dogFootIcons = {
   primary: PrimaryDogFoot,

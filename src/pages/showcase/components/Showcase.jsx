@@ -1,9 +1,10 @@
 import { Button } from "@/shared/components/buttons/Button";
 import { PageTop } from "@/shared/layout/PageTopTitle";
 import styled from "@emotion/styled";
-import ShowcaseSection from "./ShowcaseSection";
 import useModalStore from "@/shared/hooks/useModalStore";
 import DonationStoryModal from "./DonationStoryModal";
+import HonorDogSection from "./HonorDogSection";
+import ShowcaseSection from "./ShowcaseSection";
 
 export default function Showcase() {
   const { openModal } = useModalStore();
@@ -32,6 +33,7 @@ export default function Showcase() {
       </Button>
       <ShowcaseSection />
       <DonationStoryModal />
+      <HonorDogSection />
     </ShowcaseLayout>
   );
 }
@@ -41,7 +43,6 @@ const ShowcaseLayout = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 48px;
-  padding: 0 36px 100px 36px;
 `;
 
 const ShowcaseDescription = styled.div`
