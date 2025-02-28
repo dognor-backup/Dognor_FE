@@ -3,6 +3,7 @@ import { DatePicker } from "@/shared/components/DatePicker";
 import { InputBtn } from "@/shared/components/input/InputBtn";
 import { InputForm } from "@/shared/components/input/InputForm";
 import { formatDate } from "@/shared/utils/formatDate";
+import { formatDateTime } from "@/shared/utils/formatDateTime";
 import styled from "@emotion/styled";
 import { useRef, useState } from "react";
 
@@ -34,13 +35,13 @@ export function BannerSettingCard({ img, setBannerData, deleteBannerMutation, pr
   };
 
   const getStrDate = (date) => {
-    const { formattedDate } = formatDate(date);
+    const { formattedDate } = formatDateTime(date);
     const strDt = formattedDate;
     setBannerData((prev) => ({ ...prev, strDt }));
   };
 
   const getEndDate = (date) => {
-    const { formattedDate } = formatDate(date);
+    const { formattedDate } = formatDateTime(date);
     const endDt = formattedDate;
     setBannerData((prev) => ({ ...prev, endDt }));
   };

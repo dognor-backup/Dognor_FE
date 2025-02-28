@@ -21,7 +21,7 @@ import { PostDetail } from "@/pages/community/PostDetail";
 import { CampaignForm } from "@/pages/campaigns/CampaignForm";
 import { CampaignDetail } from "@/pages/campaigns/CampaignDeatil";
 import { Dashboard } from "@/pages/dashboard/Dashboard";
-import { BoardContent } from "@/pages/dashboard/components/BoardContent";
+import { BoardContent } from "@/pages/dashboard/BoardContent";
 
 const router = createBrowserRouter([
   {

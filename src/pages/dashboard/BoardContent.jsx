@@ -1,16 +1,21 @@
-import { useParams } from "react-router-dom";
-import { SettingBanner } from "./SettingBanner";
+import { useOutletContext, useParams } from "react-router-dom";
+import { SettingBanner } from "./components/SettingBanner";
 import styled from "@emotion/styled";
 import { Management } from "./Management";
-import { User } from "./User";
-import { Notice } from "./Notice";
-import { Campaign } from "./Campaign";
-import { Code } from "./Code";
-import { Error } from "./Error";
+import { User } from "./components/User";
+import { Notice } from "./components/Notice";
+import { Campaign } from "./components/Campaign";
+import { Code } from "./components/Code";
+import { Error } from "./components/Error";
 
-export function BoardContent({ title }) {
+export function BoardContent() {
+  const menuData = useOutletContext();
   const { menu } = useParams();
-  console.log("me", menu);
+  const number = Math.max(
+    menuData.findIndex((data) => data.path === menu),
+    0
+  );
+
   const ContentComponent = () => {
     switch (menu) {
       case "user":
@@ -31,7 +36,7 @@ export function BoardContent({ title }) {
   };
   return (
     <Content>
-      <DsTitle>{title}</DsTitle>
+      <DsTitle>{menuData[number]?.title}</DsTitle>
       <ContentComponent />
     </Content>
   );

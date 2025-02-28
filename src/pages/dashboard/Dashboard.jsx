@@ -9,7 +9,7 @@ export function Dashboard() {
       <PageTop>
         <SubMenuBar subMenuList={BOARD_TITLES} />
       </PageTop>
-      <Outlet />
+      <Outlet context={BOARD_TITLES} />
     </PageWrapper>
   );
 }

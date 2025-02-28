@@ -1,4 +1,4 @@
-export function formatDate(date) {
+export function formatDateTime(date) {
   const selectedDate = new Date(date);
   if (isNaN(selectedDate.getTime())) {
     return { formattedDate: "", formattedTime: "" };

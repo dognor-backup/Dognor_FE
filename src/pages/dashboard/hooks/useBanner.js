@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getAccessTokenFromDB } from "@/shared/utils/axiosInstance";
 import axios from "axios";
-import { deleteBanner, getBannerList } from "../api/dashboard";
+import { deleteBanner, getBannerList } from "../api/banner";
 
 export function useBannerMutations() {
   const queryClient = useQueryClient();
