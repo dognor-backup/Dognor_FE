@@ -1,12 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useGetAdminData } from "./hooks/useGetAdminData";
 import styled from "@emotion/styled";
 import { MenuBox } from "./components/MenuBox";
 
 export function Management() {
   const { getDashBoardStatus } = useGetAdminData();
-  const manageStatus = getDashBoardStatus?.data?.data;
-  const [status, setStatus] = useState(() => manageStatus);
+  const manageStatus = getDashBoardStatus?.data;
+  const [status, setStatus] = useState(() => manageStatus?.data);
   const {
     abailableBloodPackCnt,
     awaitApprovalHospitalCnt,
@@ -19,7 +19,13 @@ export function Management() {
     largeDogTotalCnt,
     paidDonationHospitalCnt,
     patTotalCnt,
-  } = status;
+  } = status || {};
+
+  useEffect(() => {
+    if (manageStatus?.data) {
+      setStatus(manageStatus.data);
+    }
+  }, [manageStatus]);
 
   return (
     <>
