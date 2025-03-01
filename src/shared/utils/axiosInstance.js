@@ -16,6 +16,7 @@ AxiosInstance.interceptors.request.use(
   async (config) => {
     try {
       const token = await getAccessTokenFromDB();
+      console.log(token);
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       }

@@ -11,14 +11,14 @@ export const useLogin = (setValidationError) => {
   return useMutation({
     mutationFn: login,
     onSuccess: async ({ success, data }, variables) => {
-      const { rememberMe } = variables; 
+      const { rememberMe } = variables;
       
       if (success) {
         const { userSeq, userId, userRole, name, accessToken } = data.data;
+        const userData = { userSeq, userId, userRole, name, accessToken };
 
-        setUser({ userSeq, userId, userRole, name, accessToken });
-
-        await saveUserToDB({ userSeq, userId, userRole, name, accessToken }, rememberMe);
+        setUser(userData);
+        await saveUserToDB(userData, rememberMe);
 
         navigate("/home", { replace: true });
       } else {

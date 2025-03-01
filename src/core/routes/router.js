@@ -2,7 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import Home from "../../pages/home/Home";
 import DonationInfo from "../../pages/donationinfo/DonationInfo";
 import AboutUs from "../../pages/aboutus/AboutUs";
-import Showcase from "../../pages/showcase/Showcase";
+import Showcase from "../../pages/showcase/components/Showcase";
 import HospitalMap from "../../pages/hospitalmap/HospitalMap";
 import Campaigns from "../../pages/campaigns/Campaigns";
 import MyPage from "../../pages/mypage/MyPage";
