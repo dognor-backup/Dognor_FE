@@ -19,7 +19,7 @@ export default function Showcase() {
       navigate("/login", { state: { redirect: "/showcase" } });
       return;
     }
-    
+
     openModal("donationStory");
   };
 
@@ -28,8 +28,8 @@ export default function Showcase() {
       <PageTop>
         <h2>우리들의 헌혈 동료</h2>
         <ShowcaseDescription>
-          우리 강아지가 다른 친구들을 살리는 멋진일을
-          <br /> 했어요 여러분도 참여하고 칭찬해주세요
+          우리 강아지가 다른 친구들을 살리는 멋진일을 했어요
+          <br /> 여러분도 참여하고 칭찬해주세요
         </ShowcaseDescription>
       </PageTop>
       <Button
@@ -53,7 +53,6 @@ const ShowcaseLayout = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 48px;
-
 `;
 
 const ShowcaseDescription = styled.div`

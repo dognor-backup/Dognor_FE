@@ -11,12 +11,20 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getPatInfo } from "@/domains/pat/api/pat";
 import { saveDonationStory } from "@/domains/donationstory/api/donationStory";
 
+const CenteredModal = styled(Modal)`
+  & > div:first-of-type {
+    align-items: center !important;
+    padding-top: 0 !important;
+  }
+`;
+
 export default function DonationStoryModal() {
   const { isModalOpen, closeModal } = useModalStore();
   const { inputValues, getInputValue } = useGetValueFromTextInput();
   const { user } = useUserStore();
   const userSeq = user?.userData?.userSeq;
   const queryClient = useQueryClient();
+  const [previewImage, setPreviewImage] = useState(null);
 
   const [pets, setPets] = useState([]);
   const [petNames, setPetNames] = useState([]);
@@ -31,7 +39,6 @@ export default function DonationStoryModal() {
   useEffect(() => {
     if (petListData?.success && petListData?.data) {
       setPets(petListData.data);
-
       const names = petListData.data.map((pet) => pet.name);
       setPetNames(names);
     }
@@ -43,6 +50,7 @@ export default function DonationStoryModal() {
       if (response.success) {
         queryClient.invalidateQueries(["donationStories"]);
         closeModal();
+        setPreviewImage(null);
       } else {
         alert(response.msg || "헌혈 이야기 등록에 실패했습니다.");
       }
@@ -54,6 +62,16 @@ export default function DonationStoryModal() {
 
   const handleFileChange = (file) => {
     getInputValue({ name: "imgFile", value: file });
+    
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewImage(reader.result);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setPreviewImage(null);
+    }
   };
 
   const handlePetSelect = (selectedValue) => {
@@ -108,7 +126,7 @@ export default function DonationStoryModal() {
   };
 
   return (
-    <Modal
+    <CenteredModal
       title="후기 작성하기"
       BtnText="업로드하기"
       isModalOpen={isModalOpen}
@@ -118,7 +136,11 @@ export default function DonationStoryModal() {
     >
       <ModalContentLayout>
         <IconContainer>
-          <AddProfileBtnImg />
+          {previewImage ? (
+            <PreviewImg src={previewImage} alt="업로드할 이미지" />
+          ) : (
+            <AddProfileBtnImg />
+          )}
         </IconContainer>
 
         <FlexContainer>
@@ -170,7 +192,7 @@ export default function DonationStoryModal() {
           </DescriptionText>
         </DescriptionBox>
       </ModalContentLayout>
-    </Modal>
+    </CenteredModal>
   );
 }
 
@@ -185,6 +207,13 @@ const IconContainer = styled.div`
   justify-content: center;
   align-items: center;
   width: 100%;
+`;
+
+const PreviewImg = styled.img`
+  width: 120px;
+  height: 120px;
+  border-radius: 8px;
+  object-fit: cover;
 `;
 
 const FlexContainer = styled.div`

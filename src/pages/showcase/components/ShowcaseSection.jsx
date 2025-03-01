@@ -116,15 +116,19 @@ export default function ShowcaseSection() {
     deleteMutation.mutate(deleteTargetSeq);
   };
 
-  const handlePageChange = (pageNumber) => {
+  const handlePageChange = (clicked) => {
     const totalPages = data?.totalPage || 1;
-    const newPage = Number(pageNumber);
+    let newPage;
 
-    if (newPage < 1) {
-      setCurrentPage(1);
-    } else if (newPage > totalPages) {
-      setCurrentPage(totalPages);
+    if (clicked === "next" && currentPage < totalPages) {
+      newPage = currentPage + 1;
+    } else if (clicked === "prev" && currentPage > 1) {
+      newPage = currentPage - 1;
     } else {
+      newPage = Number(clicked);
+    }
+
+    if (newPage) {
       setCurrentPage(newPage);
     }
   };
@@ -191,7 +195,6 @@ export default function ShowcaseSection() {
       <PaginationContainer>
         <DnPagination
           totalPage={data?.totalPage || 1}
-          currentPage={currentPage}
           getClickedPageNumber={handlePageChange}
         />
       </PaginationContainer>

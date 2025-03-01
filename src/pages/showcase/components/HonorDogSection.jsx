@@ -21,15 +21,21 @@ export default function HonorDogSection() {
     keepPreviousData: true,
   });
 
-  const handlePageChange = (pageNumber) => {
-    const newPage = Number(pageNumber);
+  const handlePageChange = (clicked) => {
     const totalPages = honorDogsData?.totalPage || 1;
-
-    if ((currentPage === 1 && newPage < 1) || (currentPage === totalPages && newPage > totalPages)) {
-      return;
+    let newPage;
+    
+    if (clicked === "next" && currentPage < totalPages) {
+      newPage = currentPage + 1;
+    } else if (clicked === "prev" && currentPage > 1) {
+      newPage = currentPage - 1;
+    } else {
+      newPage = Number(clicked);
     }
     
-    setCurrentPage(newPage);
+    if (newPage) {
+      setCurrentPage(newPage);
+    }
   };
 
   const isDataAvailable =
