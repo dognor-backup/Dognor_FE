@@ -15,9 +15,9 @@ export const manageStatus = async () => {
   }
 };
 export const getUsersData = async (data) => {
-  const { userSearchParam } = data;
+  const { userSearchParam } = data?.usersDataList;
   try {
-    const response = await AxiosInstanceAdmin("/user-info", userSearchParam);
+    const response = await AxiosInstance.post("/dashboard/user-info", userSearchParam);
     if (response.data.code === 200) {
       return { success: true, data: response.data.data };
     }

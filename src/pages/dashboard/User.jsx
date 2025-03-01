@@ -17,6 +17,7 @@ import { DnPagination } from "../community/components/DnPagination";
 import styled from "@emotion/styled";
 import { useGetUsersData } from "./hooks/useGetAdminData";
 import { useState } from "react";
+import { SearchForm } from "@/shared/components/SearchForm";
 
 export function User() {
   const [usersDataList, setUsersDataList] = useState({
@@ -66,6 +67,9 @@ export function User() {
         <Button variant="normal" size="small" state="outline" name="isDismissed">
           기각
         </Button>
+        <SearchWrapper>
+          <SearchForm />
+        </SearchWrapper>
       </BtnsContainer>
 
       <Flex>
@@ -154,9 +158,9 @@ const BtnsContainer = styled.div`
   text-align: left;
   display: flex;
   gap: 4px;
-  margin-top: 8px;
   width: 100%;
   align-items: center;
+  margin-bottom: 8px;
 `;
 const Badge = styled.span(
   ({}) => `
@@ -170,4 +174,7 @@ border-radius: 4px;
 const Text = styled.span`
   font-weight: 700;
   width: 72px;
+`;
+const SearchWrapper = styled.div`
+  width: 100%;
 `;
