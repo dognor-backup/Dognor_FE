@@ -14,6 +14,7 @@ import useAlertStore from "@/shared/hooks/useAlertStore";
 import DelAlert from "@/shared/components/alert/DelAlert";
 import useModalStore from "@/shared/hooks/useModalStore";
 import EditDonationStoryModal from "./EditDonationStoryModal";
+import ShowcaseDetailModal from "./ShowcaseDetailModal";
 
 export default function ShowcaseSection() {
   const { user } = useUserStore();
@@ -27,6 +28,7 @@ export default function ShowcaseSection() {
   const [userSeq, setUserSeq] = useState(1);
   const [isDeleting, setIsDeleting] = useState(false);
   const [selectedStory, setSelectedStory] = useState(null);
+  const [selectedDetailStory, setSelectedDetailStory] = useState(null);
 
   useEffect(() => {
     if (user?.userData?.userSeq) {
@@ -100,6 +102,11 @@ export default function ShowcaseSection() {
     },
   });
 
+  const handleCardClick = (story) => {
+    setSelectedDetailStory(story);
+    openModal("showcaseDetail");
+  };
+
   const handleDelete = (donationStorySeq) => {
     openAlert("donationStory", donationStorySeq);
   };
@@ -167,12 +174,16 @@ export default function ShowcaseSection() {
       ) : data?.data?.length > 0 ? (
         <ShowcaseCardContainer>
           {data.data.map((story) => (
-            <PostCard
+            <CardWrapper
               key={story.donationStorySeq}
-              story={story}
-              handleDelete={() => handleDelete(story.donationStorySeq)}
-              handleEdit={() => handleEdit(story)}
-            />
+              onClick={() => handleCardClick(story)}
+            >
+              <PostCard
+                story={story}
+                handleDelete={() => handleDelete(story.donationStorySeq)}
+                handleEdit={() => handleEdit(story)}
+              />
+            </CardWrapper>
           ))}
         </ShowcaseCardContainer>
       ) : (
@@ -197,6 +208,10 @@ export default function ShowcaseSection() {
           totalPage={data?.totalPage || 1}
           getClickedPageNumber={handlePageChange}
         />
+        <PaginationDescription>
+          페이지당 최대 15개의 헌혈 이야기가 표시됩니다. 더 많은 이야기를 보기
+          위해 페이지를 이동해 주세요.
+        </PaginationDescription>
       </PaginationContainer>
 
       <DelAlert isAlertOpen={isAlertOpen} func={confirmDelete}>
@@ -204,6 +219,13 @@ export default function ShowcaseSection() {
       </DelAlert>
 
       {selectedStory && <EditDonationStoryModal storyData={selectedStory} />}
+      {selectedDetailStory && (
+        <ShowcaseDetailModal
+          story={selectedDetailStory}
+          handleDelete={handleDelete}
+          handleEdit={handleEdit}
+        />
+      )}
     </ShowcaseSectionLayout>
   );
 }
@@ -227,6 +249,10 @@ const ShowcaseCardContainer = styled.div`
   gap: 24px;
 `;
 
+const CardWrapper = styled.div`
+  cursor: pointer;
+`;
+
 const ShowcaseNoDataContainer = styled.div`
   display: flex;
   gap: 24px;
@@ -243,4 +269,13 @@ const PaginationContainer = styled.div`
   flex-direction: column;
   align-items: center;
   width: 100%;
+`;
+
+const PaginationDescription = styled.p`
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  text-align: center;
+  color: ${({ theme }) => theme.colors.neutrals_02};
+  margin-top: 16px;
 `;

@@ -53,15 +53,16 @@ const VerticalDotsSelect = ({ handleEdit, handleDelete }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  const toggleDropdown = () => setIsOpen(!isOpen);
+  const toggleDropdown = (event) => {
+    event.stopPropagation(); 
+    setIsOpen((prev) => !prev);
+  };
 
-  const handleChange = (action) => {
+  const handleChange = (action, event) => {
+    event.stopPropagation(); 
     setIsOpen(false);
-    if (action === "edit") {
-      handleEdit();
-    } else if (action === "delete") {
-      handleDelete();
-    }
+    if (action === "edit") handleEdit();
+    if (action === "delete") handleDelete();
   };
 
   useEffect(() => {
@@ -85,8 +86,8 @@ const VerticalDotsSelect = ({ handleEdit, handleDelete }) => {
 
       {isOpen && (
         <SelectContent>
-          <SelectItem onClick={() => handleChange("edit")}>수정</SelectItem>
-          <SelectItem onClick={() => handleChange("delete")}>삭제</SelectItem>
+          <SelectItem onClick={(e) => handleChange("edit", e)}>수정</SelectItem>
+          <SelectItem onClick={(e) => handleChange("delete", e)}>삭제</SelectItem>
         </SelectContent>
       )}
     </SelectContainer>

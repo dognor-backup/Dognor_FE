@@ -34,14 +34,16 @@ const Modal = ({
             </ModalHeader>
             <ModalBody>
               <form id={formName} onSubmit={onSubmit} {...props}>
-                <ModalTitle>{title}</ModalTitle>
+                {title && <ModalTitle>{title}</ModalTitle>}
               </form>
               {children}
             </ModalBody>
             <ModalFooter>
-              <Button style={{ width: "100%" }} type="submit" form={formName}>
-                {BtnText}
-              </Button>
+              {BtnText && (
+                <Button style={{ width: "100%" }} type="submit" form={formName}>
+                  {BtnText}
+                </Button>
+              )}
             </ModalFooter>
           </ModalContent>
         </ModalContainer>
