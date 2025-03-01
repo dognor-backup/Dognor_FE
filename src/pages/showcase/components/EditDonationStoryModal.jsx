@@ -11,13 +11,6 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getPatInfo } from "@/domains/pat/api/pat";
 import { updateDonationStory } from "@/domains/donationstory/api/donationStory";
 
-const CenteredModal = styled(Modal)`
-  & > div:first-of-type {
-    align-items: center !important;
-    padding-top: 0 !important;
-  }
-`;
-
 export default function EditDonationStoryModal({ storyData }) {
   const { isModalOpen, closeModal } = useModalStore();
   const { getInputValue } = useGetValueFromTextInput();
@@ -136,7 +129,7 @@ export default function EditDonationStoryModal({ storyData }) {
   };
 
   return (
-    <CenteredModal
+    <Modal
       title="후기 수정하기"
       BtnText="업로드하기"
       isModalOpen={isModalOpen}
@@ -204,7 +197,7 @@ export default function EditDonationStoryModal({ storyData }) {
           </DescriptionText>
         </DescriptionBox>
       </ModalContentLayout>
-    </CenteredModal>
+    </Modal>
   );
 }
 
