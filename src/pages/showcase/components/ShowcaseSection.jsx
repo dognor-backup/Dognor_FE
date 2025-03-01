@@ -17,13 +17,14 @@ import EditDonationStoryModal from "./EditDonationStoryModal";
 
 export default function ShowcaseSection() {
   const { user } = useUserStore();
-  const { openAlert, isAlertOpen, deleteType, deleteTargetSeq } = useAlertStore();
+  const { openAlert, isAlertOpen, deleteType, deleteTargetSeq } =
+    useAlertStore();
   const { openModal } = useModalStore();
   const [currentPage, setCurrentPage] = useState(1);
   const [sortByLatest, setSortByLatest] = useState(true);
   const [sortByHitCnt, setSortByHitCnt] = useState(false);
   const [myPostsOnly, setMyPostsOnly] = useState(false);
-  const [userSeq, setUserSeq] = useState(null);
+  const [userSeq, setUserSeq] = useState(1);
   const [isDeleting, setIsDeleting] = useState(false);
   const [selectedStory, setSelectedStory] = useState(null);
 
@@ -118,7 +119,7 @@ export default function ShowcaseSection() {
   const handlePageChange = (pageNumber) => {
     const totalPages = data?.totalPage || 1;
     const newPage = Number(pageNumber);
-    
+
     if (newPage < 1) {
       setCurrentPage(1);
     } else if (newPage > totalPages) {
@@ -186,7 +187,7 @@ export default function ShowcaseSection() {
           />
         </ShowcaseNoDataContainer>
       )}
-      
+
       <PaginationContainer>
         <DnPagination
           totalPage={data?.totalPage || 1}

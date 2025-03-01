@@ -47,7 +47,7 @@ export default function HonorDogSection() {
           자부심입니다. "
         </HonorDogSectionTextDescription>
         <HonorDogSectionTextSubDescription>
-          친구을 구해준 훌륭한 헌혈견입니다.
+          친구를 구해준 훌륭한 헌혈견입니다.
         </HonorDogSectionTextSubDescription>
       </HonorDogSectionTextContainer>
 
