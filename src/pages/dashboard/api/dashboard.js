@@ -1,4 +1,5 @@
 import AxiosInstance from "@/shared/utils/axiosInstance";
+import { AxiosInstanceAdmin } from "./adminInstance";
 
 export const manageStatus = async () => {
   try {
@@ -8,6 +9,17 @@ export const manageStatus = async () => {
     }
     if (response.data.code === 400) {
       return { success: false, msg: response.data.msg || "실패" };
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const getUsersData = async (data) => {
+  const { userSearchParam } = data;
+  try {
+    const response = await AxiosInstanceAdmin("/user-info", userSearchParam);
+    if (response.data.code === 200) {
+      return { success: true, data: response.data.data };
     }
   } catch (error) {
     console.log(error);

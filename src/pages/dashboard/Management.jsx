@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { useGetAdminData } from "./hooks/useGetAdminData";
-import styled from "@emotion/styled";
 import { MenuBox } from "./components/MenuBox";
+import styled from "@emotion/styled";
 
 export function Management() {
-  const { getDashBoardStatus } = useGetAdminData();
-  const manageStatus = getDashBoardStatus?.data;
-  const [status, setStatus] = useState(() => manageStatus?.data);
+  const { dashboardStatus } = useGetAdminData();
+  const manageStatus = dashboardStatus?.data;
+  const [status, setStatus] = useState(() => manageStatus);
   const {
     abailableBloodPackCnt,
     awaitApprovalHospitalCnt,

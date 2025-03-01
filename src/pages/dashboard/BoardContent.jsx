@@ -2,7 +2,7 @@ import { useOutletContext, useParams } from "react-router-dom";
 import { SettingBanner } from "./components/SettingBanner";
 import styled from "@emotion/styled";
 import { Management } from "./Management";
-import { User } from "./components/User";
+import { User } from "./User";
 import { Notice } from "./components/Notice";
 import { Campaign } from "./components/Campaign";
 import { Code } from "./components/Code";

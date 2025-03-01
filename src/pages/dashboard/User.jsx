@@ -1,0 +1,173 @@
+import { Button } from "@/shared/components/buttons/Button";
+import { IconBtn } from "@/shared/components/buttons/IconBtn";
+import { OnlyCheckBox } from "@/shared/components/checkbox/CheckboxLabel";
+import CheckboxSmall from "@/shared/components/checkbox/CheckboxSmall";
+import {
+  BdBtm,
+  Flex,
+  TableBodyText,
+  TableContainer,
+  TableHeader,
+  TableHeadText,
+  TextMg,
+} from "@/shared/components/table/TableStyle";
+import VerticalDotsSelect from "@/shared/components/VerticalDotsSelect";
+import { TrashIcon } from "lucide-react";
+import { DnPagination } from "../community/components/DnPagination";
+import styled from "@emotion/styled";
+import { useGetUsersData } from "./hooks/useGetAdminData";
+import { useState } from "react";
+
+export function User() {
+  const [usersDataList, setUsersDataList] = useState({
+    userSearchParam: {
+      page: 1,
+      size: 10,
+      userType: "all",
+      sortByLatest: true,
+      isWait: true,
+      isComplet: true,
+      isDismissed: true,
+      isWithdraw: true,
+      text: "",
+      wait: true,
+      complet: true,
+      dismissed: true,
+      withdraw: true,
+    },
+  });
+  const { usersData } = useGetUsersData({ usersDataList });
+  console.log("dd", usersData);
+  return (
+    <>
+      <BtnsContainer>
+        <Text>회원구분</Text>
+        <Button variant="secondary" size="small" name="all">
+          전체
+        </Button>
+        <Button variant="secondary" size="small" state="outline" name="common">
+          일반회원
+        </Button>
+        <Button variant="secondary" size="small" state="outline" name="hospital">
+          병원관계자
+        </Button>
+      </BtnsContainer>
+      <BtnsContainer>
+        <Text>필터</Text>
+        <Button variant="normal" size="small" name="all">
+          최신순
+        </Button>
+        <Button variant="normal" size="small" state="outline" name="isComplet">
+          완료
+        </Button>
+        <Button variant="normal" size="small" state="outline" name="isWait">
+          대기
+        </Button>
+        <Button variant="normal" size="small" state="outline" name="isDismissed">
+          기각
+        </Button>
+      </BtnsContainer>
+
+      <Flex>
+        <CheckboxSmall name="checkAllNotice" label="전체선택" />
+        <IconBtn variant="secondary" size="medium" state="outline">
+          <TrashIcon />
+        </IconBtn>
+      </Flex>
+
+      <TableContainer>
+        <TableHeader>
+          <tr>
+            <TableHeadText padding="20px" scope="col" />
+            <TableHeadText padding="20px" scope="col">
+              No.
+            </TableHeadText>
+            <TableHeadText scope="col">구분</TableHeadText>
+            <TableHeadText padding="20px" scope="col">
+              성명
+            </TableHeadText>
+            <TableHeadText padding="35px" scope="col">
+              아이디
+            </TableHeadText>
+            <TableHeadText padding="auto" style={{ width: "100%" }} scope="col">
+              이메일
+            </TableHeadText>
+            <TableHeadText padding="35px" scope="col">
+              연락처
+            </TableHeadText>
+            <TableHeadText padding="20px" scope="col">
+              가입일
+            </TableHeadText>
+            <TableHeadText padding="15px" scope="col">
+              상태
+            </TableHeadText>
+            <TableHeadText padding="20px" scope="col" />
+          </tr>
+        </TableHeader>
+
+        <tbody>
+          <BdBtm>
+            <TableBodyText>
+              <OnlyCheckBox>
+                <input
+                  name="1"
+                  type="checkbox"
+                  // checked={!!checkedItems[postSeq]}
+                  onClick={(e) => e.stopPropagation()}
+                  // onChange={() => toggleCheckbox(postSeq)}
+                />
+              </OnlyCheckBox>
+            </TableBodyText>
+            <TableBodyText bold="700">
+              <span>1</span>
+            </TableBodyText>
+            <TableBodyText>
+              <TextMg>00</TextMg>
+            </TableBodyText>
+            <TableBodyText>00</TableBodyText>
+            <TableBodyText>00</TableBodyText>
+            <TableBodyText>00</TableBodyText>
+            <TableBodyText>00</TableBodyText>
+            <TableBodyText>00</TableBodyText>
+            <TableBodyText>
+              <Badge>완료</Badge>
+            </TableBodyText>
+            <TableBodyText>
+              <VerticalDotsSelect></VerticalDotsSelect>
+            </TableBodyText>
+          </BdBtm>
+
+          {/*  <tbody>
+            <BdBtm>
+              <TableBodyText colSpan={7} pdtop="24px">
+                게시글이 없습니다.
+              </TableBodyText>
+            </BdBtm>
+          </tbody> */}
+        </tbody>
+      </TableContainer>
+      {/* <DnPagination totalPage={totalPage} getClickedPageNumber={getClickedPageNumber} /> */}
+    </>
+  );
+}
+const BtnsContainer = styled.div`
+  text-align: left;
+  display: flex;
+  gap: 4px;
+  margin-top: 8px;
+  width: 100%;
+  align-items: center;
+`;
+const Badge = styled.span(
+  ({}) => `
+padding:  4px 11px;
+background-color: #11E5B3;
+font-weight: 700;
+color: #fff;
+border-radius: 4px;
+`
+);
+const Text = styled.span`
+  font-weight: 700;
+  width: 72px;
+`;
