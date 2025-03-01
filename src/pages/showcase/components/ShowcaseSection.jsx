@@ -1,20 +1,24 @@
 import { useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { Button } from "@/shared/components/buttons/Button";
 import styled from "@emotion/styled";
 import ShowcaseNoDataCard from "./ShowcaseNoDataCard";
 import { DnPagination } from "@/shared/components/DnPagination";
 import useUserStore from "@/domains/auth/store/useUserStore";
 import PostCard from "@/shared/components/cards/postcard/PostCard";
-import { searchDonationStories } from "@/domains/donationstory/api/donationStory";
+import { searchDonationStories, deleteDonationStory } from "@/domains/donationstory/api/donationStory";
+import useAlertStore from "@/shared/hooks/useAlertStore";
+import DelAlert from "@/shared/components/alert/DelAlert";
 
 export default function ShowcaseSection() {
   const { user } = useUserStore();
+  const { openAlert, isAlertOpen, deleteType, deleteTargetSeq, closeAlert } = useAlertStore();
   const [currentPage, setCurrentPage] = useState(1);
   const [sortByLatest, setSortByLatest] = useState(true);
   const [sortByHitCnt, setSortByHitCnt] = useState(false);
   const [myPostsOnly, setMyPostsOnly] = useState(false);
   const [userSeq, setUserSeq] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     if (user?.userData?.userSeq) {
@@ -42,7 +46,7 @@ export default function ShowcaseSection() {
     };
   };
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, refetch } = useQuery({
     queryKey: [
       "donationStories",
       currentPage,
@@ -70,6 +74,37 @@ export default function ShowcaseSection() {
       setSortByHitCnt(false);
       setMyPostsOnly(true);
     }
+  };
+
+  const deleteMutation = useMutation({
+    mutationFn: deleteDonationStory,
+    onSuccess: (response) => {
+      if (response.success) {
+        refetch();
+      } else {
+        alert(response.msg || "헌혈 이야기 삭제에 실패했습니다.");
+      }
+      setIsDeleting(false);
+    },
+    onError: () => {
+      alert("삭제 중 오류가 발생했습니다.");
+      setIsDeleting(false);
+    }
+  });
+
+  const handleDelete = (donationStorySeq) => {
+    openAlert("donationStory", donationStorySeq);
+  };
+
+  const handleEdit = () => {
+    // 수정 기능은 추후 구현
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteTargetSeq || deleteType !== "donationStory") return;
+    
+    setIsDeleting(true);
+    deleteMutation.mutate(deleteTargetSeq);
   };
 
   return (
@@ -101,12 +136,17 @@ export default function ShowcaseSection() {
         </Button>
       </FilterContainer>
 
-      {isLoading ? (
+      {isLoading || isDeleting ? (
         <LoadingMessage>데이터를 불러오는 중...</LoadingMessage>
       ) : data?.data?.length > 0 ? (
         <ShowcaseCardContainer>
           {data.data.map((story) => (
-            <PostCard key={story.donationStorySeq} story={story} />
+            <PostCard 
+              key={story.donationStorySeq} 
+              story={story} 
+              handleDelete={() => handleDelete(story.donationStorySeq)}
+              handleEdit={handleEdit}
+            />
           ))}
         </ShowcaseCardContainer>
       ) : (
@@ -129,6 +169,10 @@ export default function ShowcaseSection() {
         totalPage={data?.totalPage || 1}
         getClickedPageNumber={setCurrentPage}
       />
+      
+      <DelAlert isAlertOpen={isAlertOpen} func={confirmDelete}>
+        헌혈 이야기를 삭제하시겠습니까?
+      </DelAlert>
     </ShowcaseSectionLayout>
   );
 }
