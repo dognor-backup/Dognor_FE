@@ -9,16 +9,20 @@ import PostCard from "@/shared/components/cards/postcard/PostCard";
 import { searchDonationStories, deleteDonationStory } from "@/domains/donationstory/api/donationStory";
 import useAlertStore from "@/shared/hooks/useAlertStore";
 import DelAlert from "@/shared/components/alert/DelAlert";
+import useModalStore from "@/shared/hooks/useModalStore";
+import EditDonationStoryModal from "./EditDonationStoryModal";
 
 export default function ShowcaseSection() {
   const { user } = useUserStore();
-  const { openAlert, isAlertOpen, deleteType, deleteTargetSeq, closeAlert } = useAlertStore();
+  const { openAlert, isAlertOpen, deleteType, deleteTargetSeq } = useAlertStore();
+  const { openModal } = useModalStore();
   const [currentPage, setCurrentPage] = useState(1);
   const [sortByLatest, setSortByLatest] = useState(true);
   const [sortByHitCnt, setSortByHitCnt] = useState(false);
   const [myPostsOnly, setMyPostsOnly] = useState(false);
   const [userSeq, setUserSeq] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [selectedStory, setSelectedStory] = useState(null);
 
   useEffect(() => {
     if (user?.userData?.userSeq) {
@@ -96,8 +100,9 @@ export default function ShowcaseSection() {
     openAlert("donationStory", donationStorySeq);
   };
 
-  const handleEdit = () => {
-    // 수정 기능은 추후 구현
+  const handleEdit = (story) => {
+    setSelectedStory(story);
+    openModal("editDonationStory");
   };
 
   const confirmDelete = async () => {
@@ -145,7 +150,7 @@ export default function ShowcaseSection() {
               key={story.donationStorySeq} 
               story={story} 
               handleDelete={() => handleDelete(story.donationStorySeq)}
-              handleEdit={handleEdit}
+              handleEdit={() => handleEdit(story)}
             />
           ))}
         </ShowcaseCardContainer>
@@ -173,6 +178,8 @@ export default function ShowcaseSection() {
       <DelAlert isAlertOpen={isAlertOpen} func={confirmDelete}>
         헌혈 이야기를 삭제하시겠습니까?
       </DelAlert>
+      
+      {selectedStory && <EditDonationStoryModal storyData={selectedStory} />}
     </ShowcaseSectionLayout>
   );
 }
