@@ -78,6 +78,9 @@ export default function HonorDogSection() {
           </WhitePaginationContainer>
         </PaginationWrapper>
       )}
+      <Description>
+        *본 이미지는 프로필상에 등록된 이미지로 사용됩니다.{" "}
+      </Description>
     </HonorDogSectionLayout>
   );
 }
@@ -173,4 +176,13 @@ const WhitePaginationContainer = styled.div`
   & a {
     color: #ffffff;
   }
+`;
+
+const Description = styled.p`
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 20px;
+  text-align: center;
+  color: #ffffff;
+  margin-top: 8px;
 `;

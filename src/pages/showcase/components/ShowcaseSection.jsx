@@ -6,7 +6,10 @@ import ShowcaseNoDataCard from "./ShowcaseNoDataCard";
 import { DnPagination } from "@/shared/components/DnPagination";
 import useUserStore from "@/domains/auth/store/useUserStore";
 import PostCard from "@/shared/components/cards/postcard/PostCard";
-import { searchDonationStories, deleteDonationStory } from "@/domains/donationstory/api/donationStory";
+import {
+  searchDonationStories,
+  deleteDonationStory,
+} from "@/domains/donationstory/api/donationStory";
 import useAlertStore from "@/shared/hooks/useAlertStore";
 import DelAlert from "@/shared/components/alert/DelAlert";
 import useModalStore from "@/shared/hooks/useModalStore";
@@ -14,7 +17,8 @@ import EditDonationStoryModal from "./EditDonationStoryModal";
 
 export default function ShowcaseSection() {
   const { user } = useUserStore();
-  const { openAlert, isAlertOpen, deleteType, deleteTargetSeq } = useAlertStore();
+  const { openAlert, isAlertOpen, deleteType, deleteTargetSeq } =
+    useAlertStore();
   const { openModal } = useModalStore();
   const [currentPage, setCurrentPage] = useState(1);
   const [sortByLatest, setSortByLatest] = useState(true);
@@ -93,7 +97,7 @@ export default function ShowcaseSection() {
     onError: () => {
       alert("삭제 중 오류가 발생했습니다.");
       setIsDeleting(false);
-    }
+    },
   });
 
   const handleDelete = (donationStorySeq) => {
@@ -107,10 +111,14 @@ export default function ShowcaseSection() {
 
   const confirmDelete = async () => {
     if (!deleteTargetSeq || deleteType !== "donationStory") return;
-    
+
     setIsDeleting(true);
     deleteMutation.mutate(deleteTargetSeq);
   };
+
+  useEffect(() => {
+    console.log(data);
+  });
 
   return (
     <ShowcaseSectionLayout>
@@ -146,9 +154,9 @@ export default function ShowcaseSection() {
       ) : data?.data?.length > 0 ? (
         <ShowcaseCardContainer>
           {data.data.map((story) => (
-            <PostCard 
-              key={story.donationStorySeq} 
-              story={story} 
+            <PostCard
+              key={story.donationStorySeq}
+              story={story}
               handleDelete={() => handleDelete(story.donationStorySeq)}
               handleEdit={() => handleEdit(story)}
             />
@@ -174,11 +182,11 @@ export default function ShowcaseSection() {
         totalPage={data?.totalPage || 1}
         getClickedPageNumber={setCurrentPage}
       />
-      
+
       <DelAlert isAlertOpen={isAlertOpen} func={confirmDelete}>
         헌혈 이야기를 삭제하시겠습니까?
       </DelAlert>
-      
+
       {selectedStory && <EditDonationStoryModal storyData={selectedStory} />}
     </ShowcaseSectionLayout>
   );
@@ -187,6 +195,7 @@ export default function ShowcaseSection() {
 const ShowcaseSectionLayout = styled.div`
   display: flex;
   flex-direction: column;
+  margin-bottom: 52px;
   gap: 16px;
 `;
 

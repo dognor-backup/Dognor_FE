@@ -1,15 +1,25 @@
 import { Button } from "@/shared/components/buttons/Button";
 import { PageTop } from "@/shared/layout/PageTopTitle";
 import styled from "@emotion/styled";
-import useModalStore from "@/shared/hooks/useModalStore";
-import DonationStoryModal from "./DonationStoryModal";
-import HonorDogSection from "./HonorDogSection";
 import ShowcaseSection from "./ShowcaseSection";
+import useModalStore from "@/shared/hooks/useModalStore";
+
+import useUserStore from "@/domains/auth/store/useUserStore";
+import { useNavigate } from "react-router-dom";
+import HonorDogSection from "./HonorDogSection";
+import DonationStoryModal from "./DonationStoryModal";
 
 export default function Showcase() {
   const { openModal } = useModalStore();
+  const { user } = useUserStore();
+  const navigate = useNavigate();
 
-  const handleOpenDonationStoryModal = () => {
+  const handleWriteButtonClick = () => {
+    if (!user?.userData?.userSeq) {
+      navigate("/login", { state: { redirect: "/showcase" } });
+      return;
+    }
+    
     openModal("donationStory");
   };
 
@@ -27,13 +37,13 @@ export default function Showcase() {
         size="medium"
         state="default"
         style={{ width: "320px" }}
-        onClick={handleOpenDonationStoryModal}
+        onClick={handleWriteButtonClick}
       >
         헌혈 이야기 작성하기
       </Button>
       <ShowcaseSection />
-      <DonationStoryModal />
       <HonorDogSection />
+      <DonationStoryModal />
     </ShowcaseLayout>
   );
 }
@@ -43,6 +53,7 @@ const ShowcaseLayout = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 48px;
+
 `;
 
 const ShowcaseDescription = styled.div`
