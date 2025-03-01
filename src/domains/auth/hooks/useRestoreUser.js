@@ -28,7 +28,7 @@ const restoreUserFromDB = async (setUser, resetUser) => {
       }
     };
 
-    request.onerror = (event) => reject("유저 정보 로드 실패: " + event.target.error);
+    request.onerror = () => reject("유저 정보 로드 실패");
   });
 };
 
@@ -36,17 +36,15 @@ const useRestoreUser = () => {
   const { setUser, resetUser } = useUserStore();
 
   useEffect(() => {
-    restoreUserFromDB(setUser, resetUser)
-      .then((user) => {
-        if (user) {
-          const remainingTime = user.expirationTime - Date.now();
-          setTimeout(() => {
-            resetUser();
-            clearUserFromDB();
-          }, remainingTime); 
-        }
-      })
-      .catch((error) => console.error(error));
+    restoreUserFromDB(setUser, resetUser).then((user) => {
+      if (user) {
+        const remainingTime = user.expirationTime - Date.now();
+        setTimeout(() => {
+          resetUser();
+          clearUserFromDB();
+        }, remainingTime);
+      }
+    });
   }, []);
 };
 

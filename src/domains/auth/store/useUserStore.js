@@ -7,7 +7,7 @@ const useUserStore = create((set) => ({
       userId: "",
       userRole: "",
       name: "",
-      accessTokken: "",
+      accessToken: "",
     },
   },
   setUser: (userData) => set({ user: { userData } }),
@@ -19,7 +19,7 @@ const useUserStore = create((set) => ({
           userId: "",
           userRole: "",
           name: "",
-          accessTokken: "",
+          accessToken: "",
         },
       },
     });
