@@ -1,16 +1,17 @@
 import { useOutletContext, useParams } from "react-router-dom";
 import { SettingBanner } from "./components/SettingBanner";
-import styled from "@emotion/styled";
 import { Management } from "./Management";
 import { User } from "./User";
-import { Notice } from "./components/Notice";
+import { Notice } from "./Notice";
 import { Campaign } from "./components/Campaign";
 import { Code } from "./components/Code";
 import { Error } from "./components/Error";
+import styled from "@emotion/styled";
 
 export function BoardContent() {
   const menuData = useOutletContext();
   const { menu } = useParams();
+  console.log(menu);
   const number = Math.max(
     menuData.findIndex((data) => data.path === menu),
     0
