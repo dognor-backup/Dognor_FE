@@ -22,7 +22,14 @@ export default function HonorDogSection() {
   });
 
   const handlePageChange = (pageNumber) => {
-    setCurrentPage(Number(pageNumber));
+    const newPage = Number(pageNumber);
+    const totalPages = honorDogsData?.totalPage || 1;
+
+    if ((currentPage === 1 && newPage < 1) || (currentPage === totalPages && newPage > totalPages)) {
+      return;
+    }
+    
+    setCurrentPage(newPage);
   };
 
   const isDataAvailable =
@@ -71,6 +78,7 @@ export default function HonorDogSection() {
           <WhitePaginationContainer style={{ height: "40px" }}>
             <DnPagination
               totalPage={isDataAvailable ? honorDogsData.totalPage || 1 : 1}
+              currentPage={currentPage}
               getClickedPageNumber={
                 isDataAvailable ? handlePageChange : () => {}
               }

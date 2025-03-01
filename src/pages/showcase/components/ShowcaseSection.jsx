@@ -17,8 +17,7 @@ import EditDonationStoryModal from "./EditDonationStoryModal";
 
 export default function ShowcaseSection() {
   const { user } = useUserStore();
-  const { openAlert, isAlertOpen, deleteType, deleteTargetSeq } =
-    useAlertStore();
+  const { openAlert, isAlertOpen, deleteType, deleteTargetSeq } = useAlertStore();
   const { openModal } = useModalStore();
   const [currentPage, setCurrentPage] = useState(1);
   const [sortByLatest, setSortByLatest] = useState(true);
@@ -116,9 +115,18 @@ export default function ShowcaseSection() {
     deleteMutation.mutate(deleteTargetSeq);
   };
 
-  useEffect(() => {
-    console.log(data);
-  });
+  const handlePageChange = (pageNumber) => {
+    const totalPages = data?.totalPage || 1;
+    const newPage = Number(pageNumber);
+    
+    if (newPage < 1) {
+      setCurrentPage(1);
+    } else if (newPage > totalPages) {
+      setCurrentPage(totalPages);
+    } else {
+      setCurrentPage(newPage);
+    }
+  };
 
   return (
     <ShowcaseSectionLayout>
@@ -178,10 +186,14 @@ export default function ShowcaseSection() {
           />
         </ShowcaseNoDataContainer>
       )}
-      <DnPagination
-        totalPage={data?.totalPage || 1}
-        getClickedPageNumber={setCurrentPage}
-      />
+      
+      <PaginationContainer>
+        <DnPagination
+          totalPage={data?.totalPage || 1}
+          currentPage={currentPage}
+          getClickedPageNumber={handlePageChange}
+        />
+      </PaginationContainer>
 
       <DelAlert isAlertOpen={isAlertOpen} func={confirmDelete}>
         헌혈 이야기를 삭제하시겠습니까?
@@ -220,4 +232,11 @@ const LoadingMessage = styled.div`
   text-align: center;
   font-size: 18px;
   color: ${({ theme }) => theme.colors.neutrals_05};
+`;
+
+const PaginationContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
 `;
