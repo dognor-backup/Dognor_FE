@@ -10,10 +10,10 @@ export const useGetAdminData = () => {
   return { dashboardStatus };
 };
 
-export const useGetUsersData = (param) => {
+export const useGetUsersData = (params) => {
   const { data: usersData } = useQuery({
-    queryKey: ["usersData"],
-    queryFn: () => getUsersData(param),
+    queryKey: ["usersData", params],
+    queryFn: () => getUsersData(params),
     onSuccess: ({ success, data }) => {
       if (success) {
         console.log(data);

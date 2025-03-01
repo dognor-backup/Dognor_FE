@@ -16,7 +16,7 @@ import { TrashIcon } from "lucide-react";
 import { DnPagination } from "../community/components/DnPagination";
 import styled from "@emotion/styled";
 import { useGetUsersData } from "./hooks/useGetAdminData";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SearchForm } from "@/shared/components/SearchForm";
 
 export function User() {
@@ -37,8 +37,16 @@ export function User() {
       withdraw: true,
     },
   });
-  const { usersData } = useGetUsersData({ usersDataList });
-  console.log("dd", usersData);
+
+  const { usersData } = useGetUsersData(usersDataList);
+  console.log(usersData);
+  const [users, setUsers] = useState(usersData?.data || []);
+  useEffect(() => {
+    setUsers(usersData?.data);
+  }, [usersData?.data]);
+  console.log("a", users);
+  // const { agreement4, agreement5, email, hospitalDto, name, phone, registDt, userId, userRole, userStatus } =
+  //   users || {};
   return (
     <>
       <BtnsContainer>
@@ -126,7 +134,7 @@ export function User() {
               <span>1</span>
             </TableBodyText>
             <TableBodyText>
-              <TextMg>00</TextMg>
+              <TextMg>{}</TextMg>
             </TableBodyText>
             <TableBodyText>00</TableBodyText>
             <TableBodyText>00</TableBodyText>
@@ -174,6 +182,7 @@ border-radius: 4px;
 const Text = styled.span`
   font-weight: 700;
   width: 72px;
+  min-width: 72px;
 `;
 const SearchWrapper = styled.div`
   width: 100%;

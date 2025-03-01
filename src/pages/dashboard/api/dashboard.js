@@ -1,5 +1,4 @@
 import AxiosInstance from "@/shared/utils/axiosInstance";
-import { AxiosInstanceAdmin } from "./adminInstance";
 
 export const manageStatus = async () => {
   try {
@@ -15,9 +14,9 @@ export const manageStatus = async () => {
   }
 };
 export const getUsersData = async (data) => {
-  const { userSearchParam } = data?.usersDataList;
+  console.log(data);
   try {
-    const response = await AxiosInstance.post("/dashboard/user-info", userSearchParam);
+    const response = await AxiosInstance.post("/dashboard/user-info", { data });
     if (response.data.code === 200) {
       return { success: true, data: response.data.data };
     }

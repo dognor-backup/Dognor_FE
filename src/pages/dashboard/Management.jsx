@@ -23,9 +23,9 @@ export function Management() {
 
   useEffect(() => {
     if (manageStatus?.data) {
-      setStatus(manageStatus.data);
+      setStatus(manageStatus?.data);
     }
-  }, [manageStatus]);
+  }, [dashboardStatus?.data]);
 
   return (
     <>
