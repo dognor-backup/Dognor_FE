@@ -39,14 +39,13 @@ export function User() {
   });
 
   const { usersData } = useGetUsersData(usersDataList);
-  console.log(usersData);
+
   const [users, setUsers] = useState(usersData?.data || []);
+
   useEffect(() => {
     setUsers(usersData?.data);
   }, [usersData?.data]);
-  console.log("a", users);
-  // const { agreement4, agreement5, email, hospitalDto, name, phone, registDt, userId, userRole, userStatus } =
-  //   users || {};
+  console.log(users);
   return (
     <>
       <BtnsContainer>
@@ -91,17 +90,19 @@ export function User() {
         <TableHeader>
           <tr>
             <TableHeadText padding="20px" scope="col" />
-            <TableHeadText padding="20px" scope="col">
+            <TableHeadText padding="5px" scope="col">
               No.
             </TableHeadText>
-            <TableHeadText scope="col">구분</TableHeadText>
+            <TableHeadText padding="20px" scope="col">
+              구분
+            </TableHeadText>
             <TableHeadText padding="20px" scope="col">
               성명
             </TableHeadText>
-            <TableHeadText padding="35px" scope="col">
+            <TableHeadText padding="auto" scope="col">
               아이디
             </TableHeadText>
-            <TableHeadText padding="auto" style={{ width: "100%" }} scope="col">
+            <TableHeadText padding="auto" scope="col">
               이메일
             </TableHeadText>
             <TableHeadText padding="35px" scope="col">
@@ -118,46 +119,49 @@ export function User() {
         </TableHeader>
 
         <tbody>
-          <BdBtm>
-            <TableBodyText>
-              <OnlyCheckBox>
-                <input
-                  name="1"
-                  type="checkbox"
-                  // checked={!!checkedItems[postSeq]}
-                  onClick={(e) => e.stopPropagation()}
-                  // onChange={() => toggleCheckbox(postSeq)}
-                />
-              </OnlyCheckBox>
-            </TableBodyText>
-            <TableBodyText bold="700">
-              <span>1</span>
-            </TableBodyText>
-            <TableBodyText>
-              <TextMg>{}</TextMg>
-            </TableBodyText>
-            <TableBodyText>00</TableBodyText>
-            <TableBodyText>00</TableBodyText>
-            <TableBodyText>00</TableBodyText>
-            <TableBodyText>00</TableBodyText>
-            <TableBodyText>00</TableBodyText>
-            <TableBodyText>
-              <Badge>완료</Badge>
-            </TableBodyText>
-            <TableBodyText>
-              <VerticalDotsSelect></VerticalDotsSelect>
-            </TableBodyText>
-          </BdBtm>
-
-          {/*  <tbody>
+          {users?.map((user, index) => {
+            const { agreement4, agreement5, email, hospitalDto, name, phone, registDt, userId, userRole, userStatus } =
+              user;
+            return (
+              <BdBtm>
+                <TableBodyText>
+                  <OnlyCheckBox>
+                    <input
+                      name="1"
+                      type="checkbox"
+                      // checked={!!checkedItems[postSeq]}
+                      onClick={(e) => e.stopPropagation()}
+                      // onChange={() => toggleCheckbox(postSeq)}
+                    />
+                  </OnlyCheckBox>
+                </TableBodyText>
+                <TableBodyText bold="700">
+                  <span>{index + 1}</span>
+                </TableBodyText>
+                <TableBodyText>{userRole === "USER" ? "일반유저" : "의료기관"}</TableBodyText>
+                <TableBodyText>{name}</TableBodyText>
+                <TableBodyText>{userId}</TableBodyText>
+                <TableBodyText>{email}</TableBodyText>
+                <TableBodyText>{phone}</TableBodyText>
+                <TableBodyText>{registDt}</TableBodyText>
+                <TableBodyText>
+                  <Badge status={userStatus}>{userStatus}</Badge>
+                </TableBodyText>
+                <TableBodyText>
+                  <VerticalDotsSelect></VerticalDotsSelect>
+                </TableBodyText>
+              </BdBtm>
+            );
+          })}
+        </tbody>
+      </TableContainer>
+      {/*  <tbody>
             <BdBtm>
               <TableBodyText colSpan={7} pdtop="24px">
                 게시글이 없습니다.
               </TableBodyText>
             </BdBtm>
           </tbody> */}
-        </tbody>
-      </TableContainer>
       {/* <DnPagination totalPage={totalPage} getClickedPageNumber={getClickedPageNumber} /> */}
     </>
   );
@@ -171,9 +175,9 @@ const BtnsContainer = styled.div`
   margin-bottom: 8px;
 `;
 const Badge = styled.span(
-  ({}) => `
+  ({ status }) => `
 padding:  4px 11px;
-background-color: #11E5B3;
+background-color: ${status === "완료" ? "#11E5B3" : status === "기각" ? "#F64D4D" : "#4A3AFF"};
 font-weight: 700;
 color: #fff;
 border-radius: 4px;

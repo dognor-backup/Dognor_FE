@@ -12,7 +12,7 @@ export const useGetAdminData = () => {
 
 export const useGetUsersData = (params) => {
   const { data: usersData } = useQuery({
-    queryKey: ["usersData", params],
+    queryKey: ["usersDatas", params],
     queryFn: () => getUsersData(params),
     onSuccess: ({ success, data }) => {
       if (success) {
