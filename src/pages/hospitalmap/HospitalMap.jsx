@@ -11,6 +11,9 @@ import FilledStar from "../../assets/icons/primary/star_filled_primary.svg?react
 import { Button } from "@/shared/components/buttons/Button";
 import { useQuery } from "@tanstack/react-query";
 import AxiosInstance from "@/shared/utils/axiosInstance";
+import { InputBtn } from "@/shared/components/input/InputBtn";
+import HospitalDetailModal from "./HospitalDetailModal";
+import useModalStore from "@/shared/hooks/useModalStore";
 
 const fetchRegisteredHospitals = async ({
   text = "",
@@ -78,7 +81,6 @@ const useKakaoLoader = () => {
 
   return isLoaded;
 };
-
 const HospitalMap = () => {
   const isKakaoLoaded = useKakaoLoader();
   const [keyword, setKeyword] = useState("");
@@ -100,6 +102,7 @@ const HospitalMap = () => {
   const [kakaoApiPagination, setKakaoApiPagination] = useState(null);
   const registeredItemsPerPage = 5;
   const nearbyItemsPerPage = 15;
+  const { openModal } = useModalStore();
 
   const { data: registeredHospitalData, refetch: refetchRegisteredHospitals } =
     useQuery({
@@ -282,9 +285,9 @@ const HospitalMap = () => {
 
     refetchRegisteredHospitals();
   };
-
   const selectHospital = (hospital) => {
     setSelectedHospital(hospital);
+    openModal("hospitalDetail");
 
     const lat = parseFloat(hospital.y || hospital.lat || hospital.y);
     const lng = parseFloat(hospital.x || hospital.lng || hospital.x);
@@ -408,33 +411,26 @@ const HospitalMap = () => {
     return stars;
   };
 
+  const handleGetInputValue = ({ value }) => {
+    setKeyword(value);
+  };
+
   return (
     <HospitalMapLayout>
       <SidebarContainer>
         <SidebarHeader>
           병원소식
           <SearchContainer>
-            <Flex>
-              <Input
-                type="text"
-                placeholder="지역, 주소, 병원 상호명을 입력해주세요"
-                value={keyword}
-                onChange={(e) => setKeyword(e.target.value)}
-                onKeyPress={(e) => {
-                  if (e.key === "Enter") {
-                    searchByKeyword();
-                  }
-                }}
-              />
-              <Button
-                variant="normal"
-                size="normal"
-                state="default"
-                onClick={searchByKeyword}
-              >
-                <SearchIcon />
-              </Button>
-            </Flex>
+            <InputBtn
+              id="hospital-search"
+              name="hospitalSearch"
+              placeholder="지역, 주소, 병원 상호명을 입력해주세요"
+              label=""
+              BtnText={<SearchIcon width={20} height={20} />}
+              status="normal"
+              getInputValue={handleGetInputValue}
+              handleClick={searchByKeyword}
+            />
           </SearchContainer>
         </SidebarHeader>
 
@@ -669,6 +665,7 @@ const HospitalMap = () => {
           </Map>
         )}
       </MapContainer>
+      {selectedHospital && <HospitalDetailModal hospital={selectedHospital} />}
     </HospitalMapLayout>
   );
 };
@@ -699,22 +696,8 @@ const SidebarHeader = styled.h2`
 
 const SearchContainer = styled.div`
   display: flex;
+  flex-direction: column;
   gap: 8px;
-`;
-
-const Flex = styled.div`
-  display: flex;
-  width: 100%;
-`;
-
-const Input = styled.input`
-  flex: 1;
-  height: 42px;
-  padding: 0 16px;
-  border: 1px solid ${({ theme }) => theme.colors.neutrals_05};
-  border-radius: 6px;
-  font-size: 14px;
-  outline: none;
 `;
 
 const RegisteredHospitalHeader = styled.div`
@@ -901,6 +884,8 @@ const InfoWindow = styled.div`
   min-width: 120px;
   max-width: 200px;
   position: relative;
+  background-color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 
   &:after {
     content: "";
