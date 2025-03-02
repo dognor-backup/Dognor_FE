@@ -4,7 +4,7 @@ import { DnPagination } from "@/shared/components/DnPagination";
 import { Map, CustomOverlayMap } from "react-kakao-maps-sdk";
 import DogPin from "../../assets/icons/map/pin.svg?react";
 import MyPin from "../../assets/icons/map/pin2.svg?react";
-import SearchIcon from "../../assets/icons/gray/magnifying_glass_g.svg?react";
+import SearchIcon from "../../assets/icons/white/magnifying_glass_w.svg?react";
 import VerifiedIcon from "../../assets/icons/subicon/verified_mint.svg?react";
 import EmptyStar from "../../assets/icons/primary/star_primary.svg?react";
 import FilledStar from "../../assets/icons/primary/star_filled_primary.svg?react";
@@ -85,6 +85,7 @@ const HospitalMap = () => {
   const [registeredPage, setRegisteredPage] = useState(1);
   const [registeredSize] = useState(5);
   const [nearbyHospitals, setNearbyHospitals] = useState([]);
+  const [visibleNearbyHospitals, setVisibleNearbyHospitals] = useState([]);
   const [currentNearbyPage, setCurrentNearbyPage] = useState(1);
   const [totalNearbyPage, setTotalNearbyPage] = useState(1);
   const [selectedHospital, setSelectedHospital] = useState(null);
@@ -92,9 +93,11 @@ const HospitalMap = () => {
     lat: 37.566826,
     lng: 126.9786567,
   });
+  const [mapInstance, setMapInstance] = useState(null);
   const [userLocation, setUserLocation] = useState(null);
   const [infoWindowVisible, setInfoWindowVisible] = useState({});
   const [donationFilterActive, setDonationFilterActive] = useState(false);
+  const [kakaoApiPagination, setKakaoApiPagination] = useState(null);
   const registeredItemsPerPage = 5;
   const nearbyItemsPerPage = 15;
 
@@ -123,16 +126,16 @@ const HospitalMap = () => {
   const registeredHospitals = registeredHospitalData?.success
     ? registeredHospitalData.data
     : [];
-    
+
   const filteredRegisteredHospitals = donationFilterActive
-    ? registeredHospitals.filter(hospital => hospital.donationYn === 1)
+    ? registeredHospitals.filter((hospital) => hospital.donationYn === 1)
     : registeredHospitals;
-    
+
   const totalRegisteredPage = donationFilterActive
     ? Math.ceil(filteredRegisteredHospitals.length / registeredItemsPerPage)
     : registeredHospitalData?.totalCount
-      ? Math.ceil(registeredHospitalData.totalCount / registeredSize)
-      : 1;
+    ? Math.ceil(registeredHospitalData.totalCount / registeredSize)
+    : 1;
 
   const getCurrentLocation = () => {
     if (navigator.geolocation) {
@@ -166,12 +169,12 @@ const HospitalMap = () => {
     }
   };
 
-  const searchNearbyHospitals = (lat, lng) => {
+  const searchNearbyHospitals = (lat, lng, page = 1) => {
     if (!isKakaoLoaded) return;
 
     const places = new window.kakao.maps.services.Places();
 
-    const callback = function (result, status) {
+    const callback = function (result, status, pagination) {
       if (status === window.kakao.maps.services.Status.OK) {
         const hospitals = result.filter(
           (place) =>
@@ -180,9 +183,21 @@ const HospitalMap = () => {
               place.place_name.includes("병원"))
         );
 
-        setNearbyHospitals(hospitals);
-        setTotalNearbyPage(Math.ceil(hospitals.length / nearbyItemsPerPage));
-        setCurrentNearbyPage(1);
+        if (page === 1) {
+          setNearbyHospitals(hospitals);
+        } else {
+          setNearbyHospitals((prev) => [...prev, ...hospitals]);
+        }
+
+        setKakaoApiPagination(pagination);
+        setTotalNearbyPage(pagination.last);
+        setCurrentNearbyPage(pagination.current);
+
+        if (mapInstance) {
+          filterVisibleHospitals(hospitals, mapInstance);
+        } else {
+          setVisibleNearbyHospitals(hospitals);
+        }
       }
     };
 
@@ -190,7 +205,40 @@ const HospitalMap = () => {
       location: new window.kakao.maps.LatLng(lat, lng),
       radius: 5000,
       sort: window.kakao.maps.services.SortBy.DISTANCE,
+      page: page,
     });
+  };
+
+  const loadNextPage = () => {
+    if (kakaoApiPagination && kakaoApiPagination.hasNext) {
+      kakaoApiPagination.nextPage();
+    }
+  };
+
+  const loadPrevPage = () => {
+    if (kakaoApiPagination && kakaoApiPagination.hasPrev) {
+      kakaoApiPagination.prevPage();
+    }
+  };
+
+  const filterVisibleHospitals = (hospitals, map) => {
+    if (!map) return;
+
+    const bounds = map.getBounds();
+
+    if (bounds) {
+      const filtered = hospitals.filter((hospital) => {
+        const position = new window.kakao.maps.LatLng(
+          parseFloat(hospital.y),
+          parseFloat(hospital.x)
+        );
+        return bounds.contain(position);
+      });
+
+      setVisibleNearbyHospitals(filtered);
+    } else {
+      setVisibleNearbyHospitals(hospitals);
+    }
   };
 
   const searchByKeyword = () => {
@@ -198,7 +246,7 @@ const HospitalMap = () => {
 
     const places = new window.kakao.maps.services.Places();
 
-    const callback = function (result, status) {
+    const callback = function (result, status, pagination) {
       if (status === window.kakao.maps.services.Status.OK) {
         const hospitals = result.filter(
           (place) =>
@@ -208,8 +256,15 @@ const HospitalMap = () => {
         );
 
         setNearbyHospitals(hospitals);
-        setTotalNearbyPage(Math.ceil(hospitals.length / nearbyItemsPerPage));
-        setCurrentNearbyPage(1);
+        setKakaoApiPagination(pagination);
+        setTotalNearbyPage(pagination.last);
+        setCurrentNearbyPage(pagination.current);
+
+        if (mapInstance) {
+          filterVisibleHospitals(hospitals, mapInstance);
+        } else {
+          setVisibleNearbyHospitals(hospitals);
+        }
 
         if (hospitals.length > 0) {
           setCenter({
@@ -270,22 +325,23 @@ const HospitalMap = () => {
   };
 
   const handleNearbyPageChange = (pageNumber) => {
-    let newPage = pageNumber;
-
-    if (pageNumber === "prev" && currentNearbyPage > 1) {
-      newPage = currentNearbyPage - 1;
-    } else if (pageNumber === "next" && currentNearbyPage < totalNearbyPage) {
-      newPage = currentNearbyPage + 1;
-    } else if (typeof pageNumber === "number") {
-      newPage = pageNumber;
-    } else {
-      return;
+    if (pageNumber === "prev") {
+      loadPrevPage();
+    } else if (pageNumber === "next") {
+      loadNextPage();
+    } else if (typeof pageNumber === "number" && kakaoApiPagination) {
+      kakaoApiPagination.gotoPage(pageNumber);
     }
-
-    setCurrentNearbyPage(newPage);
   };
 
   const handleCenterChanged = (map) => {
+    setMapInstance(map);
+
+    const bounds = map.getBounds();
+    if (bounds && nearbyHospitals.length > 0) {
+      filterVisibleHospitals(nearbyHospitals, map);
+    }
+
     const newCenter = {
       lat: map.getCenter().getLat(),
       lng: map.getCenter().getLng(),
@@ -319,6 +375,12 @@ const HospitalMap = () => {
     }
   }, [isKakaoLoaded]);
 
+  useEffect(() => {
+    if (mapInstance && nearbyHospitals.length > 0) {
+      filterVisibleHospitals(nearbyHospitals, mapInstance);
+    }
+  }, [mapInstance, nearbyHospitals]);
+
   const paginatedRegisteredHospitals = donationFilterActive
     ? filteredRegisteredHospitals.slice(
         (registeredPage - 1) * registeredItemsPerPage,
@@ -326,9 +388,9 @@ const HospitalMap = () => {
       )
     : filteredRegisteredHospitals;
 
-  const paginatedNearbyHospitals = nearbyHospitals.slice(
-    (currentNearbyPage - 1) * nearbyItemsPerPage,
-    currentNearbyPage * nearbyItemsPerPage
+  const paginatedNearbyHospitals = visibleNearbyHospitals.slice(
+    0,
+    nearbyItemsPerPage
   );
 
   const renderStarRating = (rating) => {
@@ -378,115 +440,131 @@ const HospitalMap = () => {
 
         <RegisteredHospitalHeader>
           *헌혈하개 회원 동물병원
-          <FilterButtonWrapper>
-            <Button
-              variant="normal"
-              size="small"
-              state={donationFilterActive ? "default" : "outline"}
-              onClick={toggleDonationFilter}
-            >
-              헌혈가능
-            </Button>
-          </FilterButtonWrapper>
         </RegisteredHospitalHeader>
 
-        <ListContainer>
-          <HospitalList>
-            {paginatedRegisteredHospitals.map((hospital) => (
-              <HospitalItemRegistered
-                key={hospital.hospitalInfoSeq}
-                onClick={() => selectHospital(hospital)}
-                isSelected={
-                  selectedHospital &&
-                  selectedHospital.hospitalInfoSeq === hospital.hospitalInfoSeq
-                }
-              >
-                <HospitalItemContent>
-                  <HospitalInfo>
-                    <HospitalNameRow>
-                      <VerifiedWrapper>
-                        <VerifiedIcon width={16} height={16} />
-                      </VerifiedWrapper>
-                      <HospitalName>{hospital.hospitalName}</HospitalName>
-                      {hospital.donationYn === 1 && (
-                        <DonationBadge>헌혈 가능</DonationBadge>
-                      )}
-                    </HospitalNameRow>
-                    <RatingContainer>
-                      <RatingNumber>
-                        {hospital.starRating.toFixed(1)}
-                      </RatingNumber>
-                      {renderStarRating(hospital.starRating)}
-                    </RatingContainer>
-                    <HospitalAddress>
-                      {hospital.address} {hospital.addressDetail}
-                    </HospitalAddress>
-                    <HospitalPhone>{hospital.phone}</HospitalPhone>
-                  </HospitalInfo>
-                  {hospital.mainImgUrl && (
-                    <HospitalImage
-                      src={hospital.mainImgUrl}
-                      alt={hospital.hospitalName}
-                    />
-                  )}
-                </HospitalItemContent>
-              </HospitalItemRegistered>
-            ))}
-          </HospitalList>
+        <FilterButtonContainer>
+          <Button
+            variant="normal"
+            size="small"
+            state={donationFilterActive ? "default" : "outline"}
+            onClick={toggleDonationFilter}
+          >
+            헌혈가능
+          </Button>
+        </FilterButtonContainer>
 
-          <PaginationContainer>
-            <DnPagination
-              totalPage={totalRegisteredPage}
-              getClickedPageNumber={handleRegisteredPageChange}
-            />
-          </PaginationContainer>
+        <ListContainer>
+          {filteredRegisteredHospitals.length > 0 ? (
+            <>
+              <HospitalList>
+                {paginatedRegisteredHospitals.map((hospital) => (
+                  <HospitalItemRegistered
+                    key={hospital.hospitalInfoSeq}
+                    onClick={() => selectHospital(hospital)}
+                    isSelected={
+                      selectedHospital &&
+                      selectedHospital.hospitalInfoSeq ===
+                        hospital.hospitalInfoSeq
+                    }
+                  >
+                    <HospitalItemContent>
+                      <HospitalInfo>
+                        <HospitalNameRow>
+                          <VerifiedWrapper>
+                            <VerifiedIcon width={16} height={16} />
+                          </VerifiedWrapper>
+                          <HospitalName>{hospital.hospitalName}</HospitalName>
+                          {hospital.donationYn === 1 && (
+                            <DonationBadge>헌혈 가능</DonationBadge>
+                          )}
+                        </HospitalNameRow>
+                        <RatingContainer>
+                          <RatingNumber>
+                            {hospital.starRating.toFixed(1)}
+                          </RatingNumber>
+                          {renderStarRating(hospital.starRating)}
+                        </RatingContainer>
+                        <HospitalAddress>
+                          {hospital.address} {hospital.addressDetail}
+                        </HospitalAddress>
+                        <HospitalPhone>{hospital.phone}</HospitalPhone>
+                      </HospitalInfo>
+                      {hospital.mainImgUrl && (
+                        <HospitalImage
+                          src={hospital.mainImgUrl}
+                          alt={hospital.hospitalName}
+                        />
+                      )}
+                    </HospitalItemContent>
+                  </HospitalItemRegistered>
+                ))}
+              </HospitalList>
+              <PaginationContainer>
+                <DnPagination
+                  totalPage={totalRegisteredPage}
+                  getClickedPageNumber={handleRegisteredPageChange}
+                />
+              </PaginationContainer>
+            </>
+          ) : (
+            <NoDataContainer>
+              <NoDataText>근처에 회원 동물병원이 없습니다.</NoDataText>
+            </NoDataContainer>
+          )}
         </ListContainer>
 
         <NearbyHospitalHeader>주변 동물병원</NearbyHospitalHeader>
 
         <ListContainer>
-          <HospitalList>
-            {paginatedNearbyHospitals.map((hospital, index) => (
-              <HospitalItem
-                key={index}
-                onClick={() => selectHospital(hospital)}
-                isSelected={
-                  selectedHospital &&
-                  selectedHospital.place_name === hospital.place_name
-                }
-              >
-                <HospitalItemContent>
-                  <HospitalInfo>
-                    <HospitalName>{hospital.place_name}</HospitalName>
-                    <HospitalAddress>
-                      {hospital.address_name || hospital.road_address_name}
-                    </HospitalAddress>
-                    <HospitalPhone>{hospital.phone || ""}</HospitalPhone>
-                  </HospitalInfo>
-                  <ButtonWrapper>
-                    <Button
-                      variant="normal"
-                      size="small"
-                      state="default"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        openKakaoMap(hospital);
-                      }}
-                    >
-                      찾아가기
-                    </Button>
-                  </ButtonWrapper>
-                </HospitalItemContent>
-              </HospitalItem>
-            ))}
-          </HospitalList>
-
-          <PaginationContainer>
-            <DnPagination
-              totalPage={totalNearbyPage}
-              getClickedPageNumber={handleNearbyPageChange}
-            />
-          </PaginationContainer>
+          {paginatedNearbyHospitals.length > 0 ? (
+            <>
+              <HospitalList>
+                {paginatedNearbyHospitals.map((hospital, index) => (
+                  <HospitalItem
+                    key={index}
+                    onClick={() => selectHospital(hospital)}
+                    isSelected={
+                      selectedHospital &&
+                      selectedHospital.place_name === hospital.place_name
+                    }
+                  >
+                    <HospitalItemContent>
+                      <HospitalInfo>
+                        <HospitalName>{hospital.place_name}</HospitalName>
+                        <HospitalAddress>
+                          {hospital.address_name || hospital.road_address_name}
+                        </HospitalAddress>
+                        <HospitalPhone>{hospital.phone || ""}</HospitalPhone>
+                      </HospitalInfo>
+                      <ButtonWrapper>
+                        <Button
+                          variant="normal"
+                          size="small"
+                          state="default"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            openKakaoMap(hospital);
+                          }}
+                        >
+                          찾아가기
+                        </Button>
+                      </ButtonWrapper>
+                    </HospitalItemContent>
+                  </HospitalItem>
+                ))}
+              </HospitalList>
+              <PaginationContainer>
+                <DnPagination
+                  totalPage={totalNearbyPage}
+                  getClickedPageNumber={handleNearbyPageChange}
+                />
+              </PaginationContainer>
+            </>
+          ) : (
+            <NoDataContainer>
+              <NoDataText>조건에 맞는 병원이 없습니다.</NoDataText>
+            </NoDataContainer>
+          )}
         </ListContainer>
       </SidebarContainer>
 
@@ -497,6 +575,7 @@ const HospitalMap = () => {
             style={{ width: "100%", height: "100%" }}
             level={5}
             onCenterChanged={handleCenterChanged}
+            onCreate={setMapInstance}
           >
             {userLocation && (
               <CustomOverlayMap
@@ -604,7 +683,6 @@ const HospitalMapLayout = styled.div`
 const SidebarContainer = styled.div`
   height: 100%;
   overflow-y: auto;
-  border-right: 1px solid #e0e0e0;
   display: flex;
   flex-direction: column;
 `;
@@ -612,7 +690,6 @@ const SidebarContainer = styled.div`
 const SidebarHeader = styled.h2`
   padding: 16px;
   margin: 0;
-  border-bottom: 1px solid #e0e0e0;
   font-size: 20px;
   font-weight: 700;
   display: flex;
@@ -642,23 +719,22 @@ const Input = styled.input`
 
 const RegisteredHospitalHeader = styled.div`
   background-color: ${({ theme }) => theme.colors.primary_blue};
-  color: #ffffff;
+  color: ${({ theme }) => theme.colors.neutrals_08};
   font-weight: 700;
   font-size: 18px;
   line-height: 24px;
   padding: 40px 16px 16px 16px;
-  position: relative;
 `;
 
-const FilterButtonWrapper = styled.div`
-  position: absolute;
-  right: 16px;
-  bottom: 16px;
+const FilterButtonContainer = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  padding: 8px 16px;
 `;
 
 const NearbyHospitalHeader = styled.div`
   background-color: ${({ theme }) => theme.colors.neutrals_06};
-  color: #020202;
+  color: ${({ theme }) => theme.colors.neutrals_00};
   font-weight: 700;
   font-size: 18px;
   line-height: 24px;
@@ -670,6 +746,25 @@ const ListContainer = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
+`;
+
+const NoDataContainer = styled.div`
+  height: 140px;
+  gap: 8px;
+  padding: 0 16px;
+`;
+
+const NoDataText = styled.div`
+  height: 140px;
+  gap: 8px;
+  padding: 60px 8px 60px 8px;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0px;
+  text-align: center;
+  color: #170f49;
+  border-bottom: 1px solid ${({ theme }) => theme.colors.neutrals_05};
 `;
 
 const HospitalList = styled.ul`
@@ -685,8 +780,8 @@ const HospitalItem = styled.li`
   padding: 16px 8px;
   border-radius: 4px;
   cursor: pointer;
-  background-color: #ffffff;
-  border-bottom: 1px solid #d9dbe9;
+  background-color: ${({ theme }) => theme.colors.neutrals_08};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.neutrals_05};
   width: 380px;
 `;
 
@@ -737,12 +832,10 @@ const HospitalName = styled.div`
   font-size: 16px;
   line-height: 22px;
   letter-spacing: 0px;
-  color: #020202;
+  color: ${({ theme }) => theme.colors.neutrals_00};
 `;
 
 const DonationBadge = styled.span`
-  background-color: #3396f4;
-  color: white;
   padding: 2px 6px;
   border-radius: 4px;
   font-size: 10px;
@@ -758,7 +851,7 @@ const RatingContainer = styled.div`
 `;
 
 const RatingNumber = styled.span`
-  color: #702dff;
+  color: ${({ theme }) => theme.colors.primary_purple};
   font-weight: 400;
   font-size: 14px;
   line-height: 16px;
@@ -771,7 +864,7 @@ const HospitalAddress = styled.div`
   font-size: 14px;
   line-height: 24px;
   letter-spacing: 0%;
-  color: #020202;
+  color: ${({ theme }) => theme.colors.neutrals_00};
 `;
 
 const HospitalPhone = styled.div`
@@ -779,7 +872,7 @@ const HospitalPhone = styled.div`
   font-size: 14px;
   line-height: 24px;
   letter-spacing: 0%;
-  color: #020202;
+  color: ${({ theme }) => theme.colors.neutrals_00};
 `;
 
 const MapContainer = styled.div`
@@ -803,12 +896,10 @@ const MyPinWrapper = styled.div`
 `;
 
 const InfoWindow = styled.div`
-  background: white;
   border-radius: 5px;
   padding: 10px;
   min-width: 120px;
   max-width: 200px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   position: relative;
 
   &:after {
