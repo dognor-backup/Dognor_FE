@@ -518,7 +518,6 @@ const HospitalMap = () => {
                 {paginatedNearbyHospitals.map((hospital, index) => (
                   <HospitalItem
                     key={index}
-                    onClick={() => selectHospital(hospital)}
                     isSelected={
                       selectedHospital &&
                       selectedHospital.place_name === hospital.place_name

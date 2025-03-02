@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "@emotion/styled";
 import Modal from "@/shared/components/modals/Modal";
 import useModalStore from "@/shared/hooks/useModalStore";
@@ -7,9 +7,37 @@ import VerifiedIcon from "@/assets/icons/subicon/verified_mint.svg?react";
 import EmptyStar from "@/assets/icons/primary/star_primary.svg?react";
 import FilledStar from "@/assets/icons/primary/star_filled_primary.svg?react";
 import PaceMaker from "../../assets/icons/subicon/pacemaker.svg?react";
+import VerticalDotsSelect from "@/shared/components/VerticalDotsSelect";
+import { fetchHospitalReviews } from "@/domains/map/api/fetchHospitalReviews";
+import ReviewWriteModal from "./ReviewWriteModal";
 
 export default function HospitalDetailModal({ hospital }) {
-  const { isModalOpen } = useModalStore();
+  const { isModalOpen, openModal } = useModalStore();
+  const [reviews, setReviews] = useState([]);
+  const [reviewCount, setReviewCount] = useState(0);
+  const [reviewImages, setReviewImages] = useState([]);
+
+  useEffect(() => {
+    const loadReviews = async () => {
+      if (hospital?.hospitalInfoSeq) {
+        const result = await fetchHospitalReviews(hospital.hospitalInfoSeq);
+        if (result.success) {
+          setReviews(result.data);
+          setReviewCount(result.data.length);
+
+          const allReviewImages = result.data
+            .filter((review) => review.reviewImgList)
+            .flatMap((review) =>
+              review.reviewImgList.split(",").map((img) => img.trim())
+            );
+
+          setReviewImages(allReviewImages);
+        }
+      }
+    };
+
+    loadReviews();
+  }, [hospital]);
 
   const renderStarRating = (rating) => {
     const filledStars = Math.round(rating);
@@ -47,6 +75,27 @@ export default function HospitalDetailModal({ hospital }) {
     (a, b) => a + b,
     0
   );
+
+  const truncateText = (text) => {
+    const maxLines = 5;
+    const lines = text.split("\n");
+
+    if (lines.length > maxLines) {
+      return {
+        truncatedText: lines.slice(0, maxLines).join("\n"),
+        hasMore: true,
+      };
+    }
+
+    return {
+      truncatedText: text,
+      hasMore: false,
+    };
+  };
+
+  const handleWriteReview = () => {
+    openModal("writeReview");
+  };
 
   if (!hospital) return null;
 
@@ -133,8 +182,86 @@ export default function HospitalDetailModal({ hospital }) {
               ))}
             </BloodGridContainer>
           </BloodStatusContainer>
+
+          <ReviewSection>
+            <Button
+              variant="primary"
+              size="small"
+              state="default"
+              onClick={handleWriteReview}
+            >
+              리뷰쓰기
+            </Button>
+            <ReviewHeader>
+              <ReviewText>리뷰</ReviewText>
+              <ReviewCount>{reviewCount}</ReviewCount>
+            </ReviewHeader>
+          </ReviewSection>
+
+          <PhotoSection>
+            <PhotoHeader>
+              <PhotoText>사진</PhotoText>
+              <PhotoCount>{reviewImages.length}</PhotoCount>
+            </PhotoHeader>
+            {reviewImages.length > 0 && (
+              <PhotoImagesContainer>
+                {reviewImages.map((imgUrl, index) => (
+                  <PhotoImage
+                    key={index}
+                    src={imgUrl}
+                    alt={`리뷰 이미지 ${index + 1}`}
+                  />
+                ))}
+              </PhotoImagesContainer>
+            )}
+          </PhotoSection>
+
+          {reviews.map((review, index) => {
+            const { truncatedText, hasMore } = truncateText(review.review);
+
+            return (
+              <ReviewItemContainer key={index}>
+                <ReviewItemHeader>
+                  <ProfileSection>
+                    <ProfileImage
+                      src={review.userProfileImgUrl}
+                      alt="프로필 이미지"
+                    />
+                    <ProfileName>{review.name}</ProfileName>
+                  </ProfileSection>
+                  <VerticalDotsSelectWrapper>
+                    <VerticalDotsSelect
+                      handleEdit={() => {}}
+                      handleDelete={() => {}}
+                    />
+                  </VerticalDotsSelectWrapper>
+                </ReviewItemHeader>
+
+                {review.reviewImgList && (
+                  <ReviewImagesContainer>
+                    {review.reviewImgList
+                      .split(",")
+                      .slice(0, 4)
+                      .map((imgUrl, imgIndex) => (
+                        <ReviewImage
+                          key={imgIndex}
+                          src={imgUrl.trim()}
+                          alt={`리뷰 이미지 ${imgIndex + 1}`}
+                        />
+                      ))}
+                  </ReviewImagesContainer>
+                )}
+
+                <ReviewTextContainer>
+                  <ReviewDetailText>{truncatedText}</ReviewDetailText>
+                  {hasMore && <MoreText>더보기</MoreText>}
+                </ReviewTextContainer>
+              </ReviewItemContainer>
+            );
+          })}
         </ContentContainer>
       </ModalContentLayout>
+      {hospital && <ReviewWriteModal hospital={hospital} />}
     </Modal>
   );
 }
@@ -185,12 +312,10 @@ const HospitalName = styled.div`
 `;
 
 const DonationBadge = styled.span`
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-size: 10px;
+  font-size: 14px;
   margin-left: 4px;
-  font-weight: 500;
-  background-color: ${({ theme }) => theme.colors.primary_blue};
+  font-weight: 700;
+  color: ${({ theme }) => theme.colors.primary_blue};
 `;
 
 const RatingContainer = styled.div`
@@ -287,4 +412,161 @@ const BloodCountText = styled.span`
   font-size: 12px;
   font-weight: 600;
   color: ${({ theme }) => theme.colors.neutrals_00};
+`;
+
+const ReviewSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 16px;
+`;
+
+const ReviewHeader = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding-top: 16px;
+`;
+
+const ReviewText = styled.span`
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 24px;
+  color: ${({ theme }) => theme.colors.neutrals_00};
+`;
+
+const ReviewCount = styled.span`
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 24px;
+  color: ${({ theme }) => theme.colors.neutrals_00};
+`;
+
+const PhotoSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+`;
+
+const PhotoHeader = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
+
+const PhotoText = styled.span`
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 24px;
+  color: ${({ theme }) => theme.colors.neutrals_02};
+`;
+
+const PhotoCount = styled.span`
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 24px;
+  color: ${({ theme }) => theme.colors.neutrals_02};
+`;
+
+const PhotoImagesContainer = styled.div`
+  display: flex;
+  gap: 8px;
+  white-space: nowrap;
+  overflow-x: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  padding-bottom: 16px;
+  border-bottom: 2px solid ${({ theme }) => theme.colors.neutrals_05};
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
+
+const PhotoImage = styled.img`
+  width: 94px;
+  height: 94px;
+  object-fit: cover;
+  border-radius: 4px;
+  flex-shrink: 0;
+  border: 1px solid ${({ theme }) => theme.colors.neutrals_05};
+  display: inline-block;
+`;
+
+const ReviewImagesContainer = styled.div`
+  display: flex;
+  gap: 8px;
+  white-space: nowrap;
+  overflow-x: hidden;
+`;
+
+const ReviewImage = styled.img`
+  width: 94px;
+  height: 94px;
+  object-fit: cover;
+  border-radius: 4px;
+  flex-shrink: 0;
+`;
+
+const ReviewItemContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid ${({ theme }) => theme.colors.neutrals_05};
+`;
+
+const ReviewItemHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const ProfileSection = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
+
+const ProfileImage = styled.img`
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+`;
+
+const ProfileName = styled.span`
+  font-weight: 700;
+  font-size: 16px;
+  color: ${({ theme }) => theme.colors.neutrals_01};
+`;
+
+const VerticalDotsSelectWrapper = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const ReviewTextContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+`;
+
+const ReviewDetailText = styled.p`
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  color: ${({ theme }) => theme.colors.neutrals_02};
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
+const MoreText = styled.span`
+  font-weight: 400;
+  font-size: 14px;
+  color: ${({ theme }) => theme.colors.neutrals_03};
+  cursor: pointer;
 `;
