@@ -82,10 +82,8 @@ export default function PostCard({ story, handleDelete, handleEdit, useHome }) {
 const PostCardLayout = styled.div`
   display: flex;
   flex-direction: column;
-  border: ${({ theme }) => `1px solid ${theme.colors.neutrals_05}`};
-  background-color: ${({ theme }) => {
-    theme.colors.neutrals_08;
-  }};
+  border: 1px solid ${({ theme }) => theme.colors.neutrals_05};
+  background-color: ${({ theme }) => theme.colors.neutrals_08};
   border-radius: 16px;
   width: 320px;
   height: 408px;
@@ -101,7 +99,6 @@ const ImageWrapper = styled.div`
 
 const CardImage = styled.img`
   width: 296px;
-
   height: 280px;
   object-fit: cover;
   border-radius: 10px;
@@ -112,9 +109,7 @@ const TextWrapper = styled.div`
   font-size: 14px;
   font-weight: 400;
   line-height: 24px;
-  color: ${({ theme }) => {
-    theme.colors.neutrals_00;
-  }};
+  color: ${({ theme }) => theme.colors.neutrals_00};
   overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -133,9 +128,7 @@ const ProfileWrapper = styled.div`
   align-items: center;
   gap: 8px;
   font-weight: 700;
-  color: ${({ theme }) => {
-    theme.colors.neutrals_00;
-  }};
+  color: ${({ theme }) => theme.colors.neutrals_00};
 `;
 
 const ProfileImage = styled.img`
