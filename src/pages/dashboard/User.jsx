@@ -18,6 +18,7 @@ import styled from "@emotion/styled";
 import { useGetUsersData } from "./hooks/useGetAdminData";
 import { useEffect, useState } from "react";
 import { SearchForm } from "@/shared/components/SearchForm";
+import { useNavigate } from "react-router-dom";
 
 export function User() {
   const [usersDataList, setUsersDataList] = useState({
@@ -37,7 +38,7 @@ export function User() {
       withdraw: true,
     },
   });
-
+  const navigate = useNavigate();
   const { usersData } = useGetUsersData(usersDataList);
 
   const [users, setUsers] = useState(usersData?.data || []);
@@ -46,6 +47,12 @@ export function User() {
     setUsers(usersData?.data);
   }, [usersData?.data]);
   console.log(users);
+
+  const handleMoveUserInfo = (userData) => {
+    sessionStorage.setItem("userData", JSON.stringify(userData));
+    window.open(`/dashboard/userInfo/${userData.userSeq}`, "_blank");
+  };
+
   return (
     <>
       <BtnsContainer>
@@ -123,7 +130,7 @@ export function User() {
             const { agreement4, agreement5, email, hospitalDto, name, phone, registDt, userId, userRole, userStatus } =
               user;
             return (
-              <BdBtm>
+              <BdBtm onClick={() => handleMoveUserInfo(user)}>
                 <TableBodyText>
                   <OnlyCheckBox>
                     <input

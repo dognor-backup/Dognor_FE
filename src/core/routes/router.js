@@ -22,6 +22,7 @@ import { CampaignForm } from "@/pages/campaigns/CampaignForm";
 import { CampaignDetail } from "@/pages/campaigns/CampaignDeatil";
 import { Dashboard } from "@/pages/dashboard/Dashboard";
 import { BoardContent } from "@/pages/dashboard/BoardContent";
+import { UserInfo } from "@/pages/dashboard/UserInfo";
 
 const router = createBrowserRouter([
   {
@@ -72,7 +73,10 @@ const router = createBrowserRouter([
       { path: "postedit/:id", Component: PostForm },
     ],
   },
-
+  {
+    path: "dashboard/userInfo/:userSeq",
+    Component: UserInfo,
+  },
   { path: "findaccount", Component: FindAccount },
   { path: "guidepage", Component: Home },
   { path: "changepassword", Component: Home },
