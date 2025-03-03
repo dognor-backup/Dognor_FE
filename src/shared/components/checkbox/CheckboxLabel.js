@@ -1,0 +1,40 @@
+import styled from "@emotion/styled";
+export const OnlyCheckBox = styled.label(({ theme, checked }) => ({
+  fontWeight: 400,
+  cursor: "pointer",
+  fontSize: "14px",
+  color: theme.colors.neutrals_01,
+  lineHeight: "1.5",
+  left: "50%",
+  top: "50%",
+  transform: "translate(-50%, -50%)",
+  position: "absolute",
+  display: "flex",
+
+  "&::before": {
+    content: "''",
+    display: "inline-block",
+    marginRight: "8px",
+    width: "16px",
+    height: "16px",
+    border: `1px solid ${theme.colors.neutrals_01}`,
+    backgroundColor: checked ? theme.colors.neutrals_01 : theme.colors.neutrals_08,
+    borderRadius: "4px",
+    backgroundImage: "url('/src/assets/icons/Check_W.svg')",
+    backgroundSize: "15px",
+    backgroundRepeat: "no-repeat",
+    backgroundPosition: "center",
+  },
+  "& input": {
+    appearance: "none",
+    position: "absolute",
+    width: "16px",
+    height: "16px",
+    opacity: 0,
+    cursor: "pointer",
+  },
+  "& input:checked + &::before": {
+    backgroundColor: theme.colors.neutrals_01,
+    backgroundImage: "url('/src/assets/icons/Check_B.svg')",
+  },
+}));
