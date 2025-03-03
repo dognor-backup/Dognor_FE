@@ -63,8 +63,7 @@ const useKakaoLoader = () => {
     const script = document.createElement("script");
     script.async = true;
     script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${
-      import.meta.env.VITE_KAKAO_MAP_API_KEY ||
-      "0a3a2185ccbb6c5c6647e8a1604f823b"
+      import.meta.env.VITE_KAKAO_MAP_API_KEY
     }&autoload=false&libraries=services,clusterer`;
 
     script.onload = () => {
