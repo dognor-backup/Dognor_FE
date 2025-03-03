@@ -82,7 +82,7 @@ const ModalDimmed = styled.div(
 );
 const ModalContainer = styled.div(
   ({ size, isModalOpen }) => `
-  width:${size === "small" ? "320px" : "600px"};
+  width: ${size === "small" ? "320px" : size === "medium" ? "406px" : "600px"};
   background-color: white;
   position: relative;
   z-index: 10;
@@ -95,7 +95,6 @@ const ModalContainer = styled.div(
   visibility: ${isModalOpen ? "visible" : "hidden"};
 `
 );
-
 const ModalContent = styled.div`
   display: flex;
   flex-direction: column;
