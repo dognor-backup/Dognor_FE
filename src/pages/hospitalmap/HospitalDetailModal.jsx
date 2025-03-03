@@ -8,13 +8,17 @@ import EmptyStar from "@/assets/icons/primary/star_primary.svg?react";
 import FilledStar from "@/assets/icons/primary/star_filled_primary.svg?react";
 import PaceMaker from "../../assets/icons/subicon/pacemaker.svg?react";
 import VerticalDotsSelect from "@/shared/components/VerticalDotsSelect";
+import ReviewWriteModal from "./ReviewWriteModal";
+import ReviewDetailModal from "./ReviewDetailModal";
 import { fetchHospitalReviews } from "@/domains/map/api/fetchHospitalReviews";
+
 
 export default function HospitalDetailModal({ hospital }) {
   const { isModalOpen, openModal } = useModalStore();
   const [reviews, setReviews] = useState([]);
   const [reviewCount, setReviewCount] = useState(0);
   const [reviewImages, setReviewImages] = useState([]);
+  const [selectedReview, setSelectedReview] = useState(null);
 
   useEffect(() => {
     const loadReviews = async () => {
@@ -95,6 +99,11 @@ export default function HospitalDetailModal({ hospital }) {
   const handleWriteReview = () => {
     openModal("hospitalReviewWrite");
   };
+  
+  const handleOpenReviewDetail = (review) => {
+    setSelectedReview(review);
+    openModal("reviewDetail");
+  };
 
   if (!hospital) return null;
 
@@ -118,7 +127,7 @@ export default function HospitalDetailModal({ hospital }) {
         <ContentContainer>
           <HospitalNameRow>
             <VerifiedWrapper>
-              <VerifiedIcon width={16} height={16} />
+              <VerifiedIcon width={20} height={20} />
             </VerifiedWrapper>
             <HospitalName>{hospital.hospitalName}</HospitalName>
             {hospital.donationYn === 1 && (
@@ -250,7 +259,7 @@ export default function HospitalDetailModal({ hospital }) {
                   </ReviewImagesContainer>
                 )}
 
-                <ReviewTextContainer>
+                <ReviewTextContainer onClick={() => handleOpenReviewDetail(review)}>
                   <ReviewDetailText>{truncatedText}</ReviewDetailText>
                   {hasMore && <MoreText>더보기</MoreText>}
                 </ReviewTextContainer>
@@ -259,6 +268,8 @@ export default function HospitalDetailModal({ hospital }) {
           })}
         </ContentContainer>
       </ModalContentLayout>
+      {hospital && <ReviewWriteModal hospital={hospital} />}
+      {selectedReview && <ReviewDetailModal review={selectedReview} />}
     </Modal>
   );
 }
@@ -548,6 +559,11 @@ const ReviewTextContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
+  cursor: pointer;
+  
+  &:hover {
+    opacity: 0.85;
+  }
 `;
 
 const ReviewDetailText = styled.p`
