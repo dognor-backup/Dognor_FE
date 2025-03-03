@@ -8,12 +8,15 @@ import EmptyStar from "@/assets/icons/primary/star_primary.svg?react";
 import FilledStar from "@/assets/icons/primary/star_filled_primary.svg?react";
 import AddProfileBtnImg from "@/assets/icons/default/image.svg?react";
 import ArrowLeft from "../../assets/icons/primary/arrow_left_primary.svg?react";
+import { submitHospitalReview } from "@/domains/map/api/fetchHospitalReviews";
 
 export default function ReviewWriteModal({ hospital }) {
   const { closeModal } = useModalStore();
   const [rating, setRating] = useState(0);
   const [reviewText, setReviewText] = useState("");
   const [selectedImages, setSelectedImages] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleStarClick = (selectedRating) => {
     setRating(selectedRating);
@@ -22,8 +25,18 @@ export default function ReviewWriteModal({ hospital }) {
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files);
     const newImages = files.slice(0, 4 - selectedImages.length);
-    const newImageUrls = newImages.map((file) => URL.createObjectURL(file));
-    setSelectedImages((prev) => [...prev, ...newImageUrls]);
+    
+    newImages.forEach(file => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setSelectedImages(prev => [...prev, {
+          file: file,
+          preview: URL.createObjectURL(file),
+          data: e.target.result
+        }]);
+      };
+      reader.readAsDataURL(file);
+    });
   };
 
   const removeImage = (indexToRemove) => {
@@ -38,24 +51,56 @@ export default function ReviewWriteModal({ hospital }) {
       return starValue <= rating ? (
         <FilledStar
           key={index}
-          width={32}
-          height={32}
+          width={24}
+          height={24}
           onClick={() => handleStarClick(starValue)}
         />
       ) : (
         <EmptyStar
           key={index}
-          width={32}
-          height={32}
+          width={24}
+          height={24}
           onClick={() => handleStarClick(starValue)}
         />
       );
     });
   };
 
-  const handleReviewSubmit = (e) => {
+  const handleReviewSubmit = async (e) => {
     e.preventDefault();
-    closeModal();
+    
+    if (!reviewText.trim()) {
+      setError("리뷰 내용을 입력해주세요.");
+      return;
+    }
+    
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+      const requestData = {
+        hospitalSeq: hospital.hospitalInfoSeq,
+        review: reviewText,
+        starRating: rating
+      };
+      
+      if (selectedImages.length > 0) {
+        const reviweImgFile = selectedImages.map(img => img.data).join(',');
+        requestData.reviewImgs = { reviweImgFile };
+      }
+      
+      const result = await submitHospitalReview(requestData);
+      
+      if (result.success) {
+        closeModal();
+      } else {
+        setError(result.msg);
+      }
+    } catch (error) {
+      setError("리뷰 등록에 실패했습니다.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleBackButton = () => {
@@ -68,7 +113,7 @@ export default function ReviewWriteModal({ hospital }) {
     <Modal
       size="medium"
       title=""
-      BtnText="등록하기"
+      BtnText={isLoading ? "등록 중..." : "등록하기"}
       modalname="hospitalReviewWrite"
       formName="writeReview"
       onSubmit={handleReviewSubmit}
@@ -120,9 +165,9 @@ export default function ReviewWriteModal({ hospital }) {
             </CenteredUploadButtonContainer>
           ) : (
             <ImageGalleryContainer>
-              {selectedImages.map((imageUrl, index) => (
+              {selectedImages.map((image, index) => (
                 <ImagePreview key={index}>
-                  <PreviewImage src={imageUrl} alt={`Preview ${index + 1}`} />
+                  <PreviewImage src={image.preview} alt={`Preview ${index + 1}`} />
                   <RemoveImageButton onClick={() => removeImage(index)}>
                     ✕
                   </RemoveImageButton>
@@ -162,6 +207,8 @@ export default function ReviewWriteModal({ hospital }) {
           />
           <TextCounter>{reviewText.length}/400</TextCounter>
         </ReviewTextareaContainer>
+        
+        {error && <ErrorMessage>{error}</ErrorMessage>}
       </ModalContentLayout>
     </Modal>
   );
@@ -369,4 +416,11 @@ const TextCounter = styled.div`
   right: 12px;
   font-size: 12px;
   color: ${({ theme }) => theme.colors.neutrals_02};
+`;
+
+const ErrorMessage = styled.div`
+  color: #e74c3c;
+  font-size: 14px;
+  text-align: center;
+  margin-top: 8px;
 `;
