@@ -108,8 +108,18 @@ export default function ReviewWriteModal({ hospital }) {
             <ImageUploadText>이미지 첨부</ImageUploadText>
             <ImageUploadCount>{selectedImages.length}/4</ImageUploadCount>
           </ImageUploadLabelContainer>
-          {selectedImages.length > 0 && (
-            <ImagePreviewContainer>
+          
+          {selectedImages.length === 0 ? (
+            <CenteredUploadButtonContainer>
+              <ImageUploadButton
+                type="button"
+                onClick={() => document.getElementById("imageUpload").click()}
+              >
+                <AddProfileBtnImg />
+              </ImageUploadButton>
+            </CenteredUploadButtonContainer>
+          ) : (
+            <ImageGalleryContainer>
               {selectedImages.map((imageUrl, index) => (
                 <ImagePreview key={index}>
                   <PreviewImage src={imageUrl} alt={`Preview ${index + 1}`} />
@@ -118,16 +128,18 @@ export default function ReviewWriteModal({ hospital }) {
                   </RemoveImageButton>
                 </ImagePreview>
               ))}
-            </ImagePreviewContainer>
+              
+              {selectedImages.length < 4 && (
+                <ImageUploadButton
+                  type="button"
+                  onClick={() => document.getElementById("imageUpload").click()}
+                >
+                  <AddProfileBtnImg />
+                </ImageUploadButton>
+              )}
+            </ImageGalleryContainer>
           )}
-
-          <ImageUploadButton
-            type="button"
-            onClick={() => document.getElementById("imageUpload").click()}
-            disabled={selectedImages.length >= 4}
-          >
-            <AddProfileBtnImg />
-          </ImageUploadButton>
+          
           <HiddenFileInput
             type="file"
             id="imageUpload"
@@ -136,6 +148,7 @@ export default function ReviewWriteModal({ hospital }) {
             onChange={handleImageUpload}
           />
         </ImageUploadSectionWrapper>
+        
         <ReviewTextareaContainer>
           <ReviewTextarea
             placeholder="댓글을 작성해주세요"
@@ -244,7 +257,7 @@ const StarContainer = styled.div`
 const ImageUploadSectionWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
+  width: 100%;
 `;
 
 const ImageUploadLabelContainer = styled.div`
@@ -268,28 +281,41 @@ const ImageUploadCount = styled.span`
   color: ${({ theme }) => theme.colors.neutrals_01};
 `;
 
+const CenteredUploadButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 16px;
+`;
+
+const ImageGalleryContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+  flex-wrap: nowrap;
+  margin-bottom: 16px;
+`;
+
 const ImageUploadButton = styled.button`
+  width: 90px;
+  height: 90px;
   background: transparent;
   border: none;
-  cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
-  opacity: ${(props) => (props.disabled ? 0.5 : 1)};
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 const HiddenFileInput = styled.input`
   display: none;
 `;
 
-const ImagePreviewContainer = styled.div`
-  display: flex;
-  gap: 4px;
-  flex-wrap: wrap;
-  margin-bottom: 16px;
-`;
-
 const ImagePreview = styled.div`
   position: relative;
   width: 90px;
-  height: 90;
+  height: 90px;
 `;
 
 const PreviewImage = styled.img`
