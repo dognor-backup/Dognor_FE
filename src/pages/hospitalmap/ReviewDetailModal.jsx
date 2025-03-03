@@ -153,9 +153,6 @@ const NavButton = styled.button`
   cursor: pointer;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
-  &:hover {
-    background-color: rgba(255, 255, 255, 1);
-  }
 `;
 
 const RadioContainer = styled.div`
