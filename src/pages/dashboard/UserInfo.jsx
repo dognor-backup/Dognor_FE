@@ -6,9 +6,12 @@ import LogoNav from "@/shared/components/nav/LogoNav";
 import { Button } from "@/shared/components/buttons/Button";
 import { Select } from "@/components/ui/select";
 import { SelectBox } from "@/shared/components/dropbox/SelectBox";
+import { approveHospital } from "./api/dashboard";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export function UserInfo() {
   const [userData, setUserData] = useState(null);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     const storedData = sessionStorage.getItem("userData");
@@ -17,37 +20,98 @@ export function UserInfo() {
     }
   }, []);
 
+  const { agreement4, agreement5, userSeq, name, phone, userId, email, userStatus, userRole, hospitalDto } =
+    userData || {};
   console.log(userData);
-
-  const { name, phone, userId, email, userStatus, userRole } = userData || {};
   const userType = userRole === "USER" ? "일반회원" : "병원 관계자";
   const options = ["승인 완료", "승인 대기", "기각"];
+  const isHospital = userRole === "HOSPITAL";
+  const [approveStatus, setApproveStatus] = useState({ decisionFlag: "", hospitalSeq: userSeq });
 
-  const handleGEtValue = (value) => {
-    console.log(value);
+  useEffect(() => {
+    if (userSeq) {
+      setApproveStatus((prev) => ({ ...prev, hospitalSeq: userSeq }));
+    }
+  }, [userSeq]);
+
+  const HospitalInput = (
+    <Info>
+      <InfoTitle className="title">병원 정보</InfoTitle>
+      <div>
+        <InputForm
+          id="hospital"
+          name="hospital"
+          label="병원 상호명"
+          status="normal"
+          value={hospitalDto?.hospitalName}
+          readonly
+        />
+        <InputForm id="hospitalDto" name="hospitalDto" label="대표자" status="normal" value={name} readonly />
+        <InputForm id="userId" name="userId" label="병원 전화번호" status="normal" value={phone} readonly />
+      </div>
+    </Info>
+  );
+  const ApproveHospitalMutation = useMutation({
+    mutationFn: approveHospital,
+    onSuccess: async ({ success, data }) => {
+      if (success) {
+        queryClient.invalidateQueries({ queryKey: ["usersDatas", approveStatus] });
+        console.log(data);
+      }
+    },
+  });
+  const handleGetValue = (value) => {
+    let status = "";
+    switch (value * 1) {
+      case 1:
+        status = "approved";
+        break;
+      case 3:
+        status = "reject";
+        break;
+      default:
+        status = "dismissed";
+        break;
+    }
+    setApproveStatus((prev) => ({ ...prev, decisionFlag: status }));
   };
+  const handleCloseWindow = () => {
+    console.log(approveStatus);
+    if (isHospital) {
+      ApproveHospitalMutation.mutate(approveStatus);
+    }
+    console.log(approveStatus);
+    // sessionStorage.removeItem("userData");
+    // window.close();
+  };
+
   return (
     <InfoWrapper>
       <LogoNav />
-      <PageTop />
+      <PageTop noNav={true} />
       <PageWrapper>
-        <SelectContainer>
-          <SelectBox
-            label="회원 상태"
-            optionList={options}
-            placeholder={`승인${userStatus}`}
-            getValueFromSelect={handleGEtValue}
-          />
-        </SelectContainer>
+        {isHospital && (
+          <SelectContainer>
+            <SelectBox
+              label="회원 상태"
+              optionList={options}
+              placeholder={`승인${userStatus}`}
+              getValueFromSelect={handleGetValue}
+            />
+          </SelectContainer>
+        )}
         <InfoContainer>
           <Info className="left">
-            <InfoTitle className="title">회원 정보</InfoTitle>
             <div>
-              <InputForm id="name" name="name" label="이름" status="normal" value={name} readonly />
-              <InputForm id="phone" name="phone" label="휴대폰" status="normal" value={phone} readonly />
-              <InputForm id="userId" name="userId" label="아이디" status="normal" value={userId} readonly />
-              <InputForm id="email" name="email" label="이메일" status="normal" value={email} readonly />
+              <InfoTitle className="title">회원 정보</InfoTitle>
+              <div>
+                <InputForm id="name" name="name" label="이름" status="normal" value={name} readonly />
+                <InputForm id="phone" name="phone" label="휴대폰" status="normal" value={phone} readonly />
+                <InputForm id="userId" name="userId" label="아이디" status="normal" value={userId} readonly />
+                <InputForm id="email" name="email" label="이메일" status="normal" value={email} readonly />
+              </div>
             </div>
+            {isHospital && HospitalInput}
           </Info>
           <Border />
           <Info className="right">
@@ -57,13 +121,13 @@ export function UserInfo() {
               <InfoTitle>회원 구분</InfoTitle>
               <Text>{userType}</Text>
               <InfoTitle>개인정보 승인현황</InfoTitle>
-              {<Text>[선택] 위치기반서비스 이용약관</Text>}
-              {<Text>[선택] 이벤트・혜택 정보 수신</Text>}
+              {agreement4 === 1 ? <Text>[선택] 위치기반서비스 이용약관</Text> : ""}
+              {agreement5 === 1 ? <Text>[선택] 이벤트・혜택 정보 수신</Text> : ""}
             </div>
           </Info>
         </InfoContainer>
         <BtnContainer>
-          <Button variant="normal" size="small" state="outline">
+          <Button variant="normal" size="small" state="outline" onClick={handleCloseWindow}>
             내역으로 돌아가기
           </Button>
           <Button variant="normal" size="small" state="default">
@@ -86,10 +150,11 @@ const InfoTitle = styled.strong`
     margin-top: 0;
   }
 `;
-const InfoWrapper = styled.article``;
+const InfoWrapper = styled.article`
+  padding-bottom: 50px;
+`;
 const InfoContainer = styled.div`
   border-top: 1px solid #170f49;
-  height: 392px;
   display: flex;
   align-items: center;
   border-bottom: 1px solid #170f49;
@@ -109,7 +174,7 @@ const Info = styled.div`
   justify-content: space-between;
   &.right {
     text-align: center;
-    justify-content: start;
+    align-self: flex-start;
   }
 `;
 const Text = styled.p`

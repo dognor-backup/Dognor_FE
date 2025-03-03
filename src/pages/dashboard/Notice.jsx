@@ -23,7 +23,6 @@ export function Notice() {
   const [checkedItems, setCheckedItems] = useState({});
   const [changedPosts, setChangedPosts] = useState([]);
   const [checked, setChecked] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
   const [isUserPost, setUserPost] = useState();
   const [totalPage, setTotalPage] = useState(null);
 
