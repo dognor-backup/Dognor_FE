@@ -13,6 +13,7 @@ import { useQuery } from "@tanstack/react-query";
 import AxiosInstance from "@/shared/utils/axiosInstance";
 import { InputBtn } from "@/shared/components/input/InputBtn";
 import HospitalDetailModal from "./HospitalDetailModal";
+import ReviewWriteModal from "./ReviewWriteModal";
 import useModalStore from "@/shared/hooks/useModalStore";
 
 const fetchRegisteredHospitals = async ({
@@ -81,6 +82,7 @@ const useKakaoLoader = () => {
 
   return isLoaded;
 };
+
 const HospitalMap = () => {
   const isKakaoLoaded = useKakaoLoader();
   const [keyword, setKeyword] = useState("");
@@ -97,7 +99,6 @@ const HospitalMap = () => {
   });
   const [mapInstance, setMapInstance] = useState(null);
   const [userLocation, setUserLocation] = useState(null);
-  const [infoWindowVisible, setInfoWindowVisible] = useState({});
   const [donationFilterActive, setDonationFilterActive] = useState(false);
   const [kakaoApiPagination, setKakaoApiPagination] = useState(null);
   const registeredItemsPerPage = 5;
@@ -285,6 +286,7 @@ const HospitalMap = () => {
 
     refetchRegisteredHospitals();
   };
+
   const selectHospital = (hospital) => {
     setSelectedHospital(hospital);
     openModal("hospitalDetail");
@@ -296,19 +298,6 @@ const HospitalMap = () => {
       lat,
       lng,
     });
-
-    const id = hospital.hospitalInfoSeq || hospital.id || hospital.place_name;
-    setInfoWindowVisible({
-      [id]: true,
-    });
-  };
-
-  const toggleInfoWindow = (hospital) => {
-    const id = hospital.hospitalInfoSeq || hospital.id || hospital.place_name;
-    setInfoWindowVisible((prev) => ({
-      ...prev,
-      [id]: !prev[id],
-    }));
   };
 
   const handleRegisteredPageChange = (pageNumber) => {
@@ -416,256 +405,214 @@ const HospitalMap = () => {
   };
 
   return (
-    <HospitalMapLayout>
-      <SidebarContainer>
-        <SidebarHeader>
-          병원소식
-          <SearchContainer>
-            <InputBtn
-              id="hospital-search"
-              name="hospitalSearch"
-              placeholder="지역, 주소, 병원 상호명을 입력해주세요"
-              label=""
-              BtnText={<SearchIcon width={20} height={20} />}
-              status="normal"
-              getInputValue={handleGetInputValue}
-              handleClick={searchByKeyword}
-            />
-          </SearchContainer>
-        </SidebarHeader>
+    <>
+      <HospitalMapLayout>
+        <SidebarContainer>
+          <SidebarHeader>
+            병원소식
+            <SearchContainer>
+              <InputBtn
+                id="hospital-search"
+                name="hospitalSearch"
+                placeholder="지역, 주소, 병원 상호명을 입력해주세요"
+                label=""
+                BtnText={<SearchIcon width={20} height={20} />}
+                status="normal"
+                getInputValue={handleGetInputValue}
+                handleClick={searchByKeyword}
+              />
+            </SearchContainer>
+          </SidebarHeader>
 
-        <RegisteredHospitalHeader>
-          *헌혈하개 회원 동물병원
-        </RegisteredHospitalHeader>
+          <RegisteredHospitalHeader>
+            *헌혈하개 회원 동물병원
+          </RegisteredHospitalHeader>
 
-        <FilterButtonContainer>
-          <Button
-            variant="normal"
-            size="small"
-            state={donationFilterActive ? "default" : "outline"}
-            onClick={toggleDonationFilter}
-          >
-            헌혈가능
-          </Button>
-        </FilterButtonContainer>
+          <FilterButtonContainer>
+            <Button
+              variant="normal"
+              size="small"
+              state={donationFilterActive ? "default" : "outline"}
+              onClick={toggleDonationFilter}
+            >
+              헌혈가능
+            </Button>
+          </FilterButtonContainer>
 
-        <ListContainer>
-          {filteredRegisteredHospitals.length > 0 ? (
-            <>
-              <HospitalList>
-                {paginatedRegisteredHospitals.map((hospital) => (
-                  <HospitalItemRegistered
-                    key={hospital.hospitalInfoSeq}
-                    onClick={() => selectHospital(hospital)}
-                    isSelected={
-                      selectedHospital &&
-                      selectedHospital.hospitalInfoSeq ===
-                        hospital.hospitalInfoSeq
-                    }
-                  >
-                    <HospitalItemContent>
-                      <HospitalInfo>
-                        <HospitalNameRow>
-                          <VerifiedWrapper>
-                            <VerifiedIcon width={16} height={16} />
-                          </VerifiedWrapper>
-                          <HospitalName>{hospital.hospitalName}</HospitalName>
-                          {hospital.donationYn === 1 && (
-                            <DonationBadge>헌혈 가능</DonationBadge>
-                          )}
-                        </HospitalNameRow>
-                        <RatingContainer>
-                          <RatingNumber>
-                            {hospital.starRating.toFixed(1)}
-                          </RatingNumber>
-                          {renderStarRating(hospital.starRating)}
-                        </RatingContainer>
-                        <HospitalAddress>
-                          {hospital.address} {hospital.addressDetail}
-                        </HospitalAddress>
-                        <HospitalPhone>{hospital.phone}</HospitalPhone>
-                      </HospitalInfo>
-                      {hospital.mainImgUrl && (
-                        <HospitalImage
-                          src={hospital.mainImgUrl}
-                          alt={hospital.hospitalName}
-                        />
-                      )}
-                    </HospitalItemContent>
-                  </HospitalItemRegistered>
-                ))}
-              </HospitalList>
-              <PaginationContainer>
-                <DnPagination
-                  totalPage={totalRegisteredPage}
-                  getClickedPageNumber={handleRegisteredPageChange}
-                />
-              </PaginationContainer>
-            </>
-          ) : (
-            <NoDataContainer>
-              <NoDataText>근처에 회원 동물병원이 없습니다.</NoDataText>
-            </NoDataContainer>
-          )}
-        </ListContainer>
-
-        <NearbyHospitalHeader>주변 동물병원</NearbyHospitalHeader>
-
-        <ListContainer>
-          {paginatedNearbyHospitals.length > 0 ? (
-            <>
-              <HospitalList>
-                {paginatedNearbyHospitals.map((hospital, index) => (
-                  <HospitalItem
-                    key={index}
-                    isSelected={
-                      selectedHospital &&
-                      selectedHospital.place_name === hospital.place_name
-                    }
-                  >
-                    <HospitalItemContent>
-                      <HospitalInfo>
-                        <HospitalName>{hospital.place_name}</HospitalName>
-                        <HospitalAddress>
-                          {hospital.address_name || hospital.road_address_name}
-                        </HospitalAddress>
-                        <HospitalPhone>{hospital.phone || ""}</HospitalPhone>
-                      </HospitalInfo>
-                      <ButtonWrapper>
-                        <Button
-                          variant="normal"
-                          size="small"
-                          state="default"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            openKakaoMap(hospital);
-                          }}
-                        >
-                          찾아가기
-                        </Button>
-                      </ButtonWrapper>
-                    </HospitalItemContent>
-                  </HospitalItem>
-                ))}
-              </HospitalList>
-              <PaginationContainer>
-                <DnPagination
-                  totalPage={totalNearbyPage}
-                  getClickedPageNumber={handleNearbyPageChange}
-                />
-              </PaginationContainer>
-            </>
-          ) : (
-            <NoDataContainer>
-              <NoDataText>조건에 맞는 병원이 없습니다.</NoDataText>
-            </NoDataContainer>
-          )}
-        </ListContainer>
-      </SidebarContainer>
-
-      <MapContainer>
-        {isKakaoLoaded && (
-          <Map
-            center={center}
-            style={{ width: "100%", height: "100%" }}
-            level={5}
-            onCenterChanged={handleCenterChanged}
-            onCreate={setMapInstance}
-          >
-            {userLocation && (
-              <CustomOverlayMap
-                position={userLocation}
-                yAnchor={1.0}
-                xAnchor={0.5}
-              >
-                <MyPinWrapper>
-                  <MyPin width={50} height={50} />
-                </MyPinWrapper>
-              </CustomOverlayMap>
+          <ListContainer>
+            {filteredRegisteredHospitals.length > 0 ? (
+              <>
+                <HospitalList>
+                  {paginatedRegisteredHospitals.map((hospital) => (
+                    <HospitalItemRegistered
+                      key={hospital.hospitalInfoSeq}
+                      onClick={() => selectHospital(hospital)}
+                      isSelected={
+                        selectedHospital &&
+                        selectedHospital.hospitalInfoSeq ===
+                          hospital.hospitalInfoSeq
+                      }
+                    >
+                      <HospitalItemContent>
+                        <HospitalInfo>
+                          <HospitalNameRow>
+                            <VerifiedWrapper>
+                              <VerifiedIcon width={16} height={16} />
+                            </VerifiedWrapper>
+                            <HospitalName>{hospital.hospitalName}</HospitalName>
+                            {hospital.donationYn === 1 && (
+                              <DonationBadge>헌혈 가능</DonationBadge>
+                            )}
+                          </HospitalNameRow>
+                          <RatingContainer>
+                            <RatingNumber>
+                              {hospital.starRating.toFixed(1)}
+                            </RatingNumber>
+                            {renderStarRating(hospital.starRating)}
+                          </RatingContainer>
+                          <HospitalAddress>
+                            {hospital.address} {hospital.addressDetail}
+                          </HospitalAddress>
+                          <HospitalPhone>{hospital.phone}</HospitalPhone>
+                        </HospitalInfo>
+                        {hospital.mainImgUrl && (
+                          <HospitalImage
+                            src={hospital.mainImgUrl}
+                            alt={hospital.hospitalName}
+                          />
+                        )}
+                      </HospitalItemContent>
+                    </HospitalItemRegistered>
+                  ))}
+                </HospitalList>
+                <PaginationContainer>
+                  <DnPagination
+                    totalPage={totalRegisteredPage}
+                    getClickedPageNumber={handleRegisteredPageChange}
+                  />
+                </PaginationContainer>
+              </>
+            ) : (
+              <NoDataContainer>
+                <NoDataText>근처에 회원 동물병원이 없습니다.</NoDataText>
+              </NoDataContainer>
             )}
+          </ListContainer>
 
-            {nearbyHospitals.map((hospital, index) => (
-              <React.Fragment key={`marker-${index}`}>
+          <NearbyHospitalHeader>주변 동물병원</NearbyHospitalHeader>
+
+          <ListContainer>
+            {paginatedNearbyHospitals.length > 0 ? (
+              <>
+                <HospitalList>
+                  {paginatedNearbyHospitals.map((hospital, index) => (
+                    <HospitalItem
+                      key={index}
+                      isSelected={
+                        selectedHospital &&
+                        selectedHospital.place_name === hospital.place_name
+                      }
+                    >
+                      <HospitalItemContent>
+                        <HospitalInfo>
+                          <HospitalName>{hospital.place_name}</HospitalName>
+                          <HospitalAddress>
+                            {hospital.address_name || hospital.road_address_name}
+                          </HospitalAddress>
+                          <HospitalPhone>{hospital.phone || ""}</HospitalPhone>
+                        </HospitalInfo>
+                        <ButtonWrapper>
+                          <Button
+                            variant="normal"
+                            size="small"
+                            state="default"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              openKakaoMap(hospital);
+                            }}
+                          >
+                            찾아가기
+                          </Button>
+                        </ButtonWrapper>
+                      </HospitalItemContent>
+                    </HospitalItem>
+                  ))}
+                </HospitalList>
+                <PaginationContainer>
+                  <DnPagination
+                    totalPage={totalNearbyPage}
+                    getClickedPageNumber={handleNearbyPageChange}
+                  />
+                </PaginationContainer>
+              </>
+            ) : (
+              <NoDataContainer>
+                <NoDataText>조건에 맞는 병원이 없습니다.</NoDataText>
+              </NoDataContainer>
+            )}
+          </ListContainer>
+        </SidebarContainer>
+
+        <MapContainer>
+          {isKakaoLoaded && (
+            <Map
+              center={center}
+              style={{ width: "100%", height: "100%" }}
+              level={5}
+              onCenterChanged={handleCenterChanged}
+              onCreate={setMapInstance}
+            >
+              {userLocation && (
                 <CustomOverlayMap
+                  position={userLocation}
+                  yAnchor={1.0}
+                  xAnchor={0.5}
+                >
+                  <MyPinWrapper>
+                    <MyPin width={50} height={50} />
+                  </MyPinWrapper>
+                </CustomOverlayMap>
+              )}
+
+              {nearbyHospitals.map((hospital, index) => (
+                <CustomOverlayMap
+                  key={`marker-${index}`}
                   position={{
                     lat: parseFloat(hospital.y),
                     lng: parseFloat(hospital.x),
                   }}
                   yAnchor={1.0}
                   xAnchor={0.5}
-                  onClick={() => toggleInfoWindow(hospital)}
                 >
                   <DogPinWrapper>
                     <DogPin width={30} height={30} />
                   </DogPinWrapper>
                 </CustomOverlayMap>
+              ))}
 
-                {infoWindowVisible[hospital.place_name] && (
-                  <CustomOverlayMap
-                    position={{
-                      lat: parseFloat(hospital.y),
-                      lng: parseFloat(hospital.x),
-                    }}
-                    yAnchor={2.1}
-                    xAnchor={0.5}
-                  >
-                    <InfoWindow>
-                      <InfoTitle>{hospital.place_name}</InfoTitle>
-                      <InfoAddress>
-                        {hospital.address_name || hospital.road_address_name}
-                      </InfoAddress>
-                      {hospital.phone && (
-                        <InfoPhone>전화: {hospital.phone}</InfoPhone>
-                      )}
-                    </InfoWindow>
-                  </CustomOverlayMap>
-                )}
-              </React.Fragment>
-            ))}
-
-            {filteredRegisteredHospitals.map((hospital, index) => (
-              <React.Fragment key={`registered-${index}`}>
+              {filteredRegisteredHospitals.map((hospital, index) => (
                 <CustomOverlayMap
+                  key={`registered-${index}`}
                   position={{
                     lat: parseFloat(hospital.y),
                     lng: parseFloat(hospital.x),
                   }}
                   yAnchor={1.0}
                   xAnchor={0.5}
-                  onClick={() => toggleInfoWindow(hospital)}
+                  onClick={() => selectHospital(hospital)}
                 >
                   <DogPinWrapper>
                     <DogPin width={40} height={40} fill="#FF6B6B" />
                   </DogPinWrapper>
                 </CustomOverlayMap>
-
-                {infoWindowVisible[hospital.hospitalInfoSeq] && (
-                  <CustomOverlayMap
-                    position={{
-                      lat: parseFloat(hospital.y),
-                      lng: parseFloat(hospital.x),
-                    }}
-                    yAnchor={2.1}
-                    xAnchor={0.5}
-                  >
-                    <InfoWindow>
-                      <InfoTitle>{hospital.hospitalName}</InfoTitle>
-                      <InfoAddress>
-                        {hospital.address} {hospital.addressDetail}
-                      </InfoAddress>
-                      {hospital.phone && (
-                        <InfoPhone>전화: {hospital.phone}</InfoPhone>
-                      )}
-                    </InfoWindow>
-                  </CustomOverlayMap>
-                )}
-              </React.Fragment>
-            ))}
-          </Map>
-        )}
-      </MapContainer>
+              ))}
+            </Map>
+          )}
+        </MapContainer>
+      </HospitalMapLayout>
       {selectedHospital && <HospitalDetailModal hospital={selectedHospital} />}
-    </HospitalMapLayout>
+      {selectedHospital && <ReviewWriteModal hospital={selectedHospital} />}
+    </>
   );
 };
 
@@ -875,45 +822,6 @@ const DogPinWrapper = styled.div`
 
 const MyPinWrapper = styled.div`
   cursor: default;
-`;
-
-const InfoWindow = styled.div`
-  border-radius: 5px;
-  padding: 10px;
-  min-width: 120px;
-  max-width: 200px;
-  position: relative;
-  background-color: white;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-
-  &:after {
-    content: "";
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    border-top: 8px solid white;
-    border-left: 8px solid transparent;
-    border-right: 8px solid transparent;
-  }
-`;
-
-const InfoTitle = styled.h4`
-  margin: 0 0 5px 0;
-  font-size: 14px;
-  font-weight: 600;
-`;
-
-const InfoAddress = styled.p`
-  margin: 0;
-  font-size: 12px;
-  color: #666;
-`;
-
-const InfoPhone = styled.p`
-  margin: 5px 0 0 0;
-  font-size: 12px;
-  color: #3396f4;
 `;
 
 export default HospitalMap;

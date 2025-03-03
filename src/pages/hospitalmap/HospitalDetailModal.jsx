@@ -9,7 +9,6 @@ import FilledStar from "@/assets/icons/primary/star_filled_primary.svg?react";
 import PaceMaker from "../../assets/icons/subicon/pacemaker.svg?react";
 import VerticalDotsSelect from "@/shared/components/VerticalDotsSelect";
 import { fetchHospitalReviews } from "@/domains/map/api/fetchHospitalReviews";
-import ReviewWriteModal from "./ReviewWriteModal";
 
 export default function HospitalDetailModal({ hospital }) {
   const { isModalOpen, openModal } = useModalStore();
@@ -94,7 +93,7 @@ export default function HospitalDetailModal({ hospital }) {
   };
 
   const handleWriteReview = () => {
-    openModal("writeReview");
+    openModal("hospitalReviewWrite");
   };
 
   if (!hospital) return null;
@@ -104,7 +103,6 @@ export default function HospitalDetailModal({ hospital }) {
       size="medium"
       title=""
       BtnText=""
-      isModalOpen={isModalOpen}
       modalname="hospitalDetail"
       formName=""
       onSubmit={(e) => e.preventDefault()}
@@ -261,7 +259,6 @@ export default function HospitalDetailModal({ hospital }) {
           })}
         </ContentContainer>
       </ModalContentLayout>
-      {hospital && <ReviewWriteModal hospital={hospital} />}
     </Modal>
   );
 }

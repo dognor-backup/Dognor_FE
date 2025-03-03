@@ -7,9 +7,10 @@ import VerifiedIcon from "@/assets/icons/subicon/verified_mint.svg?react";
 import EmptyStar from "@/assets/icons/primary/star_primary.svg?react";
 import FilledStar from "@/assets/icons/primary/star_filled_primary.svg?react";
 import AddProfileBtnImg from "@/assets/icons/default/image.svg?react";
+import ArrowLeft from "../../assets/icons/primary/arrow_left_primary.svg?react";
 
 export default function ReviewWriteModal({ hospital }) {
-  const { isModalOpen, closeModal } = useModalStore();
+  const { closeModal } = useModalStore();
   const [rating, setRating] = useState(0);
   const [reviewText, setReviewText] = useState("");
   const [selectedImages, setSelectedImages] = useState([]);
@@ -21,30 +22,32 @@ export default function ReviewWriteModal({ hospital }) {
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files);
     const newImages = files.slice(0, 4 - selectedImages.length);
-    const newImageUrls = newImages.map(file => URL.createObjectURL(file));
-    setSelectedImages(prev => [...prev, ...newImageUrls]);
+    const newImageUrls = newImages.map((file) => URL.createObjectURL(file));
+    setSelectedImages((prev) => [...prev, ...newImageUrls]);
   };
 
   const removeImage = (indexToRemove) => {
-    setSelectedImages(prev => prev.filter((_, index) => index !== indexToRemove));
+    setSelectedImages((prev) =>
+      prev.filter((_, index) => index !== indexToRemove)
+    );
   };
 
   const renderStars = () => {
     return Array.from({ length: 5 }, (_, index) => {
       const starValue = index + 1;
       return starValue <= rating ? (
-        <FilledStar 
-          key={index} 
-          width={32} 
-          height={32} 
-          onClick={() => handleStarClick(starValue)} 
+        <FilledStar
+          key={index}
+          width={32}
+          height={32}
+          onClick={() => handleStarClick(starValue)}
         />
       ) : (
-        <EmptyStar 
-          key={index} 
-          width={32} 
-          height={32} 
-          onClick={() => handleStarClick(starValue)} 
+        <EmptyStar
+          key={index}
+          width={32}
+          height={32}
+          onClick={() => handleStarClick(starValue)}
         />
       );
     });
@@ -52,7 +55,10 @@ export default function ReviewWriteModal({ hospital }) {
 
   const handleReviewSubmit = (e) => {
     e.preventDefault();
-    // 리뷰 제출 로직 추가 예정
+    closeModal();
+  };
+
+  const handleBackButton = () => {
     closeModal();
   };
 
@@ -61,53 +67,47 @@ export default function ReviewWriteModal({ hospital }) {
   return (
     <Modal
       size="medium"
-      title="리뷰 작성"
+      title=""
       BtnText="등록하기"
-      isModalOpen={isModalOpen}
-      modalname="writeReview"
+      modalname="hospitalReviewWrite"
       formName="writeReview"
       onSubmit={handleReviewSubmit}
     >
+      <BackButton onClick={handleBackButton}>
+        <ArrowLeft width={24} height={24} />
+      </BackButton>
+
       <ModalContentLayout>
         <HospitalInfoSection>
           <HospitalNameRow>
             <VerifiedWrapper>
-              <VerifiedIcon width={16} height={16} />
+              <VerifiedIcon width={20} height={20} />
             </VerifiedWrapper>
             <HospitalName>{hospital.hospitalName}</HospitalName>
             {hospital.donationYn === 1 && (
               <DonationBadge>헌혈 가능</DonationBadge>
             )}
           </HospitalNameRow>
-          <HospitalAddress>
-            {hospital.address} {hospital.addressDetail}
-          </HospitalAddress>
+          <AddressContainer>
+            {hospital.address && (
+              <HospitalAddress>{hospital.address}</HospitalAddress>
+            )}
+            {hospital.addressDetail && (
+              <HospitalAddress>{hospital.addressDetail}</HospitalAddress>
+            )}
+          </AddressContainer>
         </HospitalInfoSection>
 
         <RatingSection>
           <RatingText>{rating.toFixed(1)}</RatingText>
-          <StarContainer>
-            {renderStars()}
-          </StarContainer>
+          <StarContainer>{renderStars()}</StarContainer>
         </RatingSection>
 
-        <ImageUploadSection>
-          <ImageUploadText>이미지 첨부</ImageUploadText>
-          <ImageUploadCount>{selectedImages.length}/4</ImageUploadCount>
-          <ImageUploadButton 
-            type="button" 
-            onClick={() => document.getElementById('imageUpload').click()}
-            disabled={selectedImages.length >= 4}
-          >
-            <AddProfileBtnImg />
-          </ImageUploadButton>
-          <HiddenFileInput 
-            type="file" 
-            id="imageUpload"
-            accept="image/*"
-            multiple
-            onChange={handleImageUpload}
-          />
+        <ImageUploadSectionWrapper>
+          <ImageUploadLabelContainer>
+            <ImageUploadText>이미지 첨부</ImageUploadText>
+            <ImageUploadCount>{selectedImages.length}/4</ImageUploadCount>
+          </ImageUploadLabelContainer>
           {selectedImages.length > 0 && (
             <ImagePreviewContainer>
               {selectedImages.map((imageUrl, index) => (
@@ -120,27 +120,58 @@ export default function ReviewWriteModal({ hospital }) {
               ))}
             </ImagePreviewContainer>
           )}
-        </ImageUploadSection>
 
-        <ReviewTextarea 
-          placeholder="댓글을 작성해주세요"
-          value={reviewText}
-          onChange={(e) => {
-            if (e.target.value.length <= 400) {
-              setReviewText(e.target.value);
-            }
-          }}
-          maxLength={400}
-        />
+          <ImageUploadButton
+            type="button"
+            onClick={() => document.getElementById("imageUpload").click()}
+            disabled={selectedImages.length >= 4}
+          >
+            <AddProfileBtnImg />
+          </ImageUploadButton>
+          <HiddenFileInput
+            type="file"
+            id="imageUpload"
+            accept="image/*"
+            multiple
+            onChange={handleImageUpload}
+          />
+        </ImageUploadSectionWrapper>
+        <ReviewTextareaContainer>
+          <ReviewTextarea
+            placeholder="댓글을 작성해주세요"
+            value={reviewText}
+            onChange={(e) => {
+              if (e.target.value.length <= 400) {
+                setReviewText(e.target.value);
+              }
+            }}
+            maxLength={400}
+          />
+          <TextCounter>{reviewText.length}/400</TextCounter>
+        </ReviewTextareaContainer>
       </ModalContentLayout>
     </Modal>
   );
 }
 
+const BackButton = styled.button`
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
 const ModalContentLayout = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
+  margin-top: 16px;
 `;
 
 const HospitalInfoSection = styled.div`
@@ -179,6 +210,12 @@ const DonationBadge = styled.span`
   color: white;
 `;
 
+const AddressContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+`;
+
 const HospitalAddress = styled.div`
   font-weight: 400;
   font-size: 14px;
@@ -194,7 +231,7 @@ const RatingSection = styled.div`
 
 const RatingText = styled.div`
   font-weight: 700;
-  font-size: 24px;
+  font-size: 18px;
   color: ${({ theme }) => theme.colors.primary_purple};
 `;
 
@@ -204,30 +241,38 @@ const StarContainer = styled.div`
   cursor: pointer;
 `;
 
-const ImageUploadSection = styled.div`
+const ImageUploadSectionWrapper = styled.div`
   display: flex;
+  flex-direction: column;
   align-items: center;
+`;
+
+const ImageUploadLabelContainer = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
   gap: 8px;
-  position: relative;
+  align-items: center;
+  margin-bottom: 16px;
 `;
 
 const ImageUploadText = styled.span`
-  font-weight: 400;
-  font-size: 14px;
-  color: ${({ theme }) => theme.colors.neutrals_02};
+  font-weight: 700;
+  font-size: 16px;
+  color: ${({ theme }) => theme.colors.neutrals_00};
 `;
 
 const ImageUploadCount = styled.span`
   font-weight: 400;
   font-size: 14px;
-  color: ${({ theme }) => theme.colors.neutrals_03};
+  color: ${({ theme }) => theme.colors.neutrals_01};
 `;
 
 const ImageUploadButton = styled.button`
   background: transparent;
   border: none;
-  cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
-  opacity: ${props => props.disabled ? 0.5 : 1};
+  cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
+  opacity: ${(props) => (props.disabled ? 0.5 : 1)};
 `;
 
 const HiddenFileInput = styled.input`
@@ -236,18 +281,20 @@ const HiddenFileInput = styled.input`
 
 const ImagePreviewContainer = styled.div`
   display: flex;
-  gap: 8px;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
 `;
 
 const ImagePreview = styled.div`
   position: relative;
-  width: 94px;
-  height: 94px;
+  width: 90px;
+  height: 90;
 `;
 
 const PreviewImage = styled.img`
-  width: 94px;
-  height: 94px;
+  width: 90px;
+  height: 90px;
   object-fit: cover;
   border-radius: 4px;
 `;
@@ -268,22 +315,32 @@ const RemoveImageButton = styled.button`
   cursor: pointer;
 `;
 
+const ReviewTextareaContainer = styled.div`
+  position: relative;
+  width: 100%;
+`;
+
 const ReviewTextarea = styled.textarea`
   width: 100%;
-  height: 160px;
-  padding: 12px;
+  height: 316px;
+  padding: 24px;
   border: 1px solid ${({ theme }) => theme.colors.neutrals_05};
-  border-radius: 4px;
+  border-radius: 6px;
   resize: none;
   font-size: 14px;
-  line-height: 24px;
+  font-weight: 400;
+  line-height: 20px;
+  color: ${({ theme }) => theme.colors.neutrals_02};
 
   &::placeholder {
     color: ${({ theme }) => theme.colors.neutrals_03};
   }
+`;
 
-  &:focus {
-    outline: none;
-    border-color: ${({ theme }) => theme.colors.primary_blue};
-  }
+const TextCounter = styled.div`
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-size: 12px;
+  color: ${({ theme }) => theme.colors.neutrals_02};
 `;
