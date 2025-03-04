@@ -120,6 +120,7 @@ const SignUp = () => {
   };
 
   const handleSubmitSignupForm = (e) => {
+    console.log("s");
     e.preventDefault();
     const formData = new FormData(e.target);
     const data = Object.fromEntries(formData.entries());
@@ -143,7 +144,6 @@ const SignUp = () => {
         agreement: "필수 동의 항목을 다시 확인하세요",
       }));
     }
-
     const hasEmptyField = Object.entries(data).some(([_, value]) => {
       if (value.trim() === "") {
         setErrors((prev) => ({
@@ -202,7 +202,6 @@ const SignUp = () => {
           donationYn: Number(hospitalData.isDonationPossible),
           donationFreeYn: Number(hospitalData.donationPrice),
         };
-
         signupMutation.mutate(userInfo);
         break;
       default:

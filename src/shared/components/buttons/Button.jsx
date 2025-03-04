@@ -102,7 +102,7 @@ const sizes = {
     height: "42px",
   },
   small: {
-    padding: "8px",
+    padding: "10px",
     fontSize: "14px",
     height: "36px",
   },

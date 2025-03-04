@@ -14,19 +14,22 @@ import App from "@/App";
 import AccountSettings from "@/pages/accountsettings/AccountSettings";
 import { Agreement } from "@/pages/signup/Agreement";
 import { SignUpComplete } from "@/pages/signup/SignUpComplete";
-
 import { PostForm } from "@/pages/community/PostForm";
 import { CommunityList } from "@/pages/community/components/CommunityList";
 import { CommunityLink } from "@/pages/community/components/ComminityLink";
 import { PostDetail } from "@/pages/community/PostDetail";
 import { CampaignForm } from "@/pages/campaigns/CampaignForm";
 import { CampaignDetail } from "@/pages/campaigns/CampaignDeatil";
+import { Dashboard } from "@/pages/dashboard/Dashboard";
+import { BoardContent } from "@/pages/dashboard/BoardContent";
+import { UserInfo } from "@/pages/dashboard/UserInfo";
 
 const router = createBrowserRouter([
   {
     path: "/",
     Component: App,
     children: [
+      { index: true, Component: Home },
       { path: "home", Component: Home },
       { path: "login", Component: Login },
       { path: "signup", Component: SignUp },
@@ -34,7 +37,6 @@ const router = createBrowserRouter([
       { path: "aboutus", Component: AboutUs },
       { path: "showcase", Component: Showcase },
       { path: "map", Component: HospitalMap },
-
       {
         path: "campaigns",
         Component: Campaigns,
@@ -58,12 +60,23 @@ const router = createBrowserRouter([
           { path: ":menu", Component: CommunityList },
         ],
       },
+      {
+        path: "dashboard",
+        Component: Dashboard,
+        children: [
+          { index: true, Component: BoardContent },
+          { path: ":menu", Component: BoardContent },
+        ],
+      },
       { path: "postnew", Component: PostForm },
       { path: "postdetail/:id", Component: PostDetail },
       { path: "postedit/:id", Component: PostForm },
     ],
   },
-  { path: "dashboard", Component: Home },
+  {
+    path: "dashboard/userInfo/:userSeq",
+    Component: UserInfo,
+  },
   { path: "findaccount", Component: FindAccount },
   { path: "guidepage", Component: Home },
   { path: "changepassword", Component: Home },
