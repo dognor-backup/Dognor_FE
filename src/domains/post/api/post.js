@@ -60,7 +60,6 @@ export const deleteSelectedPosts = async (data) => {
   try {
     const response = await AxiosInstance.post(`/community/posts/delete`, data);
     if (response.data.code === 200) {
-      console.log(response.data);
       return { success: true, data: response.data };
     }
   } catch (error) {

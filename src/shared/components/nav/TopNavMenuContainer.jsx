@@ -1,11 +1,8 @@
 import styled from "@emotion/styled";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 
-export default function TopNavMenuContainer({
-  activeMenuLink,
-  setActiveMenuLink,
-  isMenuOpen,
-}) {
+export default function TopNavMenuContainer({ activeMenuLink, setActiveMenuLink, isMenuOpen }) {
   const menuList = [
     {
       engTitle: "donationinfo",
@@ -32,6 +29,12 @@ export default function TopNavMenuContainer({
       korTitle: "About us",
     },
   ];
+
+  useEffect(() => {
+    const currentPath = location.pathname.split("/")[1];
+    const matchedMenu = menuList.find((menu) => menu.engTitle === currentPath)?.engTitle || "";
+    setActiveMenuLink(matchedMenu);
+  }, [location.pathname]);
 
   return (
     <TopNavMenuLayout isMenuOpen={isMenuOpen}>
@@ -62,8 +65,7 @@ const TopNavMenuLayout = styled.div`
   box-sizing: border-box;
   top: 74px;
   position: absolute;
-  transform: ${({ isMenuOpen }) =>
-    isMenuOpen ? "translateY(0)" : "translateY(-100%)"};
+  transform: ${({ isMenuOpen }) => (isMenuOpen ? "translateY(0)" : "translateY(-100%)")};
   transition: 0.5s;
 `;
 
@@ -77,14 +79,10 @@ const TopNavMenuLink = styled(Link)`
   font-size: 18px;
   line-height: 24px;
   font-weight: 700;
-  color: ${({ active, theme }) =>
-    active === "true"
-      ? theme.colors.blue_normal_100
-      : theme.colors.blue_dark_400};
+  color: ${({ active, theme }) => (active === "true" ? theme.colors.blue_normal_100 : theme.colors.blue_dark_400)};
   background-color: transparent;
   text-decoration: none;
-  box-shadow: ${({ active, theme }) =>
-    active === "true" ? `0 1px 0 ${theme.colors.blue_normal_100}` : "none"};
+  box-shadow: ${({ active, theme }) => (active === "true" ? `0 1px 0 ${theme.colors.blue_normal_100}` : "none")};
 
   &:hover {
     color: ${({ theme }) => theme.colors.purple_normal_100};

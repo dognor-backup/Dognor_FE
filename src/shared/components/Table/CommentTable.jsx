@@ -10,7 +10,6 @@ import {
   SmallTableCell,
 } from "./baseTable";
 import SelectableCheckbox from "./SelectableCheckbox";
-import VerticalDotsSelect from "@/shared/components/VerticalDotsSelect";
 
 export function CommentTable({
   data = [],
@@ -41,9 +40,7 @@ export function CommentTable({
                 <SmallTableCell>
                   <SelectableCheckbox
                     name={`comment-${item.seq}`}
-                    checked={selectedComments.some(
-                      (comment) => comment.seq === item.seq
-                    )}
+                    checked={selectedComments.some((comment) => comment.seq === item.seq)}
                     onChange={() => handleCheckboxChange(item.seq)}
                   />
                 </SmallTableCell>
@@ -51,9 +48,7 @@ export function CommentTable({
                 <TableCell>{item.content}</TableCell>
                 <SmallTableCell>{item.division || "미정"}</SmallTableCell>
                 <SmallTableCell>{item.categoryName || "없음"}</SmallTableCell>
-                <SmallTableCell>
-                  {formatDate(item.writeDt) || "날짜 없음"}
-                </SmallTableCell>
+                <SmallTableCell>{formatDate(item.writeDt) || "날짜 없음"}</SmallTableCell>
                 <SmallTableCell></SmallTableCell>
               </TableRow>
             ))

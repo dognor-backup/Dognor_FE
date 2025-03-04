@@ -43,6 +43,6 @@ export const Flex = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
   width: 100%;
 `;

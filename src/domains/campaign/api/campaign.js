@@ -43,6 +43,7 @@ export const likeCampaign = async (data) => {
 };
 
 export const saveCampaign = async (formData) => {
+  console.log([...formData.entries()]);
   try {
     const token = await getAccessTokenFromDB();
     const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/campaign`, formData, {

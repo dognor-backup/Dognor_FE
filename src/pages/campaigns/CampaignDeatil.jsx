@@ -11,7 +11,7 @@ import { useGetUserId } from "@/domains/auth/hooks/useGetUserId";
 import useAlertStore from "@/shared/hooks/useAlertStore";
 import DelAlert from "@/shared/components/alert/DelAlert";
 import styled from "@emotion/styled";
-import { formatDate } from "./hooks/formatDate";
+import { formatDateTime } from "@/shared/utils/formatDateTime";
 
 export function CampaignDetail() {
   const navigate = useNavigate();
@@ -25,9 +25,8 @@ export function CampaignDetail() {
   const [campaignDetail, setCampaignDetail] = useState({});
   const { camPaignSeq, detail, endDate, likeCnt, writeDt, strDate, title, writerName, keyword1, keyword2, keyword3 } =
     campaignDetail || {};
-  console.log(campaignDetail);
   const dateTime = writeDt;
-  const { formattedDate, formattedTime } = formatDate(dateTime);
+  const { formattedDate, formattedTime } = formatDateTime(dateTime);
   const handleGetPostDetail = useMutation({
     mutationFn: getCampaignDetail,
     onSuccess: ({ success, data }) => {

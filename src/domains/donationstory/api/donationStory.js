@@ -2,11 +2,7 @@ import AxiosInstance, { AxiosFormDataInstance } from "@/shared/utils/axiosInstan
 
 export const searchDonationStories = async (searchParam) => {
   try {
-    const response = await AxiosInstance.post(
-      "/donation-stories/search",
-      searchParam
-    );
-
+    const response = await AxiosInstance.post("/donation-stories/search", searchParam);
     if (response.data.code === 200) {
       return { 
         success: true, 
