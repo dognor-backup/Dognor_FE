@@ -1,4 +1,5 @@
-.env.*
+# API, baseURL
+.env
 
 # Logs
 logs
